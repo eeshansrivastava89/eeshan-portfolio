@@ -3,9 +3,11 @@
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "astro check --watch & astro dev",
+		"dev": "astro dev",
+		"dev:check": "astro check --watch & astro dev",
 		"start": "astro dev",
-		"build": "astro check && astro build",
+		"build": "astro build",
+		"build:check": "astro check && astro build",
 		"preview": "astro preview",
 		"astro": "astro",
 		"lint": "prettier --write  \"**/*.{js,jsx,ts,tsx,md,mdx,svelte,astro}\" && eslint --fix \"src/**/*.{js,ts,jsx,tsx,svelte,astro}\""
