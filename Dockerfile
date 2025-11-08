@@ -27,6 +27,7 @@ RUN echo 'server { \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
+    port_in_redirect off; \
     location / { \
         try_files $uri $uri/ /index.html; \
     } \
