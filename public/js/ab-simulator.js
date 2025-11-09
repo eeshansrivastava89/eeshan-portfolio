@@ -39,14 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLeaderboard();
   };
   
-  // PostHog uses a 'loaded' callback in init config to signal readiness
-  // Check if it's already ready, otherwise wait for it
-  if (window.__posthogReady) {
-    doInit();
-  } else {
-    // Fallback: wait a bit and init anyway if PostHog takes too long (3 seconds)
-    setTimeout(doInit, 3000);
-  }
+  // Wait for window.posthog to exist (the stub loads first, real lib loads async)
+  let attempts = 0;
+  const waitForPostHog = () => {
+    if (window.posthog) {
+      // PostHog object exists, safe to use
+      doInit();
+    } else if (attempts++ < 30) {
+      // Try for up to 3 seconds (30 * 100ms)
+      setTimeout(waitForPostHog, 100);
+    } else {
+      // Timeout, proceed anyway
+      doInit();
+    }
+  };
+  
+  waitForPostHog();
 });
 
 const initializeVariant = () => {
@@ -80,13 +88,15 @@ const initializeVariant = () => {
     variant = null;
   }
   
-  // Store variant if we got one, otherwise null indicates error state
-  if (variant !== null) {
-    localStorage.setItem('simulator_variant', variant);
-    localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
-    if (!localStorage.getItem('simulator_username')) {
-      localStorage.setItem('simulator_username', generateUsername());
-    }
+  // Always store variant (use fallback if null)
+  if (variant === null) {
+    variant = Math.random() < 0.5 ? 'A' : 'B';
+  }
+  
+  localStorage.setItem('simulator_variant', variant);
+  localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
+  if (!localStorage.getItem('simulator_username')) {
+    localStorage.setItem('simulator_username', generateUsername());
   }
 };
 
