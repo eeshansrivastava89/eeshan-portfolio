@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const initializeVariant = () => {
   let variant = null;
+  let flagFailed = false;
   
   // Try to get feature flag from PostHog
   try {
@@ -58,58 +59,51 @@ const initializeVariant = () => {
         variant = 'A';
       } else {
         // Feature flag exists but value is invalid
-        variant = null;
+        flagFailed = true;
       }
     } else {
       // PostHog not available
-      variant = null;
+      flagFailed = true;
     }
   } catch (e) {
     console.error('Error getting feature flag:', e);
+    flagFailed = true;
+  }
+  
+  // Show error message but don't break the page
+  if (flagFailed) {
+    showFeatureFlagError();
     variant = null;
   }
   
-  // If we couldn't get a valid variant, show error state
-  if (variant === null) {
-    showFeatureFlagError();
-    return;
-  }
-  
-  localStorage.setItem('simulator_variant', variant);
-  localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
-  if (!localStorage.getItem('simulator_username')) {
-    localStorage.setItem('simulator_username', generateUsername());
+  // Store variant if we got one, otherwise null indicates error state
+  if (variant !== null) {
+    localStorage.setItem('simulator_variant', variant);
+    localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
+    if (!localStorage.getItem('simulator_username')) {
+      localStorage.setItem('simulator_username', generateUsername());
+    }
   }
 };
 
 const showFeatureFlagError = () => {
-  const challengeSection = $('challenge-section');
-  const puzzleSection = $('puzzle-section');
-  const dashboardSection = document.getElementById('dashboard-section');
-  
-  if (challengeSection) challengeSection.classList.add('hidden');
-  if (puzzleSection) puzzleSection.classList.add('hidden');
-  if (dashboardSection) dashboardSection.classList.add('hidden');
-  
-  // Insert error message at top
   const errorHTML = `
-    <div class="rounded-lg border border-red-300 bg-red-50 p-6 dark:border-red-900 dark:bg-red-950">
-      <div class="flex items-start gap-3">
-        <div class="text-2xl">⚠️</div>
-        <div>
-          <h3 class="font-semibold text-red-900 dark:text-red-100 mb-1">Feature Flag Not Loaded</h3>
-          <p class="text-sm text-red-800 dark:text-red-200 mb-3">PostHog feature flags failed to load. The experiment cannot run without a valid variant assignment.</p>
-          <p class="text-xs text-red-700 dark:text-red-300">Please refresh the page and try again. If the issue persists, check that PostHog is properly configured.</p>
+    <div class="rounded-lg border border-red-300 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950 mb-4">
+      <div class="flex items-start gap-2">
+        <div class="text-lg">⚠️</div>
+        <div class="flex-1">
+          <h3 class="font-semibold text-red-900 dark:text-red-100 text-sm">Feature Flag Not Loaded</h3>
+          <p class="text-xs text-red-800 dark:text-red-200 mt-1">PostHog feature flags failed to load. Please refresh the page or check your PostHog configuration.</p>
         </div>
       </div>
     </div>
   `;
   
-  const mainDiv = document.querySelector('div.w-full.space-y-8');
-  if (mainDiv) {
+  const challengeSection = $('challenge-section');
+  if (challengeSection) {
     const errorDiv = document.createElement('div');
     errorDiv.innerHTML = errorHTML;
-    mainDiv.insertBefore(errorDiv.firstChild, mainDiv.firstChild);
+    challengeSection.parentNode.insertBefore(errorDiv, challengeSection);
   }
 };
 
