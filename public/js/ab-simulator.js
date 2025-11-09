@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPuzzle();
     updateLeaderboard();
   };
-  if (typeof posthog !== 'undefined' && posthog?.onFeatureFlags) posthog.onFeatureFlags(doInit);
+  // Only use PostHog if it's loaded
+  if (typeof window !== 'undefined' && typeof window.posthog !== 'undefined' && window.posthog?.onFeatureFlags) {
+    window.posthog.onFeatureFlags(doInit);
+  }
   setTimeout(doInit, 1000);
 });
 
@@ -46,17 +49,17 @@ const initializeVariant = () => {
   let variant = 'A';
   let flagResponse = null;
   
-  // Try to get feature flag from PostHog
-  if (typeof posthog !== 'undefined') {
+  // Try to get feature flag from PostHog - check window object first
+  if (typeof window !== 'undefined' && window.posthog) {
     let flag = null;
     
     // Method 1: getFeatureFlag (newer versions)
-    if (typeof posthog.getFeatureFlag === 'function') {
-      flag = posthog.getFeatureFlag(FEATURE_FLAG_KEY);
+    if (typeof window.posthog.getFeatureFlag === 'function') {
+      flag = window.posthog.getFeatureFlag(FEATURE_FLAG_KEY);
     }
     // Method 2: featureFlags object (some versions)
-    else if (posthog.featureFlags && posthog.featureFlags[FEATURE_FLAG_KEY] !== undefined) {
-      flag = posthog.featureFlags[FEATURE_FLAG_KEY];
+    else if (window.posthog.featureFlags && window.posthog.featureFlags[FEATURE_FLAG_KEY] !== undefined) {
+      flag = window.posthog.featureFlags[FEATURE_FLAG_KEY];
     }
     
     console.log(`PostHog flag "${FEATURE_FLAG_KEY}":`, flag); // Debug log
@@ -232,9 +235,9 @@ const trackEvent = (eventName, props = {}) => {
     return;
   }
   
-  if (typeof posthog === 'undefined' || !posthog?.capture) return;
+  if (typeof window === 'undefined' || !window.posthog?.capture) return;
   try {
-    posthog.capture(eventName, {
+    window.posthog.capture(eventName, {
       variant: puzzleState.variant,
       $feature_flag_response: flagResponse,
       user_id: localStorage.getItem('simulator_user_id'),
