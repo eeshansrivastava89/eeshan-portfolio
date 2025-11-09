@@ -19,7 +19,7 @@
 
 ---
 
-## Working Principles
+## Working Principles for AI Assistant [READ AND MEMORIZE]
 
 Applied consistently across all three projects:
 
@@ -36,43 +36,6 @@ Applied consistently across all three projects:
 
 ---
 
-## Complete Project Timeline
-
-### Phase 0: Hugo Blog Foundation (Sept 2025)
-- **Work:** Set up Hugo site with custom CSS + custom JavaScript puzzle game
-- **Result:** Basic portfolio + A/B test simulator page
-- **Stack:** Hugo (Go templates) + custom CSS (130 lines) + vanilla JavaScript (489 lines)
-- **Hosting:** Fly.io (soma-blog-hugo-shy-bird-7985.fly.dev)
-- **Issue:** Custom code everywhere. Hard to iterate. Stats calculation scattered
-
-### Phase 1: PostHog + Supabase Integration (Oct 25, 2025) — 11 hours
-- **Chunk 1 (2h):** PostHog SDK integration, event tracking setup
-- **Chunk 2 (3h):** PostHog webhook → Supabase pipeline, database schema
-- **Chunk 3 (3h):** Streamlit dashboard built (Python + Pandas + Plotly)
-- **Chunk 4 (0.5h):** Embedded Streamlit iframe in Hugo
-- **Chunk 5 (0.5h):** End-to-end testing (events → Supabase → dashboard)
-- **Chunk 6 (1h):** Removed FastAPI middleware (replaced with Streamlit)
-- **Chunk 7 (1h):** Documentation + polish
-- **Result:** Enterprise-grade data pipeline working. Custom dashboard removed
-- **Key Achievement:** Proved PostHog + Supabase + Streamlit stack works well
-
-### Phase 2: Hugo to Astro Migration (Nov 1-8, 2025) — 14.75 hours
-- **Setup (0.5h):** Cloned Astro Theme Resume, fixed TypeScript errors
-- **Content (0.75h):** Migrated blog posts, assets, timeline.yaml
-- **Timeline (1.5h):** Built React component with 7 company logos, animations
-- **Homepage (1h):** Personalized hero, about, projects sections
-- **Simulator (1h):** Ported A/B puzzle game, integrated Streamlit embed
-- **PostHog (1.5h):** Re-integrated PostHog SDK with safety checks
-- **Minimization (1.5h):** Reduced JS 489→250 lines (49%), CSS 130→0 (Tailwind)
-- **Removal (0.5h):** Deleted framer-motion dependency, kept animations via Tailwind
-- **Deployment (2h):** Docker multi-stage build, Fly.io deployment, 11 pages live
-- **Custom Domain (1.5h):** eeshans.com setup with Let's Encrypt SSL
-- **Bug Fix (1h):** Fixed :8080 port issue in Nginx redirects
-- **Result:** Modern portfolio site live at https://eeshans.com with all features
-
-**Total Project Time:** ~25.75 hours | **Status:** ✅ Complete & Live
-
----
 
 ## Tech Stack & Architecture
 
@@ -93,6 +56,11 @@ Let's Encrypt         → SSL/TLS (eeshans.com + www, auto-renewing)
 GitHub Actions        → Auto-deploy on main push (needs FLY_API_TOKEN secret)
 Cloudflare            → DNS records (A + AAAA + CNAME for www)
 ```
+
+### Local runs
+* For Astro site: ```npm run dev```
+* For Hugo site: ```hugo server -D```
+* For Streamlit: ```streamlit run app.py```
 
 ### Previous Stack (Hugo Era - ARCHIVED)
 
@@ -129,55 +97,47 @@ Cloudflare            → DNS records (A + AAAA + CNAME for www)
 
 ---
 
-## Critical Fixes (All Issues & Solutions)
+## Complete Project Timeline
 
-| Issue | Phase | Root Cause | Solution | Commit |
-|-------|-------|-----------|----------|--------|
-| FastAPI overhead | Phase 1 | Too much custom middleware | Replaced with Streamlit | N/A (Hugo) |
-| 130 lines custom CSS | Phase 2 | Old Hugo approach | Converted to Tailwind utilities | ad0994d |
-| 489 lines JS | Phase 2 | Dead code + utility bloat | Minimized to 250 lines (49% reduction) | ad0994d |
-| Framer-motion dependency | Phase 2 | Animation overkill | Removed, used Tailwind instead | N/A |
-| :8080 in URLs | Phase 2 | Nginx including internal port | Added `port_in_redirect off;` | ad0994d |
-| Canonical URLs broken | Phase 2 | astro.config.mjs had wrong site | Changed to `https://eeshans.com` | 8732dcf |
-| PORT env exposure | Phase 2 | fly.toml had unnecessary [env] | Removed PORT var | 6fd76de |
-| PostHog undefined errors | Phase 2 | No safety checks on SDK calls | Added if-statements before all posthog.* | PHASE_6 |
+**Total Project Time:** ~25.75 hours | **Status:** ✅ Complete & Live
 
----
+### Phase 0: Hugo Blog Foundation (Sept 2025)
+Started with Hugo (Go templates) + custom CSS (130 lines) + vanilla JavaScript (489 lines) + A/B puzzle game hosted on Fly.io. Problem: Everything custom-built, hard to iterate, stats calculation scattered.
 
-## What Actually Works Now
+### Phase 1: PostHog + Supabase Integration (Oct 25, 2025) — 11 hours
+Built modern data pipeline by replacing FastAPI middleware with established tools. Split into 7 chunks:
+- PostHog SDK integration + event tracking (2h)
+- PostHog webhook → Supabase pipeline + database schema (3h)
+- Streamlit dashboard built in Python (3h)
+- Streamlit iframe embedded in Hugo + end-to-end testing (1h)
+- Documentation + polish (1h)
 
-**11 Production Pages:**
-- Homepage (hero, about, timeline with 7 company logos, projects showcase)
-- /projects (landing page for all projects)
-- /projects/ab-test-simulator (puzzle game + Streamlit dashboard + leaderboard)
-- /blog (post listing with pagination)
-- /blog/[slug] (individual posts with code highlighting)
-- /tags (tag index + per-tag pages)
-- /search (full-text search)
-- /tools (resources page)
-- /about (detailed about page)
-- /404 (error page)
-- /sitemap.xml (SEO sitemap)
+**Key Result:** Enterprise-grade data pipeline proven. Switched from custom code to tools-first approach (PostHog → Supabase → Streamlit).
 
-**Core Features:**
-- A/B test puzzle game (word search, 60-second timer, leaderboard)
-- PostHog feature flags (50/50 variant assignment A vs B)
-- Event tracking (puzzle_started, puzzle_completed, puzzle_failed, puzzle_repeated)
-- Real-time leaderboard (localStorage persistence + badges: Bronze/Silver/Gold)
-- Embedded Streamlit dashboard (live stats, variant performance, funnel analysis)
-- Timeline component (React, 7 company logos, scroll animations)
-- Full blog system (MDX posts, tags, search, RSS feed)
-- Dark mode toggle (theme provider in header)
+### Phase 2: Hugo to Astro Migration (Nov 1-8, 2025) — 14.75 hours
+Migrated to modern Astro framework while preserving all integrations:
+- Setup + content migration (1.25h)
+- Built React Timeline component with 7 company logos (1.5h)
+- Personalized homepage, projects, simulator pages (3h)
+- Re-integrated PostHog + Streamlit embed (1.5h)
+- Minimized JavaScript 489→250 lines (49%) + CSS 130→0 lines (Tailwind) (1.5h)
+- Removed framer-motion dependency, migrated animations to Tailwind (0.5h)
+- Docker multi-stage build + Fly.io deployment (2h)
+- Custom domain (eeshans.com) + Let's Encrypt SSL (1.5h)
+- Fixed :8080 port issue in Nginx `port_in_redirect off;` (1h)
 
-**Code Quality:**
-- 0 external CSS files (all Tailwind)
-- 250-line game JS (down from 489)
-- 0 framer-motion dependency
-- 0 custom CSS (except global animations)
-- 11 pages building cleanly in 1.07s
-- 23MB Docker image (multi-stage optimized)
+**Result:** Modern portfolio site live at https://eeshans.com with all 11 pages working, zero console errors, 23MB Docker image.
+
+### Phase 3: Production Polish (Nov 8, 2025)
+- Copied profile image from Hugo to Astro assets (69KB)
+- Updated header branding from "resume" to "Eeshan S."
+- Increased profile image size from h-28 to 200px
+- Scaled Hugo site to zero machines (preserved, not deleted)
+- Disabled GitHub Actions on Hugo (preserved workflow code)
 
 ---
+
+
 
 ## How to Maintain This
 
@@ -211,31 +171,6 @@ Cloudflare            → DNS records (A + AAAA + CNAME for www)
 
 ---
 
-## Deployment Checklist
-
-Before pushing to production:
-
-- [ ] `npm run build` succeeds locally (no errors)
-- [ ] `npm run preview` renders all pages correctly
-- [ ] A/B simulator playable and events track to PostHog
-- [ ] Blog posts display with correct styling
-- [ ] Timeline renders with logos
-- [ ] Mobile responsive (test on phone)
-- [ ] No console errors (check DevTools)
-- [ ] Streamlit iframe loads (check iframe URL in browser)
-- [ ] Dark mode toggle works
-- [ ] Git status clean (no uncommitted changes)
-
-After pushing:
-
-- [ ] GitHub Actions workflow completes (check Actions tab)
-- [ ] Fly.io deployment succeeds (`fly logs` shows success)
-- [ ] Visit https://eeshans.com and spot-check pages
-- [ ] No :8080 in any URLs
-- [ ] PostHog dashboard shows new events from production
-
----
-
 ## Quick Reference
 
 **Critical Files to Know:**
@@ -266,33 +201,6 @@ npm run build && npm run preview
 
 # Reset PostHog variant (in browser console)
 localStorage.clear(); posthog.reset(); location.reload();
-```
-
----
-
-## The Complete Story in One Picture
-
-```
-Phase 0: Hugo + Custom Code (Sept 2025)
-├─ Problem: Everything custom-built, hard to iterate
-└─ Result: Works, but painful
-
-Phase 1: PostHog + Supabase + Streamlit (Oct 2025)
-├─ Problem: FastAPI middleware unnecessary, stats code scattered
-├─ Solution: Use established tools instead of custom code
-└─ Result: Modern data pipeline, dashboard easier to modify
-
-Phase 2: Astro Migration (Nov 2025)
-├─ Problem: Hugo works but aging, want modern React ecosystem
-├─ Solution: Migrate to Astro Theme Resume, keep all integrations
-├─ Minimization: JS -49%, CSS -100% (Tailwind), remove framer-motion
-└─ Result: Clean, fast, modern portfolio site at eeshans.com
-
-Today: Production Live
-├─ All features working
-├─ Domain custom (eeshans.com with SSL)
-├─ GitHub Actions auto-deploy ready
-└─ PostHog → Supabase → Streamlit pipeline still pumping data
 ```
 
 ---

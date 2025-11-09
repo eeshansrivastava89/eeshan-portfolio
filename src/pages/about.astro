@@ -1,0 +1,53 @@
+---
+import PageLayout from '../layouts/BaseLayout.astro'
+import Section from '../components/Section.astro'
+import ProjectCard from '../components/ProjectCard.astro'
+import Timeline from '../components/Timeline'
+
+import { getAllPosts, sortMDByDate } from '../utils'
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
+
+// Load timeline data
+const timelineYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/timeline.yaml'), 'utf8')
+const timelineData = yaml.load(timelineYaml) as { timeline: any[] }
+---
+
+<PageLayout meta={{ title: 'About' }}>
+	<div class='flex w-full flex-col gap-y-10'>
+		<Section title='About'>
+			<p class='text-muted-foreground'>
+				Data science leader with 8+ years of experience in experimentation, analytics, and product development. 
+				Currently leading data science initiatives at Starbucks, focusing on customer behavior modeling and A/B testing at scale. 
+				Passionate about building data-driven products that drive measurable business impact through rigorous statistical analysis and modern data stacks.
+			</p>
+		</Section>
+
+		<Section title='Experience'>
+			<Timeline client:visible items={timelineData.timeline} />
+		</Section>
+
+		<Section title='Projects'>
+			<div class='flex flex-col gap-y-3 sm:flex-row sm:gap-x-3 sm:gap-y-0'>
+				<ProjectCard
+					href='/projects/ab-test-simulator'
+					heading='A/B Test Simulator'
+					subheading='Interactive word search puzzle with PostHog experiments and real-time analytics'
+					imagePath='/src/assets/coming-soon.png'
+					altText='A/B Test Simulator'
+					class='w-full sm:w-1/2'
+				/>
+				<ProjectCard
+					as='a'
+					href='/projects'
+					heading='View All Projects'
+					subheading='Explore data science projects, tools, and implementations'
+					imagePath='/src/assets/coming-soon.png'
+					altText='All Projects'
+					class='w-full sm:w-1/2'
+				/>
+			</div>
+		</Section>
+	</div>
+</PageLayout>
