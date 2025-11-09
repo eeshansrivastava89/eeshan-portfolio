@@ -134,6 +134,12 @@ Migrated to modern Astro framework while preserving all integrations:
 - Increased profile image size from h-28 to 200px
 - Scaled Hugo site to zero machines (preserved, not deleted)
 - Disabled GitHub Actions on Hugo (preserved workflow code)
+- **Homepage Redesign:** Replaced static CTA with data-driven utility section
+  - Two-column grid: Newsletter (left, icon + label + description) + Utilities (right: A/B Simulator, Browse Projects)
+  - Created `src/data/social-links.yaml` for configurable social links (no hardcoding)
+  - Integrated astro-icon with @iconify-json/simple-icons for brand logos
+  - Pure Tailwind CSS styling (eliminated custom CSS bloat)
+  - Responsive design: stacked on mobile, side-by-side on desktop with vertical divider
 
 ---
 

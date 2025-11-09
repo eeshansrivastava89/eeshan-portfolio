@@ -24,7 +24,7 @@
 		"@types/react-dom": "^19.2.2",
 		"astro": "^4.4.15",
 		"astro-expressive-code": "^0.33.5",
-		"astro-icon": "^1.1.0",
+		"astro-icon": "^1.1.5",
 		"clsx": "^2.1.0",
 		"js-yaml": "^4.1.0",
 		"mdast-util-to-string": "^4.0.0",
@@ -40,6 +40,8 @@
 		"typescript": "^5.4.2"
 	},
 	"devDependencies": {
+		"@iconify-json/mdi": "^1.2.3",
+		"@iconify-json/simple-icons": "^1.2.57",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.10",
 		"@typescript-eslint/parser": "^7.1.1",

@@ -1,0 +1,20 @@
+socialLinks:
+  - name: github
+    url: https://github.com/eeshansrivastava89
+    icon: simple-icons:github
+    label: GitHub
+  
+  - name: linkedin
+    url: https://www.linkedin.com/in/eeshans/
+    icon: simple-icons:linkedin
+    label: LinkedIn
+  
+  - name: x
+    url: https://x.com/notesundrground
+    icon: simple-icons:x
+    label: X
+  
+  - name: bluesky
+    url: https://bsky.app/profile/eeshans.bsky.social
+    icon: simple-icons:bluesky
+    label: Bluesky
