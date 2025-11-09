@@ -88,15 +88,16 @@ const initializeVariant = () => {
     variant = null;
   }
   
-  // Always store variant (use fallback if null)
-  if (variant === null) {
-    variant = Math.random() < 0.5 ? 'A' : 'B';
-  }
-  
-  localStorage.setItem('simulator_variant', variant);
-  localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
-  if (!localStorage.getItem('simulator_username')) {
-    localStorage.setItem('simulator_username', generateUsername());
+  // Store variant if we got one
+  if (variant !== null) {
+    localStorage.setItem('simulator_variant', variant);
+    localStorage.setItem('simulator_user_id', 'user_' + Math.random().toString(36).substr(2, 9));
+    if (!localStorage.getItem('simulator_username')) {
+      localStorage.setItem('simulator_username', generateUsername());
+    }
+  } else {
+    // Show error but don't store anything
+    showFeatureFlagError();
   }
 };
 
