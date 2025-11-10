@@ -327,14 +327,10 @@ const fetchAndDisplayLeaderboard = async (variant) => {
 };
 
 const updateLeaderboard = (currentTime = null, currentVariant = null) => {
-  // After completion, fetch fresh leaderboard data from API
-  if (currentTime && currentVariant) {
-    fetchAndDisplayLeaderboard(currentVariant);
-    return true; // Always consider it notable since it's now global
-  }
+  // Fetch leaderboard data immediately
+  const variant = currentVariant || localStorage.getItem('simulator_variant');
+  if (!variant) return false; // No variant means feature flag failed
   
-  // Initial load: fetch for current variant from localStorage
-  const variant = localStorage.getItem('simulator_variant') || 'A';
   fetchAndDisplayLeaderboard(variant);
-  return false;
+  return currentTime !== null;
 };
