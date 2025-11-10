@@ -176,6 +176,10 @@
 	setInterval(() => {
 		document.getElementById('update-indicator').classList.add('opacity-50');
 		updateDashboard();
+		// Also refresh leaderboard if updateLeaderboard function exists
+		if (typeof updateLeaderboard === 'function') {
+			updateLeaderboard();
+		}
 	}, 5000);
 
 	const observer = new MutationObserver(() => {

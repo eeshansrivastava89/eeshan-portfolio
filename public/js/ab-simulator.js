@@ -302,12 +302,22 @@ const fetchAndDisplayLeaderboard = async (variant) => {
       return;
     }
     
-    const html = data.slice(0, 5).map((entry, i) => {
+    // Find user's best time in the full data
+    const userBest = data.find(entry => entry.username === username);
+    const userRank = data.findIndex(entry => entry.username === username) + 1;
+    
+    // Display top 5
+    let html = data.slice(0, 5).map((entry, i) => {
       const isCurrentUser = entry.username === username;
       const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
       const highlight = isCurrentUser ? ' bg-blue-50 dark:bg-blue-950 border-l-2 border-blue-500 pl-2' : '';
       return `<div class="flex items-center justify-between py-1.5${highlight}"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${medal}</span> ${entry.username}${isCurrentUser ? ' 🌟' : ''}</span><span style="font-weight: 600; color: #3b82f6;">${entry.best_time.toFixed(2)}s</span></div>`;
     }).join('');
+    
+    // If user has a time but is not in top 5, show their best below
+    if (userBest && userRank > 5) {
+      html += `<div style="border-top: 1px solid #d1d5db; margin-top: 0.5rem; padding-top: 0.5rem;"><div class="flex items-center justify-between py-1.5 bg-blue-50 dark:bg-blue-950 border-l-2 border-blue-500 pl-2"><span class="font-mono text-xs"><span style="display:inline-block;width:1.5rem;">${userRank}.</span> ${userBest.username} 🌟</span><span style="font-weight: 600; color: #3b82f6;">${userBest.best_time.toFixed(2)}s</span></div></div>`;
+    }
     
     leaderboardList.innerHTML = html;
   } catch (error) {
@@ -323,8 +333,8 @@ const updateLeaderboard = (currentTime = null, currentVariant = null) => {
     return true; // Always consider it notable since it's now global
   }
   
-  // Initial load: fetch for current variant
-  const variant = puzzleState?.variant || 'A';
+  // Initial load: fetch for current variant from localStorage
+  const variant = localStorage.getItem('simulator_variant') || 'A';
   fetchAndDisplayLeaderboard(variant);
   return false;
 };
