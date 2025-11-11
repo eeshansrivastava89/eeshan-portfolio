@@ -163,13 +163,19 @@
 			document.getElementById('update-indicator').classList.remove('opacity-50');
 		} catch (err) {
 			console.error('Dashboard error:', err);
-			document.getElementById('comparison-card').innerHTML = `
-				<div class="rounded-lg p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900">
-					<div class="text-sm font-semibold text-red-900 dark:text-red-100 mb-1">❌ Error Loading Dashboard</div>
-					<div class="text-xs text-red-800 dark:text-red-200">${err.message}</div>
-					<div class="text-xs text-red-700 dark:text-red-300 mt-2">Check if soma-analytics API is running at ${API_URL}</div>
-				</div>
-			`;
+			const container = document.getElementById('dashboard-section');
+			if (container && !document.getElementById('dashboard-error')) {
+				const el = document.createElement('div');
+				el.id = 'dashboard-error';
+				el.innerHTML = `
+					<div class="rounded-lg p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 mb-3">
+						<div class="text-sm font-semibold text-red-900 dark:text-red-100 mb-1">❌ Error Loading Dashboard</div>
+						<div class="text-xs text-red-800 dark:text-red-200">${err.message}</div>
+						<div class="text-xs text-red-700 dark:text-red-300 mt-2">Check if soma-analytics API is reachable at ${API_URL}</div>
+					</div>
+				`;
+				container.prepend(el);
+			}
 		}
 	}
 
