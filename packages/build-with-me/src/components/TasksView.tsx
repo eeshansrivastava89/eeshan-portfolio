@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Sparkles, Clock, CircleDot, RefreshCw } from 'lucide-react'
+import { Sparkles, Clock, CircleDot } from 'lucide-react'
 import TasksTable from './TasksTable'
 import SearchBar from './SearchBar'
 import FilterPanel from './FilterPanel'
-import { refreshGitHubData } from '../lib/github-refresh'
 import type { Task } from '../lib/validate-build-with-me'
 import type { Category, Status } from '../data/build-with-me-config'
 
@@ -19,27 +18,17 @@ const QUICK_FILTERS: { id: QuickFilter; label: string; icon: typeof Sparkles }[]
 	{ id: 'open-only', label: 'Open only', icon: CircleDot },
 ]
 
-export default function TasksView({ tasks: initialTasks }: TasksViewProps) {
-	const [tasks, setTasks] = useState<Task[]>(initialTasks)
-	const [searchFilteredTasks, setSearchFilteredTasks] = useState<Task[]>(initialTasks)
+export default function TasksView({ tasks }: TasksViewProps) {
+	const [searchFilteredTasks, setSearchFilteredTasks] = useState<Task[]>(tasks)
 	const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 	const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([])
 	const [quickFilters, setQuickFilters] = useState<Set<QuickFilter>>(new Set())
-	const [finalTasks, setFinalTasks] = useState<Task[]>(initialTasks)
-	const [isRefreshing, setIsRefreshing] = useState(false)
+	const [finalTasks, setFinalTasks] = useState<Task[]>(tasks)
 
-	const handleRefresh = async () => {
-		setIsRefreshing(true)
-		try {
-			const data = await refreshGitHubData()
-			setTasks(data.tasks)
-			setSearchFilteredTasks(data.tasks)
-		} catch (e) {
-			console.error('Refresh failed:', e)
-		} finally {
-			setIsRefreshing(false)
-		}
-	}
+	// Sync when tasks prop changes (e.g., after refresh)
+	useEffect(() => {
+		setSearchFilteredTasks(tasks)
+	}, [tasks])
 
 	const toggleQuickFilter = (filter: QuickFilter) => {
 		setQuickFilters((prev) => {
@@ -80,13 +69,13 @@ export default function TasksView({ tasks: initialTasks }: TasksViewProps) {
 		}
 
 		setFinalTasks(filtered)
-	}, [searchFilteredTasks, selectedCategories, selectedStatuses, quickFilters])
+	}, [tasks, searchFilteredTasks, selectedCategories, selectedStatuses, quickFilters])
 
 	return (
 		<div className='space-y-4'>
 			<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
 				<div className='flex-1'>
-					<SearchBar tasks={tasks} onFilteredTasks={setSearchFilteredTasks} />
+					<SearchBar tasks={tasks} onFilteredTasks={setSearchFilteredTasks} key={tasks.length} />
 				</div>
 				<FilterPanel
 					selectedCategories={selectedCategories}
@@ -123,17 +112,6 @@ export default function TasksView({ tasks: initialTasks }: TasksViewProps) {
 						Clear
 					</button>
 				)}
-				{/* Refresh button */}
-				<div className='ml-auto'>
-					<button
-						onClick={handleRefresh}
-						disabled={isRefreshing}
-						className='inline-flex items-center gap-1.5 rounded-full bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-sky-600 disabled:opacity-50'
-					>
-						<RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
-						{isRefreshing ? 'Refreshing...' : 'Refresh'}
-					</button>
-				</div>
 			</div>
 			<TasksTable tasks={finalTasks} />
 		</div>

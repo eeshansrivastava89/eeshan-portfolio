@@ -1,8 +1,6 @@
 ---
 import SiteLayout from '../../../shared/src/layouts/SiteLayout.astro'
-import TasksView from '../components/TasksView'
-import ContributorCards from '../components/ContributorCards'
-import ActivityFeed from '../components/ActivityFeed'
+import BuildWithMeView from '../components/BuildWithMeView'
 import StartHereGuide from '../components/StartHereGuide'
 import VideoModal from '../components/VideoModal'
 import { validateBuildWithMeData } from '../lib/validate-build-with-me'
@@ -62,54 +60,9 @@ const openCount = tasks.filter(t => t.status === 'open').length
 				</div>
 			</div>
 
-			<!-- Quick nav button bar -->
-			<div class='flex flex-wrap items-center gap-2 border-t border-border pt-4'>
-				<a
-					href='#open-work'
-					class='rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-orange-400'
-				>
-					Open Work
-				</a>
-				<a
-					href='#contributors'
-					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
-				>
-					Contributors
-				</a>
-				<a
-					href='#how-to'
-					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
-				>
-					How to Ship
-				</a>
-				<a
-					href='#faq'
-					class='rounded-full border border-border bg-primary-foreground px-4 py-2 text-sm font-medium text-foreground transition hover:-translate-y-0.5 hover:border-foreground/30'
-				>
-					FAQ
-				</a>
-				<!-- Mobile video link -->
-				<div class='lg:hidden'>
-					<VideoModal client:load />
-				</div>
-			</div>
 		</section>
 
-		<section>
-			<ActivityFeed activities={recentActivity} client:load />
-		</section>
-
-		<section id='open-work' class='space-y-4' aria-label='Open work'>
-			<div>
-				<h2 class='text-2xl font-bold text-foreground'>Open Work</h2>
-				<p class='text-sm text-muted-foreground'>Pick a task, claim an issue, and ship.</p>
-			</div>
-			<TasksView tasks={tasks} client:load />
-		</section>
-
-		<section id='contributors' aria-label='Contributors'>
-			<ContributorCards contributors={contributors} tasks={tasks} client:load />
-		</section>
+		<BuildWithMeView tasks={tasks} contributors={contributors} recentActivity={recentActivity} client:load />
 
 		<section id='how-to' class='grid gap-4 lg:grid-cols-[2fr_1fr]'>
 			<div class='rounded-2xl border border-border bg-primary-foreground p-4 shadow-lg shadow-black/5'>

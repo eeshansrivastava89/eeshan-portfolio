@@ -5,12 +5,42 @@
       "name": "A/B Simulator",
       "phase": "Active",
       "openTasks": 0,
-      "claimed": 3,
-      "mergedThisWeek": 15,
-      "highlight": "15 tasks merged"
+      "claimed": 2,
+      "mergedThisWeek": 17,
+      "highlight": "17 tasks merged"
     }
   ],
   "tasks": [
+    {
+      "id": "19",
+      "title": "surface issue numbers in open work, recent activity and contributor tables",
+      "projectSlug": "ab-sim",
+      "category": [
+        "frontend"
+      ],
+      "status": "merged",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
+      "labels": [
+        "enhancement",
+        "cat:frontend",
+        "hours:1-2"
+      ],
+      "skills": [],
+      "estimatedHours": "1-2",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/19",
+      "updatedAt": "2025-11-25T09:54:49Z",
+      "closedAt": "2025-11-25T09:54:49Z"
+    },
     {
       "id": "18",
       "title": "add manual github refresh button on the build with me page",
@@ -18,13 +48,17 @@
       "category": [
         "frontend"
       ],
-      "status": "claimed",
+      "status": "merged",
       "assignees": [
         {
           "name": "eeshansrivastava89",
           "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
         }
       ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
       "labels": [
         "cat:frontend",
         "learn:react",
@@ -36,8 +70,8 @@
       "estimatedHours": "3-5",
       "isGoodFirstIssue": false,
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/18",
-      "updatedAt": "2025-11-25T08:57:32Z",
-      "closedAt": null
+      "updatedAt": "2025-11-25T09:30:48Z",
+      "closedAt": "2025-11-25T09:30:48Z"
     },
     {
       "id": "17",
@@ -609,7 +643,14 @@
       "hats": [
         "frontend"
       ],
-      "status": "claimed"
+      "status": "merged"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend"
+      ],
+      "status": "merged"
     },
     {
       "name": "eeshansrivastava89",
@@ -729,12 +770,30 @@
     {
       "name": "eeshansrivastava89",
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "mergedPRs": 14,
+      "mergedPRs": 16,
       "reviews": 0,
       "recentActivityCount": 10
     }
   ],
   "recentActivity": [
+    {
+      "type": "merged",
+      "taskId": "19",
+      "taskTitle": "surface issue numbers in open work, recent activity and contributor tables",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T09:54:49Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/19"
+    },
+    {
+      "type": "merged",
+      "taskId": "18",
+      "taskTitle": "add manual github refresh button on the build with me page",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T09:30:48Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/18"
+    },
     {
       "type": "claimed",
       "taskId": "16",
@@ -752,15 +811,6 @@
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
       "timestamp": "2025-11-25T08:57:46Z",
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/17"
-    },
-    {
-      "type": "claimed",
-      "taskId": "18",
-      "taskTitle": "add manual github refresh button on the build with me page",
-      "user": "eeshansrivastava89",
-      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T08:57:32Z",
-      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/18"
     },
     {
       "type": "merged",
@@ -815,16 +865,7 @@
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
       "timestamp": "2025-11-25T05:46:52Z",
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/11"
-    },
-    {
-      "type": "merged",
-      "taskId": "10",
-      "taskTitle": "Build With Me page with GitHub Issues integration",
-      "user": "eeshansrivastava89",
-      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T05:46:47Z",
-      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/10"
     }
   ],
-  "lastFetchTime": "2025-11-25T09:29:07.394Z"
+  "lastFetchTime": "2025-11-25T10:38:52.534Z"
 }

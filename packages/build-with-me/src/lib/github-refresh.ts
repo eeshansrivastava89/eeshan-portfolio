@@ -150,9 +150,52 @@ function buildContributors(tasks: Task[]): Contributor[] {
 	return Array.from(map.values()).sort((a, b) => b.mergedPRs - a.mergedPRs)
 }
 
+interface ActivityItem {
+	type: 'merged' | 'claimed' | 'pr-opened'
+	taskId: string
+	taskTitle: string
+	user: string
+	avatarUrl?: string
+	timestamp: string
+	githubUrl: string
+}
+
+function buildRecentActivity(tasks: Task[]): ActivityItem[] {
+	const activities: ActivityItem[] = []
+	
+	tasks.forEach((task) => {
+		if (task.status === 'merged' && task.closedBy && task.closedAt) {
+			activities.push({
+				type: 'merged',
+				taskId: task.id,
+				taskTitle: task.title,
+				user: task.closedBy.name,
+				avatarUrl: task.closedBy.avatarUrl,
+				timestamp: task.closedAt,
+				githubUrl: task.githubUrl
+			})
+		} else if (task.status === 'claimed' && task.assignees?.[0] && task.updatedAt) {
+			activities.push({
+				type: 'claimed',
+				taskId: task.id,
+				taskTitle: task.title,
+				user: task.assignees[0].name,
+				avatarUrl: task.assignees[0].avatarUrl,
+				timestamp: task.updatedAt,
+				githubUrl: task.githubUrl
+			})
+		}
+	})
+	
+	return activities
+		.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+		.slice(0, 10)
+}
+
 export interface RefreshResult {
 	tasks: Task[]
 	contributors: Contributor[]
+	recentActivity: ActivityItem[]
 	lastFetchTime: string
 }
 
@@ -160,5 +203,6 @@ export async function refreshGitHubData(): Promise<RefreshResult> {
 	const [issues, prs] = await Promise.all([fetchAllIssues(), fetchAllPRs()])
 	const tasks = buildTasks(issues, prs)
 	const contributors = buildContributors(tasks)
-	return { tasks, contributors, lastFetchTime: new Date().toISOString() }
+	const recentActivity = buildRecentActivity(tasks)
+	return { tasks, contributors, recentActivity, lastFetchTime: new Date().toISOString() }
 }
