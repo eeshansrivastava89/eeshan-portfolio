@@ -113,7 +113,7 @@ export default function ContributorCards({ contributors, tasks }: ContributorCar
 										rel='noreferrer'
 										className='mt-1 block text-sm text-foreground transition hover:text-orange-600'
 									>
-										<span className='line-clamp-2'>{latestShip.title}</span>
+										<span className='line-clamp-2'><span className='text-muted-foreground'>#{latestShip.id}</span> {latestShip.title}</span>
 									</a>
 									<div className='mt-1 flex items-center justify-between'>
 										<span className='text-xs text-muted-foreground'>

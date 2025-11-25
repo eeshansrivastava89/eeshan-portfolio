@@ -114,7 +114,7 @@ export default function ActivityFeed({ activities, initialLimit = DEFAULT_LIMIT 
 								rel='noreferrer'
 								className='group mt-0.5 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground'
 							>
-								<span className='line-clamp-1'>{activity.taskTitle}</span>
+								<span className='line-clamp-1'>#{activity.taskId} {activity.taskTitle}</span>
 								<ExternalLink className='h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100' />
 							</a>
 						</div>

@@ -84,7 +84,9 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 				),
 				cell: ({ row }) => (
 					<div className='max-w-md'>
-						<div className='font-semibold text-foreground'>{row.original.title}</div>
+						<div className='font-semibold text-foreground'>
+							<span className='text-muted-foreground'>#{row.original.id}</span> {row.original.title}
+						</div>
 						<div className='text-xs text-muted-foreground'>
 							{row.original.projectSlug === 'ab-sim' ? 'A/B Simulator' : 'Basketball Analyzer'}
 						</div>
@@ -263,7 +265,9 @@ export default function TasksTable({ tasks }: TasksTableProps) {
 										<div className='text-xs text-muted-foreground'>
 											{task.projectSlug === 'ab-sim' ? 'A/B Simulator' : 'Basketball Analyzer'}
 										</div>
-										<div className='mt-1 font-semibold text-foreground'>{task.title}</div>
+										<div className='mt-1 font-semibold text-foreground'>
+											<span className='text-muted-foreground'>#{task.id}</span> {task.title}
+										</div>
 										<TaskEnrichment task={task} />
 									</div>
 									<span
