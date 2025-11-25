@@ -1,4 +1,4 @@
-import { Users, Flame, ExternalLink } from 'lucide-react'
+import { Users, ExternalLink } from 'lucide-react'
 import type { Contributor, Task } from '../lib/validate-build-with-me'
 
 interface ContributorCardsProps {
@@ -66,7 +66,6 @@ export default function ContributorCards({ contributors, tasks }: ContributorCar
 			<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
 				{contributors.map((contributor) => {
 					const latestShip = latestShipByUser.get(contributor.name)
-					const hasStreak = (contributor.recentActivityCount || 0) >= 2
 
 					return (
 						<div
@@ -87,17 +86,9 @@ export default function ContributorCards({ contributors, tasks }: ContributorCar
 									</div>
 								)}
 								<div className='min-w-0 flex-1'>
-									<div className='flex items-center gap-2'>
-										<span className='truncate text-base font-semibold text-foreground'>
-											{contributor.name}
-										</span>
-										{hasStreak && (
-											<span className='inline-flex items-center gap-0.5 rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-semibold text-orange-600'>
-												<Flame className='h-3 w-3' />
-												<span className='hidden sm:inline'>On fire</span>
-											</span>
-										)}
-									</div>
+									<span className='truncate text-base font-semibold text-foreground'>
+										{contributor.name}
+									</span>
 									<div className='mt-0.5 text-sm text-muted-foreground'>
 										{contributor.mergedPRs} PRs merged
 										{contributor.reviews > 0 && ` • ${contributor.reviews} reviews`}

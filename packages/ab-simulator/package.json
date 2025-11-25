@@ -9,7 +9,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@soma/shared": "workspace:*",
     "astro": "^5.16.0",
     "dotenv": "^17.2.3",
     "unique-names-generator": "^4.7.1"

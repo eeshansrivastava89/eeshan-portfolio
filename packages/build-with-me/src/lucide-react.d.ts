@@ -19,16 +19,19 @@ declare module 'lucide-react' {
 	export const ChevronLeft: LucideIcon
 	export const ChevronRight: LucideIcon
 	export const ChevronUp: LucideIcon
+	export const CircleDot: LucideIcon
 	export const Clock: LucideIcon
 	export const ExternalLink: LucideIcon
+	export const Filter: LucideIcon
 	export const Flame: LucideIcon
 	export const GitFork: LucideIcon
 	export const GitMerge: LucideIcon
 	export const GitPullRequest: LucideIcon
 	export const Play: LucideIcon
+	export const RefreshCw: LucideIcon
+	export const Search: LucideIcon
 	export const Sparkles: LucideIcon
 	export const UserPlus: LucideIcon
 	export const Users: LucideIcon
 	export const X: LucideIcon
-	export const CircleDot: LucideIcon
 }

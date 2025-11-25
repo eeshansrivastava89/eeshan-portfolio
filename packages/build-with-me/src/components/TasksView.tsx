@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Sparkles, Clock, CircleDot } from 'lucide-react'
+import { Sparkles, Clock, CircleDot, RefreshCw } from 'lucide-react'
 import TasksTable from './TasksTable'
 import SearchBar from './SearchBar'
 import FilterPanel from './FilterPanel'
+import { refreshGitHubData } from '../lib/github-refresh'
 import type { Task } from '../lib/validate-build-with-me'
 import type { Category, Status } from '../data/build-with-me-config'
 
@@ -18,12 +19,27 @@ const QUICK_FILTERS: { id: QuickFilter; label: string; icon: typeof Sparkles }[]
 	{ id: 'open-only', label: 'Open only', icon: CircleDot },
 ]
 
-export default function TasksView({ tasks }: TasksViewProps) {
-	const [searchFilteredTasks, setSearchFilteredTasks] = useState<Task[]>(tasks)
+export default function TasksView({ tasks: initialTasks }: TasksViewProps) {
+	const [tasks, setTasks] = useState<Task[]>(initialTasks)
+	const [searchFilteredTasks, setSearchFilteredTasks] = useState<Task[]>(initialTasks)
 	const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 	const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([])
 	const [quickFilters, setQuickFilters] = useState<Set<QuickFilter>>(new Set())
-	const [finalTasks, setFinalTasks] = useState<Task[]>(tasks)
+	const [finalTasks, setFinalTasks] = useState<Task[]>(initialTasks)
+	const [isRefreshing, setIsRefreshing] = useState(false)
+
+	const handleRefresh = async () => {
+		setIsRefreshing(true)
+		try {
+			const data = await refreshGitHubData()
+			setTasks(data.tasks)
+			setSearchFilteredTasks(data.tasks)
+		} catch (e) {
+			console.error('Refresh failed:', e)
+		} finally {
+			setIsRefreshing(false)
+		}
+	}
 
 	const toggleQuickFilter = (filter: QuickFilter) => {
 		setQuickFilters((prev) => {
@@ -107,6 +123,17 @@ export default function TasksView({ tasks }: TasksViewProps) {
 						Clear
 					</button>
 				)}
+				{/* Refresh button */}
+				<div className='ml-auto'>
+					<button
+						onClick={handleRefresh}
+						disabled={isRefreshing}
+						className='inline-flex items-center gap-1.5 rounded-full bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-sky-600 disabled:opacity-50'
+					>
+						<RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+						{isRefreshing ? 'Refreshing...' : 'Refresh'}
+					</button>
+				</div>
 			</div>
 			<TasksTable tasks={finalTasks} />
 		</div>

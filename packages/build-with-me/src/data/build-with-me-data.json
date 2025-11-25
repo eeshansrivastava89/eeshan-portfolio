@@ -6,14 +6,14 @@
       "phase": "Active",
       "openTasks": 0,
       "claimed": 3,
-      "mergedThisWeek": 14,
-      "highlight": "14 tasks merged"
+      "mergedThisWeek": 15,
+      "highlight": "15 tasks merged"
     }
   ],
   "tasks": [
     {
-      "id": "17",
-      "title": "create architecture doc page per project",
+      "id": "18",
+      "title": "add manual github refresh button on the build with me page",
       "projectSlug": "ab-sim",
       "category": [
         "frontend"
@@ -25,11 +25,43 @@
           "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
         }
       ],
-      "labels": [],
+      "labels": [
+        "cat:frontend",
+        "learn:react",
+        "hours:3-5"
+      ],
+      "skills": [
+        "react"
+      ],
+      "estimatedHours": "3-5",
+      "isGoodFirstIssue": false,
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/18",
+      "updatedAt": "2025-11-25T08:57:32Z",
+      "closedAt": null
+    },
+    {
+      "id": "17",
+      "title": "create architecture doc page per project",
+      "projectSlug": "ab-sim",
+      "category": [
+        "docs"
+      ],
+      "status": "claimed",
+      "assignees": [
+        {
+          "name": "eeshansrivastava89",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+        }
+      ],
+      "labels": [
+        "cat:docs",
+        "hours:3-5"
+      ],
       "skills": [],
+      "estimatedHours": "3-5",
       "isGoodFirstIssue": false,
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/17",
-      "updatedAt": "2025-11-25T08:19:55Z",
+      "updatedAt": "2025-11-25T08:57:46Z",
       "closedAt": null
     },
     {
@@ -37,7 +69,8 @@
       "title": "add columns for architecture docs & substack posts at the project level",
       "projectSlug": "ab-sim",
       "category": [
-        "frontend"
+        "frontend",
+        "docs"
       ],
       "status": "claimed",
       "assignees": [
@@ -46,11 +79,16 @@
           "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
         }
       ],
-      "labels": [],
+      "labels": [
+        "cat:frontend",
+        "cat:docs",
+        "hours:3-5"
+      ],
       "skills": [],
+      "estimatedHours": "3-5",
       "isGoodFirstIssue": false,
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/16",
-      "updatedAt": "2025-11-25T08:18:52Z",
+      "updatedAt": "2025-11-25T09:00:51Z",
       "closedAt": null
     },
     {
@@ -535,13 +573,17 @@
       "category": [
         "frontend"
       ],
-      "status": "claimed",
+      "status": "merged",
       "assignees": [
         {
           "name": "eeshansrivastava89",
           "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
         }
       ],
+      "closedBy": {
+        "name": "eeshansrivastava89",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4"
+      },
       "labels": [
         "enhancement",
         "good first issue",
@@ -557,8 +599,8 @@
       "estimatedHours": "3-5",
       "isGoodFirstIssue": true,
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/1",
-      "updatedAt": "2025-11-25T05:34:09Z",
-      "closedAt": null
+      "updatedAt": "2025-11-25T08:57:21Z",
+      "closedAt": "2025-11-25T08:57:21Z"
     }
   ],
   "hats": [
@@ -572,7 +614,15 @@
     {
       "name": "eeshansrivastava89",
       "hats": [
-        "frontend"
+        "docs"
+      ],
+      "status": "claimed"
+    },
+    {
+      "name": "eeshansrivastava89",
+      "hats": [
+        "frontend",
+        "docs"
       ],
       "status": "claimed"
     },
@@ -672,14 +722,14 @@
       "hats": [
         "frontend"
       ],
-      "status": "claimed"
+      "status": "merged"
     }
   ],
   "contributors": [
     {
       "name": "eeshansrivastava89",
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "mergedPRs": 13,
+      "mergedPRs": 14,
       "reviews": 0,
       "recentActivityCount": 10
     }
@@ -687,21 +737,39 @@
   "recentActivity": [
     {
       "type": "claimed",
-      "taskId": "17",
-      "taskTitle": "create architecture doc page per project",
-      "user": "eeshansrivastava89",
-      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T08:19:55Z",
-      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/17"
-    },
-    {
-      "type": "claimed",
       "taskId": "16",
       "taskTitle": "add columns for architecture docs & substack posts at the project level",
       "user": "eeshansrivastava89",
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T08:18:52Z",
+      "timestamp": "2025-11-25T09:00:51Z",
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/16"
+    },
+    {
+      "type": "claimed",
+      "taskId": "17",
+      "taskTitle": "create architecture doc page per project",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T08:57:46Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/17"
+    },
+    {
+      "type": "claimed",
+      "taskId": "18",
+      "taskTitle": "add manual github refresh button on the build with me page",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T08:57:32Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/18"
+    },
+    {
+      "type": "merged",
+      "taskId": "1",
+      "taskTitle": "create build with me page instead of projects",
+      "user": "eeshansrivastava89",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
+      "timestamp": "2025-11-25T08:57:21Z",
+      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/1"
     },
     {
       "type": "merged",
@@ -756,25 +824,7 @@
       "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
       "timestamp": "2025-11-25T05:46:47Z",
       "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/10"
-    },
-    {
-      "type": "merged",
-      "taskId": "9",
-      "taskTitle": "Add analytics notebooks with Supabase health checks",
-      "user": "eeshansrivastava89",
-      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T05:46:43Z",
-      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/9"
-    },
-    {
-      "type": "merged",
-      "taskId": "8",
-      "taskTitle": "Consolidate A/B simulator JS into modular ES6 structure",
-      "user": "eeshansrivastava89",
-      "avatarUrl": "https://avatars.githubusercontent.com/u/77134595?v=4",
-      "timestamp": "2025-11-25T05:46:38Z",
-      "githubUrl": "https://github.com/eeshansrivastava89/soma-portfolio/issues/8"
     }
   ],
-  "lastFetchTime": "2025-11-25T08:22:23.156Z"
+  "lastFetchTime": "2025-11-25T09:29:07.394Z"
 }
