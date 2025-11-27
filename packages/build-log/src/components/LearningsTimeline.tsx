@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { Learning } from '../../../shared/src/lib/learnings'
+import { useState, useMemo } from 'react'
+import type { Learning, ProjectSlug } from '../../../shared/src/lib/learnings'
 import {
   TYPE_CONFIG,
   PROJECT_NAMES,
@@ -14,11 +14,30 @@ interface Props {
 
 export default function LearningsTimeline({ learnings, pageSize = 10 }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedProject, setSelectedProject] = useState<ProjectSlug | 'all'>('all')
+
+  // Get unique projects from learnings for filter pills
+  const availableProjects = useMemo(() => {
+    const projects = new Set(learnings.map(l => l.project))
+    return Array.from(projects).sort() as ProjectSlug[]
+  }, [learnings])
+
+  // Filter learnings by selected project
+  const filteredLearnings = useMemo(() => {
+    if (selectedProject === 'all') return learnings
+    return learnings.filter(l => l.project === selectedProject)
+  }, [learnings, selectedProject])
+
+  // Reset to page 1 when filter changes
+  const handleFilterChange = (project: ProjectSlug | 'all') => {
+    setSelectedProject(project)
+    setCurrentPage(1)
+  }
 
   // Pagination
-  const totalPages = Math.ceil(learnings.length / pageSize)
+  const totalPages = Math.ceil(filteredLearnings.length / pageSize)
   const startIndex = (currentPage - 1) * pageSize
-  const displayedLearnings = learnings.slice(startIndex, startIndex + pageSize)
+  const displayedLearnings = filteredLearnings.slice(startIndex, startIndex + pageSize)
 
   if (learnings.length === 0) {
     return (
@@ -41,6 +60,38 @@ export default function LearningsTimeline({ learnings, pageSize = 10 }: Props) {
 
   return (
     <div className="space-y-4">
+      {/* Filter Pills */}
+      {availableProjects.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handleFilterChange('all')}
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+              selectedProject === 'all'
+                ? 'bg-orange-500 text-white'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            All ({learnings.length})
+          </button>
+          {availableProjects.map(project => {
+            const count = learnings.filter(l => l.project === project).length
+            return (
+              <button
+                key={project}
+                onClick={() => handleFilterChange(project)}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  selectedProject === project
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                {PROJECT_NAMES[project]} ({count})
+              </button>
+            )
+          })}
+        </div>
+      )}
+
       {/* Timeline */}
       <div className="relative space-y-0">
         {/* Vertical line */}
