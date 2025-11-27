@@ -139,67 +139,34 @@ Consolidated 3 sections into unified `ContributorCards`. Removed competitive ele
 
 ---
 
-## Phase 4b: DRY Projects Infrastructure ⬜
+## Phase 4b: DRY Projects Infrastructure ✅
 
 **Goal:** Create shared YAML-based projects data system so projects appear consistently on both home page and build log.
+
+**Completed:** 2025-11-27
 
 ### Tasks
 
 | Task | Description | Status |
 |------|-------------|--------|
-| **Projects YAML + Schema** ([#39](https://github.com/eeshansrivastava89/soma-portfolio/issues/39)) | YAML data file with JSON schema for VS Code | ⬜ Not started |
+| **Projects YAML + Schema** ([#39](https://github.com/eeshansrivastava89/soma-portfolio/issues/39)) | YAML data file with JSON schema for VS Code | ✅ Done |
 
-### Implementation Plan
+### Progress Log
 
-**1. Create `projects.yaml` in shared data**
-```yaml
-# packages/shared/src/data/projects.yaml
-projects:
-  - id: ab-simulator
-    name: A/B Test Simulator
-    url: /ab-simulator/
-    status: live  # live | in-progress | coming-soon
-    description: Interactive tool for learning A/B testing fundamentals. Run experiments, visualize statistical significance, and understand the math behind the scenes.
-    shortDescription: Interactive tool for learning A/B testing fundamentals
-    tags:
-      - name: Astro
-        color: orange
-      - name: React
-        color: sky
-      - name: Tailwind
-        color: cyan
-      - name: Plotly
-        color: violet
-```
+**Commit:** `8082a26`
 
-**2. Create TypeScript types + loader**
-- `packages/shared/src/lib/projects.ts`
-- `Project` interface with all fields
-- `parseProjectsYaml()` function (same pattern as learnings)
+**New files:**
+- `packages/shared/src/data/projects.yaml` — Project data with tags and status
+- `packages/shared/src/data/projects.schema.json` — JSON schema for VS Code autocomplete
+- `packages/shared/src/lib/projects.ts` — TypeScript types, color configs, parser
+- `packages/shared/src/components/ProjectCard.astro` — Shared component with full/compact variants
 
-**3. Create shared `ProjectCard.astro` component**
-- `packages/shared/src/components/ProjectCard.astro`
-- Props: `project`, `variant: 'full' | 'compact'`
-- Full variant = Build Log style (large card, "Try It →" button)
-- Compact variant = Home page style (smaller, nested inside section card)
+**Key changes:**
+- `tailwind.config.js` — Added shared package to content paths
+- `src/pages/index.astro` — Uses ProjectCard with `variant="compact"`
+- `packages/build-log/src/pages/index.astro` — Uses ProjectCard with `variant="full"`
 
-**4. Update both pages**
-- `src/pages/index.astro` → import projects, loop with `variant="compact"`
-- `packages/build-log/src/pages/index.astro` → import projects, loop with `variant="full"`
-
-**5. Add JSON schema**
-- `packages/shared/src/data/projects.schema.json` for VS Code autocomplete
-
-### Files to Create/Modify
-
-| File | Action |
-|------|--------|
-| `packages/shared/src/data/projects.yaml` | Create |
-| `packages/shared/src/data/projects.schema.json` | Create |
-| `packages/shared/src/lib/projects.ts` | Create |
-| `packages/shared/src/components/ProjectCard.astro` | Create |
-| `src/pages/index.astro` | Modify - use shared component |
-| `packages/build-log/src/pages/index.astro` | Modify - use shared component |
+**Result:** Add a project once in `projects.yaml`, it appears on both home page and build log with appropriate styling.
 
 ---
 
