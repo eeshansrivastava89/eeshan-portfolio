@@ -1,0 +1,127 @@
+---
+import SiteLayout from '../../../../shared/src/layouts/SiteLayout.astro'
+import BuildLogView from '../../components/BuildLogView'
+import StartHereGuide from '../../components/StartHereGuide'
+import { validateBuildLogData } from '../../lib/validate-build-log'
+
+// Data source (overwritten by fetch script). Keep defaults for local preview.
+import buildLogData from '../../data/build-log-data.json'
+
+const validatedData = validateBuildLogData(buildLogData)
+if (!validatedData) {
+	throw new Error('Invalid build-log-data.json. Run: npm run fetch:data')
+}
+
+const { tasks, contributors, recentActivity } = validatedData
+
+// Compute stats
+const totalContributors = contributors.length
+const mergedCount = tasks.filter(t => t.status === 'merged').length
+const openCount = tasks.filter(t => t.status === 'open').length
+---
+
+<SiteLayout meta={{ title: 'Contribute — The Build Log' }}>
+	<div class='w-full space-y-12'>
+
+		<!-- ============================================ -->
+		<!-- HERO                                         -->
+		<!-- ============================================ -->
+		<section class='space-y-4'>
+			<a href='/build-log/' class='inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition'>
+				← Back to Build Log
+			</a>
+			
+			<div class='space-y-4'>
+				<h1 class='text-2xl font-bold text-foreground sm:text-4xl'>Want to Contribute?</h1>
+				<p class='max-w-2xl text-base text-muted-foreground'>
+					Claim a task, open a PR, get code review, and ship. Real projects, real GitHub history. Build your portfolio while helping me build mine.
+				</p>
+				
+				<!-- Stats -->
+				<div class='flex flex-wrap items-center gap-6 text-sm'>
+					<div class='flex items-center gap-1.5'>
+						<span class='text-2xl font-bold text-foreground'>{totalContributors}</span>
+						<span class='text-muted-foreground'>contributors</span>
+					</div>
+					<div class='flex items-center gap-1.5'>
+						<span class='text-2xl font-bold text-emerald-600'>{mergedCount}</span>
+						<span class='text-muted-foreground'>merged</span>
+					</div>
+					<div class='flex items-center gap-1.5'>
+						<span class='text-2xl font-bold text-orange-500'>{openCount}</span>
+						<span class='text-muted-foreground'>open</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================================ -->
+		<!-- Start Here Guide                             -->
+		<!-- ============================================ -->
+		<section class='space-y-6'>
+			<StartHereGuide client:load />
+		</section>
+
+		<!-- ============================================ -->
+		<!-- Tasks & Contributors                         -->
+		<!-- ============================================ -->
+		<section class='space-y-6'>
+			<BuildLogView tasks={tasks} contributors={contributors} recentActivity={recentActivity} client:load />
+		</section>
+
+		<!-- ============================================ -->
+		<!-- How to Ship / FAQ                            -->
+		<!-- ============================================ -->
+		<section id='how-to' class='grid gap-4 lg:grid-cols-[2fr_1fr]'>
+			<div class='rounded-2xl border border-border bg-primary-foreground p-4 shadow-lg shadow-black/5'>
+				<h2 class='text-xl font-semibold text-foreground'>How to Ship</h2>
+				<ol class='mt-3 list-decimal space-y-3 pl-5 text-sm text-muted-foreground'>
+					<li>
+						<span class='font-semibold text-foreground'>Claim the issue:</span> comment on GitHub to
+						reserve your slot; unclaimed issues are fair game.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Branch naming:</span>
+						<code class='rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-1 text-[11px]'>feature/your-handle-topic</code
+						>.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Setup env:</span> add PostHog + Supabase keys;
+						run
+						<code class='rounded bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-1 text-[11px]'>npm run dev</code>.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Validate:</span> play the flow, keep console
+						clean, lint if you touch TS/JS.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>PR template:</span> include summary, screenshots/gifs
+						for UI, checklist for tracking changes.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Optional:</span> add a 30–60s Loom demo for reviewers.
+					</li>
+				</ol>
+			</div>
+			<div id='faq' class='rounded-2xl border border-border bg-primary-foreground p-4 shadow-lg shadow-black/5'>
+				<h2 class='text-xl font-semibold text-foreground'>FAQ & Compliance</h2>
+				<ul class='mt-3 space-y-2 text-sm text-muted-foreground'>
+					<li>
+						<span class='font-semibold text-foreground'>Non-commercial:</span> personal educational project.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Time:</span> issues marked for scope; async friendly.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Stack:</span> Astro, Tailwind, PostHog, Supabase/PostgREST,
+						Plotly.
+					</li>
+					<li>
+						<span class='font-semibold text-foreground'>Taken issue?</span> pick another or waitlist
+						in comments.
+					</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+</SiteLayout>
