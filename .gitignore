@@ -22,6 +22,7 @@ pnpm-debug.log*
 .DS_Store
 .vercel
 
-# secret / not to publish files
-#supabase-schema.sql
-#PROJECT_HISTORY.md
+# internal / not to publish
+internal/
+docs/
+.github/instructions/
