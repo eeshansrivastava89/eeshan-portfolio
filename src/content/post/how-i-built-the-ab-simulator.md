@@ -98,4 +98,4 @@ The A/B Simulator is just the first step. It proves that you can run a full prod
 - **Backend:** Supabase (Postgres + Edge Functions)
 - **Viz:** Plotly.js (Client-side rendering)
 
-[Check out the code on GitHub](https://github.com/eeshansrivastava89/eeshan-portfolio) or [Try the Simulator](/ab-simulator).
+[Check out the code on GitHub](https://github.com/eeshansrivastava89/ds-apps-main) or [Try the Simulator](/ab-simulator).
