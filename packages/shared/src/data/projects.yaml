@@ -31,6 +31,13 @@ projects:
       - GitHub Copilot handled repetitive refactors and test generation
       - Claude designed the PostHog → Supabase data pipeline architecture
       - I architected the system, defined requirements, and reviewed all code
+    notebooks:
+      - id: ab-test-analysis
+        title: "A/B Test Analysis"
+        description: "End-to-end statistical analysis of the Pineapple Finder experiment with hypothesis testing, regression, and power analysis"
+        path: analytics/notebooks/ab_test_analysis.ipynb
+        schedule: weekly
+        outputPath: ab-simulator/ab-test-analysis
 
   - id: prompt-debugger
     name: Prompt Debugger

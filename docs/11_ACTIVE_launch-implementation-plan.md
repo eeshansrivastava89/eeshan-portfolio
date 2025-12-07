@@ -272,8 +272,8 @@ Commit HTML to public/analysis/ → Fly deploys with fresh HTML
 | ✅ | Section 9: Visualizations | CI plot, daily trend chart |
 | ✅ | Section 10: Post-hoc power | Power=12.8%, MDE=5.8s at n=49 |
 | ✅ | Section 11: Conclusions | Recommend: Do NOT ship Variant B |
-| ☐ | Build integration | papermill + nbconvert in GH Actions |
-| ☐ | Create `/projects/ab-simulator/analysis` page | Embed rendered HTML |
+| ✅ | Build integration | GH Actions workflow with matrix build |
+| ✅ | Create `/projects/ab-simulator/analysis` page | Dynamic Astro page with iframe embed |
 
 ### 6.2 Other Content
 

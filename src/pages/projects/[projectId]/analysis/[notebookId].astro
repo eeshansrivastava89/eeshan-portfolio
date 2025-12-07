@@ -1,0 +1,169 @@
+---
+/**
+ * Dynamic Analysis Page for Project Notebooks
+ * 
+ * Embeds rendered HTML from notebooks configured in projects.yaml
+ * 
+ * URL pattern: /projects/{projectId}/analysis/{notebookId}
+ * Example: /projects/ab-simulator/analysis/ab-test-analysis
+ */
+import PageLayout from '../../../../layouts/BaseLayout.astro'
+import Section from '../../../../components/Section.astro'
+import { Icon } from 'astro-icon/components'
+
+import { parseProjectsYaml } from '../../../../../packages/shared/src/lib/projects'
+import projectsYaml from '../../../../../packages/shared/src/data/projects.yaml?raw'
+import fs from 'node:fs'
+import path from 'node:path'
+
+// Generate static paths for all notebooks
+export async function getStaticPaths() {
+  const allProjects = parseProjectsYaml(projectsYaml)
+  
+  const paths = []
+  for (const project of allProjects) {
+    if (project.notebooks && Array.isArray(project.notebooks)) {
+      for (const notebook of project.notebooks) {
+        paths.push({
+          params: { 
+            projectId: project.id, 
+            notebookId: notebook.id 
+          },
+          props: { 
+            project, 
+            notebook 
+          }
+        })
+      }
+    }
+  }
+  
+  return paths
+}
+
+const { projectId, notebookId } = Astro.params
+const { project, notebook } = Astro.props
+
+// Try to load the rendered HTML
+let notebookHtml = ''
+let lastUpdated = ''
+let notebookExists = false
+
+try {
+  const htmlPath = path.join(process.cwd(), 'public', 'analysis', notebook.outputPath, `${notebook.id}.html`)
+  if (fs.existsSync(htmlPath)) {
+    notebookHtml = fs.readFileSync(htmlPath, 'utf-8')
+    const stats = fs.statSync(htmlPath)
+    lastUpdated = stats.mtime.toISOString().split('T')[0]
+    notebookExists = true
+  }
+} catch (e) {
+  console.warn(`Notebook HTML not found: ${notebook.outputPath}/${notebook.id}.html`)
+}
+
+// Build GitHub link to source notebook
+const githubNotebookUrl = `https://github.com/eeshansrivastava89/ds-apps-main/blob/main/${notebook.path}`
+---
+
+<PageLayout meta={{ 
+  title: `${notebook.title} | ${project.name}`, 
+  description: notebook.description 
+}}>
+  <div class='flex w-full flex-col gap-y-8'>
+    
+    <!-- Breadcrumb -->
+    <nav class='flex items-center gap-2 text-sm text-muted-foreground'>
+      <a href='/projects' class='hover:text-foreground'>Projects</a>
+      <span>/</span>
+      <a href={project.hubUrl || `/projects/${project.id}`} class='hover:text-foreground'>{project.name}</a>
+      <span>/</span>
+      <span class='text-foreground'>Analysis</span>
+    </nav>
+
+    <!-- Header -->
+    <header class='space-y-4'>
+      <div class='flex items-start justify-between gap-4'>
+        <div class='space-y-2'>
+          <h1 class='text-2xl font-bold text-foreground sm:text-3xl'>{notebook.title}</h1>
+          <p class='max-w-2xl text-muted-foreground'>{notebook.description}</p>
+        </div>
+        
+        <a
+          href={githubNotebookUrl}
+          target='_blank'
+          rel='noopener noreferrer'
+          class='flex shrink-0 items-center gap-2 rounded border border-border px-3 py-2 text-sm text-muted-foreground transition hover:border-foreground/30 hover:text-foreground'
+        >
+          <Icon name='mdi:github' class='h-4 w-4' />
+          View Source
+        </a>
+      </div>
+      
+      {lastUpdated && (
+        <div class='flex items-center gap-4 text-sm text-muted-foreground'>
+          <span class='flex items-center gap-1.5'>
+            <Icon name='mdi:calendar' class='h-4 w-4' />
+            Last updated: {lastUpdated}
+          </span>
+          <span class='flex items-center gap-1.5'>
+            <Icon name='mdi:refresh' class='h-4 w-4' />
+            Refreshes: {notebook.schedule}
+          </span>
+        </div>
+      )}
+    </header>
+
+    <!-- Notebook Content -->
+    {notebookExists ? (
+      <div class='notebook-container overflow-hidden border border-border bg-white'>
+        <!-- Embed the HTML in an iframe for isolation -->
+        <iframe 
+          srcdoc={notebookHtml}
+          class='h-[80vh] w-full border-0'
+          title={notebook.title}
+          sandbox='allow-scripts allow-same-origin'
+        />
+      </div>
+    ) : (
+      <div class='border border-dashed border-border p-8 text-center'>
+        <Icon name='mdi:notebook-outline' class='mx-auto h-12 w-12 text-muted-foreground/50' />
+        <h2 class='mt-4 text-lg font-medium text-foreground'>Analysis Coming Soon</h2>
+        <p class='mt-2 text-muted-foreground'>
+          This notebook will be generated on the next scheduled run ({notebook.schedule}).
+        </p>
+        <a
+          href={githubNotebookUrl}
+          target='_blank'
+          rel='noopener noreferrer'
+          class='mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'
+        >
+          <Icon name='mdi:github' class='h-4 w-4' />
+          View source notebook on GitHub
+        </a>
+      </div>
+    )}
+
+    <!-- Back to Project -->
+    <div class='border-t border-border pt-6'>
+      <a
+        href={project.hubUrl || `/projects/${project.id}`}
+        class='inline-flex items-center gap-2 text-muted-foreground transition hover:text-foreground'
+      >
+        ← Back to {project.name}
+      </a>
+    </div>
+
+  </div>
+</PageLayout>
+
+<style>
+  /* Style adjustments for embedded notebook */
+  .notebook-container iframe {
+    background: white;
+  }
+  
+  /* Dark mode handling - notebooks render with white background */
+  :global(.dark) .notebook-container {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+</style>
