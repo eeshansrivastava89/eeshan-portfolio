@@ -1,0 +1,61 @@
+---
+/**
+ * Work Experience Timeline component
+ * Visual style matches the project Timeline component
+ */
+interface TimelineItem {
+  timespan: string
+  title: string
+  company?: string
+  description?: string
+  logo?: string
+  details?: string[]
+}
+
+interface Props {
+  items: TimelineItem[]
+}
+
+const { items } = Astro.props
+
+// Split into current (has "Present") vs past
+const currentItems = items.filter(item => item.timespan.includes('Present'))
+const pastItems = items.filter(item => !item.timespan.includes('Present'))
+---
+
+<div class='relative ml-3 border-l-2 border-border pl-6'>
+  {/* Current Role */}
+  {currentItems.map((item) => (
+    <div class='relative pb-6'>
+      {/* Green dot for current */}
+      <div class='absolute -left-[31px] flex h-4 w-4 items-center justify-center rounded-full border-2 border-emerald-500 bg-background'>
+        <div class='h-2 w-2 rounded-full bg-emerald-500'></div>
+      </div>
+      <div class='space-y-1'>
+        <div class='flex items-center gap-2'>
+          <span class='text-xs font-medium uppercase tracking-wide text-emerald-600 dark:text-emerald-400'>{item.timespan}</span>
+        </div>
+        <h4 class='font-semibold text-foreground'>{item.title}</h4>
+        {item.company && <p class='text-sm text-muted-foreground'>{item.company}</p>}
+        {item.description && <p class='text-sm text-muted-foreground'>{item.description}</p>}
+      </div>
+    </div>
+  ))}
+  
+  {/* Past Roles */}
+  {pastItems.map((item, index) => (
+    <div class={`relative ${index < pastItems.length - 1 ? 'pb-6' : ''}`}>
+      {/* Gray dot for past */}
+      <div class='absolute -left-[31px] flex h-4 w-4 items-center justify-center rounded-full border-2 border-gray-300 bg-background dark:border-gray-600'>
+        <div class='h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-600'></div>
+      </div>
+      <div class='space-y-1'>
+        <div class='flex items-center gap-2'>
+          <span class='text-xs font-medium uppercase tracking-wide text-muted-foreground'>{item.timespan}</span>
+        </div>
+        <h4 class='font-medium text-foreground'>{item.title}</h4>
+        {item.company && <p class='text-sm text-muted-foreground'>{item.company}</p>}
+      </div>
+    </div>
+  ))}
+</div>

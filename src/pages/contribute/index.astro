@@ -5,13 +5,13 @@ const lastUpdated = 'November 30, 2025'
 ---
 
 <BaseLayout meta={{ title: 'Build With Me' }}>
-  <article class="prose prose-slate dark:prose-invert max-w-none">
+  <div class="flex w-full flex-col gap-y-4">
     <!-- Back link -->
-    <a href="/" class="no-underline text-sm text-muted-foreground hover:text-foreground transition inline-flex items-center gap-1 mb-6">
+    <a href="/" class="no-underline text-sm text-muted-foreground hover:text-foreground transition inline-flex items-center gap-1">
       ← Back to Home
     </a>
 
-    <h1 class="text-2xl font-bold mb-2">Build With Me</h1>
+    <h1 class="text-2xl font-bold">Build With Me</h1>
     
     <blockquote class="border-l-4 border-slate-300 dark:border-slate-600 pl-4 italic text-muted-foreground not-italic">
       This is a living document. <strong>Last updated: {lastUpdated}</strong>
@@ -21,7 +21,7 @@ const lastUpdated = 'November 30, 2025'
       I'm building in public. This page tracks what I'm working on, what's coming next, and how you can contribute.
     </p>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- Current Focus -->
     <h2 class="text-xl font-semibold flex items-center gap-2">🎯 Current Focus</h2>
@@ -53,7 +53,7 @@ const lastUpdated = 'November 30, 2025'
       </table>
     </div>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- Active Work -->
     <h2 class="text-xl font-semibold flex items-center gap-2">📋 Active Work</h2>
@@ -101,7 +101,7 @@ const lastUpdated = 'November 30, 2025'
       <strong>See all open issues →</strong> <a href="https://github.com/eeshansrivastava89/ds-apps-main/issues?q=is%3Aissue+is%3Aopen" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub Issues</a>
     </p>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- Quick Links -->
     <h2 class="text-xl font-semibold flex items-center gap-2">🔗 Quick Links</h2>
@@ -129,7 +129,7 @@ const lastUpdated = 'November 30, 2025'
       </li>
     </ul>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- How to Contribute -->
     <h2 class="text-xl font-semibold flex items-center gap-2">🚀 How to Contribute</h2>
@@ -145,7 +145,7 @@ const lastUpdated = 'November 30, 2025'
       <strong>Stack:</strong> Astro · Tailwind · PostHog · Supabase · TypeScript
     </p>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- Contributors -->
     <h2 class="text-xl font-semibold flex items-center gap-2">👥 Contributors</h2>
@@ -173,7 +173,7 @@ const lastUpdated = 'November 30, 2025'
       Want to be listed here? Ship a PR!
     </p>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- Follow the Build -->
     <h2 class="text-xl font-semibold flex items-center gap-2">📰 Follow the Build</h2>
@@ -196,7 +196,7 @@ const lastUpdated = 'November 30, 2025'
       </li>
     </ul>
 
-    <hr class="my-4 border-slate-200 dark:border-slate-700" />
+    <hr class="border-slate-200 dark:border-slate-700" />
 
     <!-- FAQ -->
     <h2 class="text-xl font-semibold flex items-center gap-2">❓ FAQ</h2>
@@ -226,5 +226,5 @@ const lastUpdated = 'November 30, 2025'
       </table>
     </div>
 
-  </article>
+  </div>
 </BaseLayout>

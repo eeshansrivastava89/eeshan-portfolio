@@ -63,8 +63,8 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				// sans: ['Lora', ...fontFamily.serif]
-				sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif']
+				sans: ['Lato', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				serif: ['Playfair Display', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif']
 			}
 		}
 	}

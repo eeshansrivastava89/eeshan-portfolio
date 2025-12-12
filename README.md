@@ -1,58 +1,124 @@
-# Soma Portfolio & A/B Simulator
+# eeshans.com — Full Stack Data Scientist Portfolio
 
-An Astro-based personal portfolio + blog with an interactive A/B testing simulator (memory puzzle) backed by Supabase and PostHog. The simulator demonstrates feature flagging, event capture, real-time analytics (SQL views + RPCs), and frontend charting with Plotly.
+Personal portfolio site with interactive data science projects, built end-to-end with AI assistance.
 
-## Stack (Concise)
+**Live:** [eeshans.com](https://eeshans.com)
 
-- Astro + TypeScript + Tailwind
-- Supabase (SQL views + SECURITY DEFINER RPCs via PostgREST)
-- PostHog (feature flag + event ingestion)
-- Plotly (charts/funnel/table) on the simulator page
-- Fly.io (Docker build with public build args) + GitHub Actions (deploy + smoke checks)
+## What's Here
 
-## Key Folders
+- **Portfolio site** — About, projects, writing, contribution guide
+- **A/B Simulator** — Interactive memory game with real A/B testing, live stats, and full analysis pipeline
+- **Analytics pipeline** — PostHog → Supabase → live dashboards
+- **Analysis notebooks** — Publication-quality Jupyter notebooks rendered as HTML
+
+## Stack
+
+| Layer | Tech | Why |
+|-------|------|-----|
+| Framework | Astro 4.x | Static-first, React islands for interactivity |
+| Styling | Tailwind CSS | Utility-first, dark mode, Playfair + Lato typography |
+| Islands | React 19 | Interactive components (stats, game, comments) |
+| Analytics | PostHog | Events, session replay, feature flags |
+| Database | Supabase (Postgres) | Views, PostgREST API, edge functions |
+| Hosting | Cloudflare Pages | Fast, free, global CDN |
+| Proxy | Cloudflare Worker | PostHog reverse proxy (bypass blockers) |
+| Monorepo | pnpm workspaces | Shared components across packages |
+
+## Project Structure
 
 ```
-public/js/ab-sim/   # All simulator & dashboard logic (core, supabase-api, dashboard)
-src/pages/projects/ # Project pages including ab-test-simulator.astro
-supabase-schema.sql # Source of truth for views/RPCs
-.github/workflows/  # deploy.yml + smoke.yml health checks
+ds-apps-main/
+├── src/                      # Main site
+│   ├── pages/               # Routes (index, about, projects, writing, contribute)
+│   ├── content/post/        # MDX blog posts
+│   ├── components/          # Site-specific components
+│   ├── data/                # YAML data (timeline, social links)
+│   └── styles/              # Global CSS (Tailwind + fonts)
+├── packages/
+│   ├── ab-simulator/        # Standalone A/B testing game
+│   └── shared/              # Shared components, utils, projects.yaml
+├── analytics/
+│   └── notebooks/           # Jupyter analysis notebooks
+├── internal/                # Cloudflare worker, Supabase schema
+├── docs/                    # Project planning docs
+└── public/                  # Static assets
 ```
-
-## Simulator Script Layout
-
-`public/js/ab-sim/supabase-api.js` – RPC/view fetch helpers (normalized arrays → objects)
-`public/js/ab-sim/core.js` – Feature flag resolution, game state, timers, events, leaderboard
-`public/js/ab-sim/dashboard.js` – Fetch + render analytics charts/tables at a fixed interval
 
 ## Quick Start
 
 ```bash
-npm install
-PUBLIC_SUPABASE_URL=... \
-PUBLIC_SUPABASE_ANON_KEY=... \
-PUBLIC_POSTHOG_KEY=... \
-npm run dev
+# Install dependencies
+pnpm install
+
+# Create .env with required keys
+cp .env.example .env
+# Edit .env with your Supabase/PostHog keys
+
+# Run dev server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
 
-Open: http://localhost:4321/projects/ab-test-simulator
+**Environment variables:**
+- `PUBLIC_SUPABASE_URL` — Supabase project URL
+- `PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key (safe for client)
+- `PUBLIC_POSTHOG_KEY` — PostHog project key
+- `PUBLIC_POSTHOG_HOST` — PostHog host (or proxy URL)
 
-Environment variables with `PUBLIC_` are exposed client-side (safe public PostgREST + PostHog keys).
+## Key Pages
 
-## For Windows only
-✅ Windows: Requires git config core.symlinks true (or clone with admin rights)
+| Route | Description |
+|-------|-------------|
+| `/` | Home — hero, projects, newsletter |
+| `/about` | Bio, experience timeline, stack |
+| `/projects` | Project index with live stats |
+| `/projects/ab-simulator` | A/B Simulator hub with analysis |
+| `/ab-simulator` | The actual game (embedded from package) |
+| `/writing` | Blog posts (technical + essays) |
+| `/contribute` | Build with me — how to follow along |
 
-## Build & Preview
+## Analytics Pipeline
+
+```
+User Action → PostHog SDK → Cloudflare Worker (proxy) → PostHog Cloud
+                                                            ↓
+                                                      Batch Export
+                                                            ↓
+Supabase Edge Function ← Webhook ← PostHog
+        ↓
+   PostgreSQL (posthog_events, posthog_batch_events)
+        ↓
+   Views (v_ab_simulator_stats, v_page_views)
+        ↓
+   PostgREST API → React islands → Live stats
+```
+
+## Development
 
 ```bash
-npm run build
-npm run preview
+# Main site
+pnpm dev
+
+# A/B Simulator package only
+pnpm dev:ab-sim
+
+# Lint and format
+pnpm lint
+
+# Type check
+pnpm build:check
 ```
 
-## Deployment (Fly.io)
+## Deployment
 
-Supply public Supabase vars at build time (build args or fly.toml) so Astro can inline them:
+**Cloudflare Pages** (automatic on push to main via GitHub integration)
 
+For manual Fly.io deployment:
 ```bash
 fly deploy \
     --build-arg PUBLIC_SUPABASE_URL=... \
@@ -60,69 +126,13 @@ fly deploy \
     --build-arg PUBLIC_POSTHOG_KEY=...
 ```
 
-GitHub Actions workflow (`deploy.yml`) can automate on push to `main` (ensure build args are defined in `fly.toml` under `[build.args]`).
+## Analysis Notebooks
 
-## Smoke Checks
+Jupyter notebooks in `analytics/notebooks/` are auto-executed via GitHub Actions and rendered as HTML:
 
-`smoke.yml` hits:
-
-- `rpc/variant_overview`
-- `rpc/recent_completions`
-- `rpc/completion_time_distribution`
-- `v_conversion_funnel`
-
-Repo secrets/variables required:
-`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`
-
-## Rotating Public Keys
-
-1. Update `.env` locally.
-2. Redeploy with new build args.
-3. Update GitHub Actions secrets for smoke checks.
-
-## Future (Phase 2 ideas)
-
-- Adaptive polling + manual refresh button
-- Per-session `game_session_id` for richer analytics
-- Lighter chart library if bundle size becomes a concern
+- `ab_dashboard_health.ipynb` — Dashboard monitoring
+- Full A/B test analysis at `/projects/ab-simulator/analysis/ab-test-analysis`
 
 ## License
 
 MIT
-
-## Operations (Supabase + Deploy)
-
-### Rotate PUBLIC\_\* keys
-
-- Update local `.env` with new values:
-  - `PUBLIC_SUPABASE_URL`
-  - `PUBLIC_SUPABASE_ANON_KEY`
-- For production deploys on Fly.io, provide these at build time (safe to expose, they’re public):
-  - via `fly.toml` under `[build.args]`, or
-  - via deploy flags: `fly deploy --build-arg PUBLIC_SUPABASE_URL=... --build-arg PUBLIC_SUPABASE_ANON_KEY=...`
-- Update GitHub repository settings for smoke checks:
-  - Settings → Secrets and variables → Actions
-  - Add secrets (or variables) with the same two names so `.github/workflows/smoke.yml` can run.
-
-### Redeploy
-
-1. Commit changes
-2. `fly deploy` (or let GitHub Actions run `.github/workflows/deploy.yml` on push to main)
-
-### Monitoring (Smoke checks)
-
-- Workflow `.github/workflows/smoke.yml` runs every 30 minutes and on-demand.
-- It calls these endpoints on Supabase PostgREST:
-  - `rpc/variant_overview`
-  - `rpc/recent_completions`
-  - `rpc/completion_time_distribution`
-  - `v_conversion_funnel`
-- Configure repository secrets or variables:
-  - `PUBLIC_SUPABASE_URL`
-  - `PUBLIC_SUPABASE_ANON_KEY`
-
-### Performance notes (optional)
-
-- Current SQL includes targeted indexes for common filters and aggregations.
-- If distribution queries grow heavy, consider a materialized view and refresh with `pg_cron`.
-- Frontend scripts on the simulator page are inlined (`is:inline`), so cache-busting isn’t required for those assets.

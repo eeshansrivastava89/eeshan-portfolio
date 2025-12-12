@@ -44,7 +44,8 @@ module.exports = {
 				}
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif']
+				sans: ['Lato', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				serif: ['Playfair Display', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif']
 			}
 		}
 	},

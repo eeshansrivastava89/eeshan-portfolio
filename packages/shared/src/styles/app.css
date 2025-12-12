@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap');
+/* Fonts - Playfair Display for headings, Lato for body */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +7,7 @@
 
 @layer base {
 	:root {
-		--background: 210 33% 99%;
+		--background: 40 33% 98%;  /* Warm cream */
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
 		--card-foreground: 240 10% 3.9%;
@@ -17,7 +18,7 @@
 		--secondary: 240 4.8% 95.9%;
 		--secondary-foreground: 240 5.9% 10%;
 		--muted: 240 4.8% 95.9%;
-		--muted-foreground: 240 3.8% 46.1%;
+		--muted-foreground: 240 3.8% 20%;
 		--accent: 240 4.8% 95.9%;
 		--accent-foreground: 240 5.9% 10%;
 		--destructive: 0 72.22% 50.59%;
@@ -56,6 +57,10 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+	}
+	/* Serif headings site-wide */
+	h1, h2, h3, h4, h5, h6 {
+		@apply font-serif;
 	}
 }
 

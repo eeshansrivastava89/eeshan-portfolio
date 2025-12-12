@@ -1,7 +1,7 @@
 ---
 import PageLayout from '../layouts/BaseLayout.astro'
 import Section from '../components/Section.astro'
-import Timeline from '../components/Timeline'
+import WorkTimeline from '../components/WorkTimeline.astro'
 
 import { parseProjectsYaml, getLiveProjects } from '../../packages/shared/src/lib/projects'
 import projectsYaml from '../../packages/shared/src/data/projects.yaml?raw'
@@ -24,19 +24,21 @@ const liveProjects = getLiveProjects(allProjects)
 	<div class='flex w-full flex-col gap-y-10'>
 		<Section title='About'>
 			<p class='text-muted-foreground'>
-				Data science leader with 10+ years of experience in experimentation, analytics, and product
-				development. Currently leading data science initiatives at Starbucks, focusing on customer
-				behavior modeling and A/B testing at scale.
+				I sit at an unusual intersection: <strong>Computer Science</strong> by training, <strong>Data Science</strong> by profession, <strong>MBA</strong> by transformation.
 			</p>
 			<p class='mt-4 text-muted-foreground'>
-				I believe the best way to understand data is to build the system that creates it. That's why I build 
-				end-to-end products in my personal time—not to replace engineers, but to understand the tradeoffs 
-				firsthand. It makes me a better collaborator and a more credible leader.
+				CS gave me the ability to build systems—not just analyze data, but understand architecture, code quality, and deployment. Data Science became my craft, self-taught and continuously evolving through a decade of real-world experimentation, analytics, and ML at scale. The MBA was my inflection point—it pulled me out of the back office and into the boardroom, turning me from an engineer who happened to work with data into a business-facing consultant who could translate technical depth into executive decisions.
+			</p>
+			<p class='mt-4 text-muted-foreground'>
+				Most data scientists are either technical but can't communicate business value, or business-savvy but can't build anything themselves. I can <strong>build the product, analyze the data, AND present to the exec team</strong>. That's rare.
+			</p>
+			<p class='mt-4 text-muted-foreground'>
+				Currently leading data science at Starbucks, focusing on customer behavior modeling and A/B testing at scale. In my personal time, I build end-to-end products—not to replace engineers, but to stay sharp, understand the tradeoffs firsthand, and lead by example.
 			</p>
 		</Section>
 
 		<Section title='Experience'>
-			<Timeline client:load items={timelineData.timeline} />
+			<WorkTimeline items={timelineData.timeline} />
 		</Section>
 
 		{liveProjects.length > 0 && (
@@ -57,5 +59,49 @@ const liveProjects = getLiveProjects(allProjects)
 				</a>
 			</Section>
 		)}
+
+		<Section title='Stack'>
+			<p class='mb-4 text-muted-foreground'>
+				This site is built with modern web tools and a data-first architecture.
+			</p>
+			<div class='overflow-x-auto'>
+				<table class='w-full text-sm'>
+					<tbody class='divide-y divide-border'>
+						<tr>
+							<td class='py-2 pr-4 font-medium w-24'>Framework</td>
+							<td class='py-2 text-muted-foreground'>Astro 4.x + React islands</td>
+						</tr>
+						<tr>
+							<td class='py-2 pr-4 font-medium'>Styling</td>
+							<td class='py-2 text-muted-foreground'>Tailwind CSS</td>
+						</tr>
+						<tr>
+							<td class='py-2 pr-4 font-medium'>Analytics</td>
+							<td class='py-2 text-muted-foreground'>PostHog → Supabase pipeline</td>
+						</tr>
+						<tr>
+							<td class='py-2 pr-4 font-medium'>Database</td>
+							<td class='py-2 text-muted-foreground'>Supabase (Postgres + PostgREST)</td>
+						</tr>
+						<tr>
+							<td class='py-2 pr-4 font-medium'>Hosting</td>
+							<td class='py-2 text-muted-foreground'>Cloudflare Pages + Workers</td>
+						</tr>
+						<tr>
+							<td class='py-2 pr-4 font-medium'>Monorepo</td>
+							<td class='py-2 text-muted-foreground'>pnpm workspaces</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<a 
+				href='https://github.com/eeshansrivastava89/ds-apps-main' 
+				target='_blank'
+				rel='noopener noreferrer'
+				class='mt-4 inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition'
+			>
+				View source on GitHub →
+			</a>
+		</Section>
 	</div>
 </PageLayout>
