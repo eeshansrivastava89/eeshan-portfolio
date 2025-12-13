@@ -1,0 +1,62 @@
+---
+/**
+ * Contributors component - displays recent GitHub contributors
+ * Fetches data at build time via getRecentContributors()
+ */
+import { getRecentContributors, type Contributor } from '../lib/github'
+
+interface Props {
+  days?: number
+  maxDisplay?: number
+}
+
+const { days = 30, maxDisplay = 10 } = Astro.props
+
+let contributors: Contributor[] = []
+try {
+  contributors = await getRecentContributors(days)
+} catch (e) {
+  console.error('Failed to load contributors:', e)
+}
+
+const displayContributors = contributors.slice(0, maxDisplay)
+const hasMore = contributors.length > maxDisplay
+---
+
+<div class="contributors">
+  {displayContributors.length > 0 ? (
+    <div class="flex flex-wrap items-center gap-3">
+      {displayContributors.map((contributor) => (
+        <a
+          href={contributor.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`@${contributor.login}`}
+          class="group relative"
+        >
+          <img
+            src={contributor.avatar_url}
+            alt={contributor.login}
+            class="h-10 w-10 rounded-full border-2 border-border transition-all group-hover:border-accent group-hover:scale-110"
+            loading="lazy"
+          />
+          <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
+            @{contributor.login}
+          </span>
+        </a>
+      ))}
+      {hasMore && (
+        <span class="text-sm text-muted-foreground">
+          +{contributors.length - maxDisplay} more
+        </span>
+      )}
+    </div>
+  ) : (
+    <p class="text-muted-foreground italic">
+      Be the first contributor! Check out the{' '}
+      <a href="https://github.com/eeshansrivastava89/ds-apps-main/issues" class="underline hover:text-accent">
+        open issues
+      </a>.
+    </p>
+  )}
+</div>
