@@ -3,12 +3,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '../../../packages/shared/src/components/Breadcrumbs.astro'
 import Contributors from '@/components/Contributors.astro'
 import { Icon } from 'astro-icon/components'
-import { getLiveProjects, getProjectsByStatus, STATUS_CONFIG } from '../../../packages/shared/src/lib/projects'
-import { getAllProjects } from '../../../packages/shared/src/data/projectLoader'
-
-const allProjects = getAllProjects()
-const liveProjects = getLiveProjects(allProjects)
-const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
 ---
 
 <BaseLayout meta={{ title: 'Build With Me' }}>
@@ -19,101 +13,191 @@ const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
     <section class="mt-6 mb-8">
       <h1 class="text-2xl font-bold text-foreground sm:text-3xl">Build With Me</h1>
       <p class="mt-2 text-base text-muted-foreground">
-        I'm building data science web apps in public. Contribute to existing projects or add a new web app. I provide a consistent underlying <a href="#stack" class="underline hover:text-foreground">tech stack</a> which should be fine for small projects. 
+        I'm building data science web apps in public. Contribute to existing projects or add a new web app.
       </p>
     </section>
 
-    <!-- Two Column: Options -->
-    <div class="grid gap-6 lg:grid-cols-2">
-      
-      <!-- Option 1: Fix Existing -->
-      <div class="border border-border bg-primary-foreground p-6">
-        <h2 class="text-lg font-bold text-foreground mb-3">Fix or Enhance Existing Apps</h2>
-        <ul class="space-y-2 text-base text-muted-foreground mb-4">
-          <li>Browse <a href="https://github.com/eeshansrivastava89/ds-apps-main/issues?q=is%3Aissue+is%3Aopen" class="underline hover:text-foreground">open issues</a></li>
-          <li>Claim by commenting</li>
-          <li>Branch, fix, PR</li>
-        </ul>
-        <div class="flex gap-3">
-          <a href="/contribute/guide#fix-existing" class="inline-block px-4 py-2 bg-foreground text-background text-sm font-medium hover:bg-foreground/90">Detailed Guide →</a>
-          <a href="https://github.com/eeshansrivastava89/ds-apps-main" class="inline-block px-4 py-2 border border-border text-sm hover:bg-muted">View Source</a>
-        </div>
-      </div>
-
-      <!-- Option 2: Build New -->
-      <div class="border border-border bg-primary-foreground p-6">
-        <h2 class="text-lg font-bold text-foreground mb-3">Build a New Web App</h2>
-        <ul class="space-y-2 text-base text-muted-foreground mb-4">
-          <li>Propose via <a href="https://github.com/eeshansrivastava89/ds-apps-main/discussions/new?category=new-data-science-web-app-proposals" class="underline hover:text-foreground">Discussion</a></li>
-          <li>Run <code class="bg-muted px-1.5 py-0.5 rounded text-sm">node scripts/create-package.mjs</code></li>
-          <li>Build, analyze, ship</li>
-        </ul>
-        <a href="/contribute/guide#build-new" class="inline-block px-4 py-2 bg-foreground text-background text-sm font-medium hover:bg-foreground/90">Detailed Guide →</a>
-      </div>
-
-    </div>
-
-    <!-- Guide CTA -->
-    <div class="mt-6 p-4 border-2 border-dashed border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-950/30">
-      <p class="font-medium text-amber-800 dark:text-amber-200">
-        🚀 New to contributing? <a href="/contribute/guide" class="underline hover:text-amber-900 dark:hover:text-amber-100 font-bold">Read the step-by-step guide →</a>
-      </p>
-    </div>
-
-    <!-- Contributors -->
-    <section class="mt-8 border border-border bg-primary-foreground p-6">
+    <!-- Recent Contributors -->
+    <section class="mb-8 border border-border bg-primary-foreground p-6">
       <h2 class="text-lg font-bold text-foreground mb-4">Recent Contributors</h2>
       <Contributors days={90} maxDisplay={8} />
     </section>
 
-    <!-- Current Projects -->
-    <section class="mt-6 border border-border bg-primary-foreground p-6">
-      <h2 class="text-lg font-bold text-foreground mb-3">Current Projects</h2>
-      <div class="space-y-3">
-        {liveProjects.map((project) => (
-          <div class="flex items-center justify-between border border-border bg-background p-3">
-            <div class="flex items-center gap-3">
-              <span class={`w-2 h-2 rounded-full ${STATUS_CONFIG[project.status].dotColor}`}></span>
-              <div>
-                <span class="font-medium">{project.name}</span>
-                <span class="text-sm text-muted-foreground ml-2 hidden sm:inline">{project.shortDescription}</span>
-              </div>
-            </div>
-            <div class="flex gap-3 text-sm">
-              {project.url && project.url !== '#' && (
-                <a href={project.url} class="text-foreground underline">Try →</a>
-              )}
-              {project.hubUrl && (
-                <a href={project.hubUrl} class="text-muted-foreground underline hover:text-foreground">Docs</a>
-              )}
-            </div>
-          </div>
-        ))}
-        {inProgressProjects.map((project) => (
-          <div class="flex items-center justify-between border border-border bg-background p-3 opacity-60">
-            <div class="flex items-center gap-3">
-              <span class={`w-2 h-2 rounded-full ${STATUS_CONFIG[project.status].dotColor}`}></span>
-              <div>
-                <span class="font-medium">{project.name}</span>
-                <span class="text-sm text-muted-foreground ml-2">({STATUS_CONFIG[project.status].label})</span>
-              </div>
-            </div>
-          </div>
-        ))}
+    <!-- Two Column: Options -->
+    <div class="grid gap-6 lg:grid-cols-2 mb-8">
+      
+      <!-- Option 1: Fix Existing -->
+      <div class="border border-border bg-primary-foreground p-6">
+        <h2 class="text-lg font-bold text-foreground mb-3">Option 1: Fix or Enhance</h2>
+        <ul class="space-y-2 text-base text-muted-foreground">
+          <li>• Browse <a href="https://github.com/eeshansrivastava89/ds-apps-main/issues?q=is%3Aissue+is%3Aopen" class="underline hover:text-foreground">open issues</a> (look for <code class="bg-muted px-1.5 py-0.5 rounded text-sm">diff:easy</code>)</li>
+          <li>• Claim by commenting "I'll work on this"</li>
+          <li>• Branch, fix, test, PR</li>
+        </ul>
+      </div>
+
+      <!-- Option 2: Build New -->
+      <div class="border border-border bg-primary-foreground p-6">
+        <h2 class="text-lg font-bold text-foreground mb-3">Option 2: Build New App</h2>
+        <ul class="space-y-2 text-base text-muted-foreground">
+          <li>• Propose via <a href="https://github.com/eeshansrivastava89/ds-apps-main/discussions/new?category=new-data-science-web-app-proposals" class="underline hover:text-foreground">GitHub Discussion</a></li>
+          <li>• Run <code class="bg-muted px-1.5 py-0.5 rounded text-sm">node scripts/create-package.mjs</code></li>
+          <li>• Build, analyze, ship</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Prerequisites -->
+    <section class="mb-8 border border-border bg-primary-foreground p-6">
+      <h2 class="text-lg font-bold text-foreground mb-4">Prerequisites</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left py-2 px-3 font-medium">Tool</th>
+              <th class="text-left py-2 px-3 font-medium">Check</th>
+              <th class="text-left py-2 px-3 font-medium">Install</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border">
+              <td class="py-2 px-3">Node.js 20+</td>
+              <td class="py-2 px-3"><code class="bg-muted px-1.5 py-0.5 rounded">node -v</code></td>
+              <td class="py-2 px-3"><a href="https://nodejs.org/" class="underline hover:text-foreground">nodejs.org</a></td>
+            </tr>
+            <tr class="border-b border-border">
+              <td class="py-2 px-3">pnpm 9+</td>
+              <td class="py-2 px-3"><code class="bg-muted px-1.5 py-0.5 rounded">pnpm -v</code></td>
+              <td class="py-2 px-3"><code class="bg-muted px-1.5 py-0.5 rounded">npm i -g pnpm</code></td>
+            </tr>
+            <tr class="border-b border-border">
+              <td class="py-2 px-3">Git + GitHub CLI</td>
+              <td class="py-2 px-3"><code class="bg-muted px-1.5 py-0.5 rounded">gh --version</code></td>
+              <td class="py-2 px-3"><a href="https://cli.github.com/" class="underline hover:text-foreground">cli.github.com</a></td>
+            </tr>
+            <tr class="border-b border-border">
+              <td class="py-2 px-3">Python 3.11+ (notebooks)</td>
+              <td class="py-2 px-3"><code class="bg-muted px-1.5 py-0.5 rounded">python --version</code></td>
+              <td class="py-2 px-3"><a href="https://python.org/" class="underline hover:text-foreground">python.org</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- Workflow -->
-    <section class="mt-6 border border-border bg-primary-foreground p-6">
-      <h2 class="text-lg font-bold text-foreground mb-3">Workflow Tips</h2>
-      <ul class="space-y-1 text-base text-muted-foreground">
-        <li><strong class="text-foreground">Use AI</strong> — <a href="/writing/how-i-ai" class="underline hover:text-foreground">How I AI</a> explains my approach</li>
-        <li><strong class="text-foreground">Test before PR</strong> — <code class="bg-muted px-1.5 py-0.5 rounded text-sm">pnpm dev</code> → <code class="bg-muted px-1.5 py-0.5 rounded text-sm">pnpm build</code></li>
-      </ul>
+    <!-- Environment / Analytics -->
+    <section class="mb-8 border border-border bg-primary-foreground p-6">
+      <h2 class="text-lg font-bold text-foreground mb-4">Environment Setup</h2>
+      <div class="space-y-4 text-base text-muted-foreground">
+        <div>
+          <h3 class="font-medium text-foreground mb-2">Quick Start</h3>
+          <p>Copy the example env file — it includes shared project keys:</p>
+          <pre class="mt-2 bg-zinc-900 text-zinc-100 p-3 rounded text-sm overflow-x-auto"><code>cp .env.example .env</code></pre>
+        </div>
+        <div>
+          <h3 class="font-medium text-foreground mb-2">What You Get</h3>
+          <ul class="mt-2 space-y-1 list-disc list-inside">
+            <li><strong>Supabase</strong> — Query production data in notebooks (read-only via RLS)</li>
+            <li><strong>PostHog</strong> — Track events locally to the shared project</li>
+          </ul>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Keys are public by design. Row Level Security prevents modifications to production data.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notebooks -->
+    <section class="mb-8 border border-border bg-primary-foreground p-6">
+      <h2 class="text-lg font-bold text-foreground mb-4">Adding Notebooks</h2>
+      <div class="space-y-4 text-base text-muted-foreground">
+        <p>Each app can have Jupyter notebooks that run weekly and output to the public analysis folder.</p>
+        
+        <div>
+          <h3 class="font-medium text-foreground mb-2">Folder Structure</h3>
+          <pre class="bg-zinc-900 text-zinc-100 p-3 rounded text-sm overflow-x-auto"><code>analytics/notebooks/your-app-id/
+├── analysis.ipynb        → public/analysis/your-app-id/
+├── dashboard.ipynb       → public/analysis/your-app-id-dashboard/
+└── requirements.txt      (optional, app-specific deps)</code></pre>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-foreground mb-2">How It Works</h3>
+          <ul class="space-y-1 list-disc list-inside">
+            <li>Drop <code class="bg-muted px-1.5 py-0.5 rounded text-sm">.ipynb</code> files in <code class="bg-muted px-1.5 py-0.5 rounded text-sm">analytics/notebooks/your-app-id/</code></li>
+            <li>GitHub Action runs weekly (and on push to <code class="bg-muted px-1.5 py-0.5 rounded text-sm">analytics/notebooks/**</code>)</li>
+            <li>Outputs go to <code class="bg-muted px-1.5 py-0.5 rounded text-sm">public/analysis/</code> — auto-committed</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-foreground mb-2">No Setup Required</h3>
+          <p>The workflow runs automatically in the main repo. Contributors don't need to configure GitHub Actions — just add notebooks and PR them in.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Diagram -->
+    <section class="mb-8 border border-border bg-white dark:bg-zinc-900 p-6 rounded-lg">
+      <h2 class="text-lg font-bold text-foreground mb-4">Workflow Overview</h2>
+      <div class="mermaid-container overflow-x-auto" style="min-height: 500px;">
+        <pre class="mermaid mx-auto" style="display: flex; justify-content: center;">
+flowchart TB
+    subgraph SETUP["SETUP"]
+        A[Fork repo on GitHub] --> B[git clone]
+        B --> C[pnpm install]
+        C --> D[pnpm dev]
+    end
+
+    D --> E[[Choose Path]]
+
+    subgraph FIX["OPTION 1: Fix Existing"]
+        F[Find issue] --> G[Claim it]
+        G --> H[Make changes]
+    end
+
+    subgraph BUILD["OPTION 2: Build New App"]
+        I[Propose in Discussion] --> J[create-package.mjs]
+        J --> K[Build your app]
+    end
+
+    E -->|Quick fix| F
+    E -->|New project| I
+    
+    H --> L[pnpm build]
+    K --> L
+
+    subgraph SUBMIT["SUBMIT"]
+        L --> M[git push]
+        M --> N[gh pr create]
+    end
+
+    subgraph REVIEW["REVIEW by Maintainer"]
+        N --> O[Review and Test]
+        O --> P[gh pr merge --squash]
+    end
+
+    subgraph SYNC["SYNC"]
+        P --> Q[gh repo sync]
+        Q --> R[git pull]
+    end
+
+    style SETUP fill:#f1f5f9,stroke:#cbd5e1
+    style FIX fill:#dcfce7,stroke:#86efac
+    style BUILD fill:#fef3c7,stroke:#fcd34d
+    style SUBMIT fill:#dbeafe,stroke:#93c5fd
+    style REVIEW fill:#e0e7ff,stroke:#a5b4fc
+    style SYNC fill:#f3e8ff,stroke:#d8b4fe
+        </pre>
+      </div>
+      <p class="mt-4 text-sm text-muted-foreground text-center">
+        Both paths converge at Submit → Review → Sync
+      </p>
     </section>
 
     <!-- Stack -->
-    <section id="stack" class="mt-6 border border-border bg-primary-foreground p-6">
+    <section id="stack" class="border border-border bg-primary-foreground p-6">
       <h2 class="text-lg font-bold text-foreground mb-4">Stack</h2>
       <div class="space-y-4">
         <div>
@@ -193,3 +277,21 @@ const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
 
   </div>
 </BaseLayout>
+
+<style>
+  pre.mermaid {
+    @apply bg-transparent border-0 p-0;
+  }
+  .mermaid svg {
+    margin: 0 auto;
+  }
+</style>
+
+<!-- Mermaid for diagrams -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script is:inline>
+  mermaid.initialize({ 
+    startOnLoad: true,
+    theme: 'neutral'
+  });
+</script>
