@@ -53,7 +53,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 						<div class='text-center sm:text-left'>
 							<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
 							<p class='mt-1 text-lg text-muted-foreground'>
-								Engineer × Data Scientist × Business Leader <span class='mx-1 text-border'>|</span> <span class='font-serif italic text-amber-700 dark:text-amber-400'>Building in Public</span>
+								Engineer × Data Scientist × Leader
 							</p>
 						</div>
 
@@ -90,15 +90,9 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- PHILOSOPHY                                   -->
 			<!-- ============================================ -->
 			<section class='mt-10 space-y-4'>
-				<h2 class='text-2xl font-bold text-foreground'>The Full Stack Data Scientist</h2>
+				<h2 class='text-2xl font-bold text-foreground'>Full-stack data science. Interactive experiments. <span class='font-serif italic text-amber-700 dark:text-amber-400'>Built in public.</span></h2>
 				<p class='text-base text-muted-foreground'>
-					The era of the notebook-only data scientist is ending. AI can write your Python, run your regressions, and generate your charts. What it can't do is understand why the data looks wrong, debug the pipeline that created it, or explain to the exec team why this model matters.
-				</p>
-				<p class='text-base text-muted-foreground'>
-					The future belongs to data scientists who can <strong>build the product, own the data infrastructure, and translate insights into business decisions</strong>. Not specialists waiting for clean CSVs—generalists who understand the full system.
-				</p>
-				<p class='text-base text-muted-foreground'>
-					This site is my proof of concept. Every project here—from the analytics pipeline to the A/B testing platform—was built end-to-end. AI handles the scaffolding; I do the architecture, the analysis, and the decisions.
+					Day job: data science leader. Side quest: builder. I ship full-stack apps, instrument everything, get real users, then run the stats. Build → measure → analyze. The loop that actually teaches you something.
 				</p>
 			</section>
 
@@ -107,6 +101,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- ============================================ -->
 			<section class='mt-10 space-y-4'>
 				<h2 class='text-2xl font-bold text-foreground'>Projects</h2>
+				<p class='text-base text-muted-foreground'>Try the live apps, generate some data, learn about the methods.</p>
 				<div class='space-y-3'>
 					{activeProjects.map((project) => (
 						<ProjectCard project={project} variant='compact' />
@@ -134,8 +129,8 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 						<div class='flex items-start gap-3'>
 							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
 							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Full Stack Data Scientist</h2>
-								<p class='text-sm text-muted-foreground'>Building data science products end-to-end. New posts delivered free.</p>
+								<h2 class='text-xl font-bold text-foreground'>Follow the build</h2>
+								<p class='text-sm text-muted-foreground'>Cross-posting learnings and progress on Substack. Free and without fluff.</p>
 							</div>
 						</div>
 						<form 
