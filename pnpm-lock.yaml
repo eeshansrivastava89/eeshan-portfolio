@@ -173,9 +173,7 @@ importers:
         specifier: ^3.4.18
         version: 3.4.18(yaml@2.8.1)
 
-  packages/shared: {}
-
-  packages/test-app:
+  packages/my-test-app:
     dependencies:
       '@astrojs/react':
         specifier: ^3.6.2
@@ -205,6 +203,8 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+
+  packages/shared: {}
 
 packages:
 

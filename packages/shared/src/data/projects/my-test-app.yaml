@@ -1,0 +1,12 @@
+# My Test App
+# Status: in-progress
+
+id: my-test-app
+name: My Test App
+url: /my-test-app/
+hubUrl: /projects/my-test-app
+status: in-progress
+description: A sample app to test the contributor workflow
+shortDescription: A sample app to test the contributor workflow
+tags:
+  - name: Astro / React / Tailwind

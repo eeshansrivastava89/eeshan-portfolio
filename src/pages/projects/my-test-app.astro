@@ -1,0 +1,12 @@
+---
+/**
+ * Project Hub: My Test App
+ */
+import ProjectHubLayout from '../../layouts/ProjectHubLayout.astro'
+import { getProjectById } from '../../../packages/shared/src/data/projectLoader'
+
+const project = getProjectById('my-test-app')
+if (!project) throw new Error('Project my-test-app not found')
+---
+
+<ProjectHubLayout project={project} />
