@@ -21,7 +21,7 @@ const meta = {
 		<p class='mb-8 text-sm text-muted-foreground'>Technical posts and essays on AI, product development, and culture.</p>
 
 		{sortedPosts.length > 0 ? (
-			<ul class='flex flex-col gap-y-4'>
+			<ul class='flex flex-col gap-y-4 list-none p-0 m-0'>
 				{sortedPosts.map((post) => (
 					<PostPreview post={post} withDesc />
 				))}

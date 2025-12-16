@@ -25,6 +25,13 @@ import { getAllProjects } from '../../packages/shared/src/data/projectLoader'
 import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
 import Timeline from '../../packages/shared/src/components/Timeline.astro'
 
+// Load posts
+import { getAllPosts, sortMDByDate } from '@/utils'
+import PostPreview from '@/components/writing/PostPreview.astro'
+
+const allPosts = await getAllPosts()
+const recentPosts = sortMDByDate(allPosts).slice(0, 3)
+
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)
 const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
@@ -89,11 +96,21 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- ============================================ -->
 			<!-- PHILOSOPHY                                   -->
 			<!-- ============================================ -->
-			<section class='mt-10 space-y-4'>
-				<h2 class='text-2xl font-bold text-foreground'>Full-stack data science. Interactive experiments. <span class='font-serif italic text-amber-700 dark:text-amber-400'>Built in public.</span></h2>
-				<p class='text-base text-muted-foreground'>
-					Day job: data science leader. Side quest: builder. I ship full-stack apps, instrument everything, get real users, then run the stats. Build → measure → analyze. The loop that actually teaches you something.
-				</p>
+			<section class='mt-10 border-l-2 border-amber-400 pl-6 space-y-4'>
+				<!-- Section heading with tight tracking -->
+				<h2 class='text-2xl font-bold text-foreground tracking-tight'>Full-stack data science. Interactive experiments with data. <span class='font-serif italic text-amber-700 dark:text-amber-400'>Built in public.</span></h2>
+				<!-- Subtle divider -->
+				<div class='border-t border-border/50 pt-4'>
+					<p class='text-base text-muted-foreground'>
+						Hi, <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>I'm Eeshan</span>. I'm not ex-FAANG or Ivy League. Just someone who's spent 15 years at the intersection of CS, data science, and business — someone who enjoys being curious, creative, and loves working with people. I'm currently a data science leader at <a href='https://www.starbucks.com/about-us/' target='_blank' class='underline hover:text-foreground'>Starbucks</a>. As a people leader, I see the role of data scientists shifting from stats experts working in notebooks into something more. AI tools are breaking down barriers.
+					</p>
+					<p class='text-base text-muted-foreground mt-4'>
+						This site is where I practice: shipping products from 0 → 1 with AI tools, <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>wearing every hat — PM, engineer, data scientist, marketer, founder</span>. Not to replace specialists, but to build the <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>empathy and credibility</span> that makes data scientists impactful.
+					</p>
+					<p class='text-base text-muted-foreground mt-4'>
+						Everything here is self-hosted, documented, and <a href='https://github.com/eeshansrivastava89/ds-apps-main' target='_blank' class='underline hover:text-foreground'>open-source</a>. The <a href='/contribute#stack' class='underline hover:text-foreground'>stack</a> is templatized for <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>building data science apps</span>. Contributions are welcome — come <a href='/contribute' class='underline hover:text-foreground'>build with me</a>.
+					</p>
+				</div>
 			</section>
 
 			<!-- ============================================ -->
@@ -120,6 +137,28 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			</section>
 
 			<!-- ============================================ -->
+			<!-- RECENT POSTS                                 -->
+			<!-- ============================================ -->
+			<section class='mt-10 space-y-4'>
+				<h2 class='text-2xl font-bold text-foreground'>Recent Posts</h2>
+				{recentPosts.length > 0 ? (
+					<ul class='flex flex-col gap-y-3 list-none p-0 m-0'>
+						{recentPosts.map((post) => (
+							<PostPreview post={post} />
+						))}
+					</ul>
+				) : (
+					<p class='text-muted-foreground'>No posts yet.</p>
+				)}
+				<a 
+					href='/writing' 
+					class='inline-block text-sm text-muted-foreground hover:text-foreground transition'
+				>
+					View all posts →
+				</a>
+			</section>
+
+			<!-- ============================================ -->
 			<!-- NEWSLETTER SIGNUP                            -->
 			<!-- Opens Substack with email pre-filled         -->
 			<!-- ============================================ -->
@@ -129,7 +168,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 						<div class='flex items-start gap-3'>
 							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
 							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Follow the build</h2>
+								<h2 class='text-xl font-bold text-foreground'>Sign up for my Newsletter</h2>
 								<p class='text-sm text-muted-foreground'>Cross-posting learnings and progress on Substack. Free and without fluff.</p>
 							</div>
 						</div>
