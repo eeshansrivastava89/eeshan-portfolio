@@ -23,6 +23,7 @@
 		"@astrojs/sitemap": "^3.1.1",
 		"@astrojs/tailwind": "^5.1.0",
 		"@giscus/react": "^3.1.0",
+		"@iconify-json/lucide": "^1.2.81",
 		"@tanstack/react-table": "^8.21.3",
 		"@types/js-yaml": "^4.0.9",
 		"@types/react": "^19.2.2",

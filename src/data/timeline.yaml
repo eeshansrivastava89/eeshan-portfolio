@@ -22,7 +22,7 @@ timeline:
   - timespan: "Summer 2015"
     title: "Sr. Product Manager - MBA Intern"
     company: "Amazon"
-    description: "3-month product manager experience at Amazon"
+    description: "Product roadmap for Amazon Identity Services; designed authentication improvements for checkout experience"
     logo: "amazon.png"
 
   - timespan: "2014 — 2016"
@@ -31,10 +31,6 @@ timeline:
     description: "Transformational learning experience in business, leadership and organizational behavior; and a lifetime of friendships"
     logo: "cwru.png"
     type: education
-    details:
-      - "MBA completion"
-      - "Self-directed learning in statistics and machine learning"
-      - "MIT coursework in analytics"
   
   - timespan: "2013 — 2014"
     title: "Automation Engineer"
