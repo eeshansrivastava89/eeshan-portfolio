@@ -47,13 +47,13 @@ const getAccent = (item: TimelineItem, isCurrent: boolean) => {
               
               {/* Title & Company */}
               <div class='flex-1 min-w-0'>
-                <h4 class='font-semibold text-foreground'>{item.title}</h4>
-                <p class='text-sm text-muted-foreground'>{item.company}</p>
+                <h4 class='text-lg font-semibold text-foreground'>{item.title}</h4>
+                <p class='text-base text-muted-foreground'>{item.company}</p>
               </div>
-              
+
               {/* Date & Chevron */}
               <div class='flex items-center gap-3 shrink-0'>
-                <span class={`text-sm font-medium ${accent}`}>{item.timespan}</span>
+                <span class={`text-base font-medium ${accent}`}>{item.timespan}</span>
                 <Icon 
                   name='lucide:chevron-down' 
                   class='h-5 w-5 text-muted-foreground transition-transform duration-200 group-open:rotate-180' 
@@ -64,12 +64,12 @@ const getAccent = (item: TimelineItem, isCurrent: boolean) => {
             {/* Expanded Content */}
             <div class='border-t border-border px-4 pb-4 pt-3'>
               {item.description && (
-                <p class='text-sm text-muted-foreground'>{item.description}</p>
+                <p class='text-base text-muted-foreground'>{item.description}</p>
               )}
               {item.details && item.details.length > 0 && (
                 <ul class='mt-3 space-y-1.5'>
                   {item.details.map((detail, i) => (
-                    <li class='flex items-start gap-3 text-sm text-muted-foreground'>
+                    <li class='flex items-start gap-3 text-base text-muted-foreground'>
                       <span class='flex h-5 w-5 shrink-0 items-center justify-center rounded bg-muted text-xs font-medium'>{i + 1}</span>
                       <span>{detail}</span>
                     </li>
@@ -85,10 +85,10 @@ const getAccent = (item: TimelineItem, isCurrent: boolean) => {
               <Icon name={getIcon(item)} class='h-5 w-5 text-muted-foreground' />
             </div>
             <div class='flex-1 min-w-0'>
-              <h4 class='font-semibold text-foreground'>{item.title}</h4>
-              <p class='text-sm text-muted-foreground'>{item.company}</p>
+              <h4 class='text-lg font-semibold text-foreground'>{item.title}</h4>
+              <p class='text-base text-muted-foreground'>{item.company}</p>
             </div>
-            <span class={`text-sm font-medium shrink-0 ${accent}`}>{item.timespan}</span>
+            <span class={`text-base font-medium shrink-0 ${accent}`}>{item.timespan}</span>
           </div>
         )}
       </div>

@@ -8,7 +8,7 @@ const allPosts = await getAllPosts()
 const sortedPosts = sortMDByDate(allPosts)
 
 const meta = {
-	description: 'Technical posts and essays on AI, product development, and culture.',
+	description: 'Technical posts and essays on AI, data science, and culture.',
 	title: 'Writing'
 }
 ---
@@ -18,7 +18,7 @@ const meta = {
 		<Breadcrumbs />
 
 		<h1 class='mb-2 mt-5 text-2xl font-bold'>Writing</h1>
-		<p class='mb-8 text-sm text-muted-foreground'>Technical posts and essays on AI, product development, and culture.</p>
+		<p class='mb-8 text-base text-muted-foreground'>Technical posts and essays on AI, data science, and culture.</p>
 
 		{sortedPosts.length > 0 ? (
 			<ul class='flex flex-col gap-y-4 list-none p-0 m-0'>

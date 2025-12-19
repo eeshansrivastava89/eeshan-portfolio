@@ -2,6 +2,7 @@
 import PageLayout from '../layouts/BaseLayout.astro'
 import Section from '../components/Section.astro'
 import WorkTimeline from '../components/WorkTimeline.astro'
+import ImpactShelf from '../components/ImpactShelf.astro'
 import Breadcrumbs from '../../packages/shared/src/components/Breadcrumbs.astro'
 
 import fs from 'fs'
@@ -11,22 +12,26 @@ import path from 'path'
 // Load timeline data
 const timelineYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/timeline.yaml'), 'utf8')
 const timelineData = yaml.load(timelineYaml) as { timeline: any[] }
+
+// Load impact data
+const impactYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/impact.yaml'), 'utf8')
+const impactData = yaml.load(impactYaml) as { impact: any[] }
 ---
 
 <PageLayout meta={{ title: 'About' }}>
 	<div class='flex w-full flex-col gap-y-10'>
 		<Breadcrumbs currentLabel="About" />
 		<Section title='About'>
-			<p class='text-muted-foreground'>
+			<p class='text-base text-muted-foreground'>
 				I'm Eeshan. I lead a data science team at Starbucks focused on AI/ML, personalization, and experimentation, including recommendation models powering the Starbucks app for 40M+ users.
 			</p>
-			<p class='text-muted-foreground'>
+			<p class='text-base text-muted-foreground'>
 				12+ years across engineering, marketing analytics, modeling, and team leadership. CS undergrad, MBA. Not ex-FAANG. Not Ivy League. Just someone who likes making things work, learning by doing, and working with smart people.
 			</p>
-			<p class='text-muted-foreground'>
+			<p class='text-base text-muted-foreground'>
 				I build data science apps on the side using AI tools. Each one teaches me something—about systems, about design & architecture, about data, about what real users actually do. Hard to push your team toward new approaches if you haven't struggled through the learning curve yourself.
 			</p>
-			<p class='text-muted-foreground'>
+			<p class='text-base text-muted-foreground'>
 				In my free time, I enjoy <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>running</span>, <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>painting</span>, <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>reading</span>, and <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>basketball</span>. 
 			</p>
 		</Section>
@@ -35,16 +40,8 @@ const timelineData = yaml.load(timelineYaml) as { timeline: any[] }
 			<WorkTimeline items={timelineData.timeline} />
 		</Section>
 
-		<Section title='Projects'>
-			<p class='text-muted-foreground'>
-				Full-stack data science apps built in public. Real analytics pipelines, real users, real analysis.
-			</p>
-			<a 
-				href='/projects' 
-				class='mt-4 inline-block w-fit px-5 py-2.5 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-all hover:-translate-y-0.5'
-			>
-				Explore Projects →
-			</a>
+		<Section title='Recognition & Leadership'>
+			<ImpactShelf items={impactData.impact} />
 		</Section>
 	</div>
 </PageLayout>

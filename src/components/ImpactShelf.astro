@@ -1,0 +1,65 @@
+---
+/**
+ * Impact Shelf - Sequential sections with left-border accent
+ * Filter by `visible: true` in impact.yaml
+ */
+import { Icon } from 'astro-icon/components'
+
+interface ImpactItem {
+  text: string
+  link?: string
+}
+
+interface ImpactSection {
+  title: string
+  icon: string
+  visible: boolean
+  items: ImpactItem[]
+}
+
+interface Props {
+  items: ImpactSection[]
+}
+
+const { items } = Astro.props
+const visibleSections = items.filter(section => section.visible)
+---
+
+{visibleSections.length > 0 && (
+  <div class='space-y-6'>
+    {visibleSections.map((section) => (
+      <div>
+        <!-- Section header: icon + title -->
+        <div class='flex items-center gap-2 mb-2'>
+          <Icon name={section.icon} class='h-5 w-5 text-muted-foreground' />
+          <h4 class='text-lg font-semibold text-foreground'>{section.title}</h4>
+        </div>
+
+        <!-- Bullet list -->
+        <ul class='space-y-1 text-base text-muted-foreground'>
+          {section.items.map((item) => (
+            <li class='flex items-start gap-2'>
+              <span class='text-muted-foreground/50 mt-0.5'>•</span>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target='_blank'
+                  class='hover:text-foreground transition-colors inline-flex items-center gap-1'
+                >
+                  {item.text}
+                  <Icon name='lucide:arrow-up-right' class='h-3 w-3 shrink-0' />
+                </a>
+              ) : (
+                <span>{item.text}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+)}
+
+{visibleSections.length === 0 && (
+  <p class='text-sm text-muted-foreground italic'>Coming soon.</p>
+)}

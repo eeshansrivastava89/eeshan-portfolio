@@ -1,0 +1,48 @@
+impact:
+  - title: "Awards & Recognition"
+    icon: "lucide:award"
+    visible: true
+    items:
+      - text: "5 under 35 Award - Weatherhead School of Management - 2024"
+        link: "https://case.edu/news/meet-2024-alumni-award-winners"
+
+  - title: "Media & Podcasts"
+    icon: "lucide:radio"
+    visible: true
+    items:
+      - text: "What Really Matters Podcast (Weatherhead School of Management) - 2022"
+        link: "https://open.spotify.com/episode/0K3M2e38PPMO1HUdXpU0i9"
+
+  - title: "Conference Talks"
+    icon: "lucide:mic"
+    visible: false
+    items:
+      - text: "ODSC West 2024: 'Experimentation at Scale'"
+        link: "https://odsc.com/speakers/eeshan-srivastava"
+      - text: "Data Council 2023: 'Building DS Infra'"
+
+  - title: "Publications"
+    icon: "lucide:file-text"
+    visible: false
+    items:
+      - text: "Towards Data Science: 'Causal Inference in the Wild'"
+        link: "https://towardsdatascience.com/causal-inference-in-the-wild-eeshan"
+      - text: "Medium: 'A/B Testing Pitfalls'"
+
+  - title: "Open Source"
+    icon: "lucide:github"
+    visible: true
+    items:
+      - text: "ds-apps-main"
+        link: "https://github.com/eeshansrivastava89/ds-apps-main"
+      - text: "weather app"
+        link: "https://github.com/eeshansrivastava89/weather-app"
+
+  - title: "Mentorship"
+    icon: "lucide:users"
+    visible: false
+    items:
+      - text: "Mentored 10+ data scientists"
+      - text: "Guest instructor, Data Science Bootcamp"
+
+  

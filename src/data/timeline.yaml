@@ -4,20 +4,20 @@ timeline:
     company: "Starbucks"
     description: "Leading digital & marketing data science initiatives; building AI/ML products, running large-scale experiments and informing executive decisions"
     logo: "starbucks.png"
-    details:
-      - "Built experimentation platform for A/B testing at scale"
-      - "Developed predictive models for customer behavior and churn"
-      - "Led cross-functional projects on personalization and targeting"
+    # details:
+    #   - "Built experimentation platform for A/B testing at scale"
+    #   - "Developed predictive models for customer behavior and churn"
+    #   - "Led cross-functional projects on personalization and targeting"
 
   - timespan: "2016 — 2019"
     title: "Manager of Data Analytics"
     company: "Overstock.com"
     description: "Lived in the depths of marketing & media measurement; incrementality / MMM / MTA / LTV; acquisition & growth analytics"
     logo: "overstock.png"
-    details:
-      - "Scaled analytics infrastructure and reporting systems"
-      - "Mentored junior analysts and data scientists"
-      - "Launched customer segmentation and lifecycle analytics"
+    # details:
+    #   - "Scaled analytics infrastructure and reporting systems"
+    #   - "Mentored junior analysts and data scientists"
+    #   - "Launched customer segmentation and lifecycle analytics"
 
   - timespan: "Summer 2015"
     title: "Sr. Product Manager - MBA Intern"
