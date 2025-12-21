@@ -31,5 +31,6 @@ tmp/
 # editor configs (personal)
 .obsidian/
 
-# Python venv
+# Python
 analytics/.venv/
+__pycache__/
