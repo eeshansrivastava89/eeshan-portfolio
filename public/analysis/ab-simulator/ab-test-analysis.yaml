@@ -21,7 +21,7 @@ metrics:
 - label: Effect Size
   value: d=0.14
   context: negligible (<0.2)
-generated_at: '2025-12-21T18:08:06.463752'
+generated_at: '2025-12-21T20:06:20.417715'
 power_analysis: 13% power — need 789 per group for 80%
 warnings:
 - Sample Ratio Mismatch detected (32%/68% vs expected 50/50)
