@@ -108,3 +108,4 @@ Views and RPCs expose aggregated data via PostgREST. Frontend calls `/rest/v1/rp
 6. Execute tasks
 7. Verify locally and approach chunk by chunk
 8. Commit & push + close out GitHub issues — ask user first
+9. do not add anything about "claude" in commit messages

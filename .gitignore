@@ -24,7 +24,6 @@ pnpm-debug.log*
 
 # internal / not to publish
 internal/
-docs/
 .github/instructions/
 supabase/
 tmp/
