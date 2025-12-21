@@ -20,41 +20,51 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 {variant === 'full' ? (
   <!-- Full variant: Build Log style (large card, "Try It →" button) -->
   <div class='border border-border bg-primary-foreground p-6 shadow-lg shadow-black/5 transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-xl'>
-    <div class='flex flex-wrap items-start justify-between gap-4'>
-      <div class='space-y-3'>
-        <div class='flex items-center gap-3'>
-          <h3 class='text-xl font-semibold text-foreground'>{project.name}</h3>
-          <span class={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
-            <span class={`h-1.5 w-1.5 rounded-full ${statusConfig.dotColor}`}></span>
-            {statusConfig.label}
-          </span>
-        </div>
-        <p class='max-w-xl text-sm text-muted-foreground'>
-          {project.description}
-        </p>
-        <div class='flex flex-wrap gap-2'>
-          {project.tags.map((tag) => (
-            <span class='bg-muted px-2.5 py-1 text-sm font-medium text-muted-foreground'>
-              {tag.name}
-            </span>
-          ))}
-        </div>
-        
-        {/* Standard Engagement Stats */}
-        {showStats && isActive && (
-          <div 
-            class='project-engagement-stats pt-2 text-sm text-muted-foreground'
-            data-project-id={project.id}
-            data-supabase-url={supabaseUrl}
-            data-supabase-key={supabaseKey}
-          >
-            <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='total_views'>—</span> Total Views
-            <span class='mx-2'>|</span>
-            <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='views_30d'>—</span> P30D Views
-            <span class='mx-2'>|</span>
-            Project View Rank: <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='rank'>—</span>
-          </div>
+    <div class='flex flex-wrap items-center justify-between gap-4'>
+      <div class='flex gap-5'>
+        {/* Project thumbnail - hidden on mobile */}
+        {project.image && (
+          <img
+            src={project.image}
+            alt={`${project.name} thumbnail`}
+            class='hidden sm:block h-24 w-24 shrink-0 rounded-lg object-cover border border-border'
+          />
         )}
+        <div class='space-y-3'>
+          <div class='flex items-center gap-3'>
+            <h3 class='text-xl font-semibold text-foreground'>{project.name}</h3>
+            <span class={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
+              <span class={`h-1.5 w-1.5 rounded-full ${statusConfig.dotColor}`}></span>
+              {statusConfig.label}
+            </span>
+          </div>
+          <p class='max-w-xl text-sm text-muted-foreground'>
+            {project.description}
+          </p>
+          <div class='flex flex-wrap gap-2'>
+            {project.tags.map((tag) => (
+              <span class='bg-muted px-2.5 py-1 text-sm font-medium text-muted-foreground'>
+                {tag.name}
+              </span>
+            ))}
+          </div>
+
+          {/* Standard Engagement Stats */}
+          {showStats && isActive && (
+            <div
+              class='project-engagement-stats pt-2 text-sm text-muted-foreground'
+              data-project-id={project.id}
+              data-supabase-url={supabaseUrl}
+              data-supabase-key={supabaseKey}
+            >
+              <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='total_views'>—</span> Total Views
+              <span class='mx-2'>|</span>
+              <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='views_30d'>—</span> P30D Views
+              <span class='mx-2'>|</span>
+              Project View Rank: <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='rank'>—</span>
+            </div>
+          )}
+        </div>
       </div>
       <div class='flex flex-col gap-2 sm:flex-row'>
         {project.hubUrl && (
@@ -77,41 +87,51 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 ) : (
   <!-- Compact variant: Smaller version with right-aligned buttons -->
   <div class='border border-border bg-primary-foreground p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-md'>
-    <div class='flex flex-wrap items-start justify-between gap-4'>
-      <div class='space-y-2'>
-        <div class='flex items-center gap-2'>
-          <h3 class='text-lg font-semibold text-foreground'>{project.name}</h3>
-          <span class={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
-            <span class={`h-1.5 w-1.5 rounded-full ${statusConfig.dotColor}`}></span>
-            {statusConfig.label}
-          </span>
-        </div>
-        <p class='max-w-xl text-sm text-muted-foreground'>
-          {project.description}
-        </p>
-        <div class='flex flex-wrap gap-1.5'>
-          {project.tags.map((tag) => (
-            <span class='bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground'>
-              {tag.name}
-            </span>
-          ))}
-        </div>
-        
-        {/* Standard Engagement Stats */}
-        {showStats && isActive && (
-          <div 
-            class='project-engagement-stats pt-1 text-xs text-muted-foreground'
-            data-project-id={project.id}
-            data-supabase-url={supabaseUrl}
-            data-supabase-key={supabaseKey}
-          >
-            <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='total_views'>—</span> Total Views
-            <span class='mx-1.5'>|</span>
-            <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='views_30d'>—</span> P30D Views
-            <span class='mx-1.5'>|</span>
-            Project View Rank: <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='rank'>—</span>
-          </div>
+    <div class='flex flex-wrap items-center justify-between gap-4'>
+      <div class='flex gap-4'>
+        {/* Project thumbnail - hidden on mobile */}
+        {project.image && (
+          <img
+            src={project.image}
+            alt={`${project.name} thumbnail`}
+            class='hidden sm:block h-20 w-20 shrink-0 rounded-lg object-cover border border-border'
+          />
         )}
+        <div class='space-y-2'>
+          <div class='flex items-center gap-2'>
+            <h3 class='text-lg font-semibold text-foreground'>{project.name}</h3>
+            <span class={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
+              <span class={`h-1.5 w-1.5 rounded-full ${statusConfig.dotColor}`}></span>
+              {statusConfig.label}
+            </span>
+          </div>
+          <p class='max-w-xl text-sm text-muted-foreground'>
+            {project.description}
+          </p>
+          <div class='flex flex-wrap gap-1.5'>
+            {project.tags.map((tag) => (
+              <span class='bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground'>
+                {tag.name}
+              </span>
+            ))}
+          </div>
+
+          {/* Standard Engagement Stats */}
+          {showStats && isActive && (
+            <div
+              class='project-engagement-stats pt-1 text-xs text-muted-foreground'
+              data-project-id={project.id}
+              data-supabase-url={supabaseUrl}
+              data-supabase-key={supabaseKey}
+            >
+              <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='total_views'>—</span> Total Views
+              <span class='mx-1.5'>|</span>
+              <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='views_30d'>—</span> P30D Views
+              <span class='mx-1.5'>|</span>
+              Project View Rank: <span class='stat-value font-semibold text-foreground tabular-nums' data-stat='rank'>—</span>
+            </div>
+          )}
+        </div>
       </div>
       <div class='flex flex-col gap-2 sm:flex-row'>
         {project.hubUrl && (

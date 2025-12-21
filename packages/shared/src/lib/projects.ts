@@ -17,6 +17,7 @@ export interface Project {
   description: string
   shortDescription: string
   tags: ProjectTag[]
+  image?: string // Path to project thumbnail (e.g., /images/projects/ab-simulator.png)
 }
 
 // Status badge configuration

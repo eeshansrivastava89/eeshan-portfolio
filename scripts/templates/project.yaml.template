@@ -8,5 +8,6 @@ hubUrl: /projects/{{PACKAGE_NAME}}
 status: in-progress
 description: {{DESCRIPTION}}
 shortDescription: {{DESCRIPTION}}
+# image: /images/projects/{{PACKAGE_NAME}}.png
 tags:
   - name: Astro / React / Tailwind

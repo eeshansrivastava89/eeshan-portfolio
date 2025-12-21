@@ -45,7 +45,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 		<!-- ============================================ -->
 		<!-- HERO: Compact horizontal card                -->
 		<!-- ============================================ -->
-			<section class='border border-border bg-primary-foreground p-6 shadow-lg shadow-black/5'>
+			<section class='border border-border bg-primary-foreground p-4 sm:p-6 shadow-lg shadow-black/5'>
 				<div class='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
 					<!-- Profile Image -->
 					<Image
@@ -94,17 +94,20 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- ============================================ -->
 			<!-- PHILOSOPHY                                   -->
 			<!-- ============================================ -->
-			<section class='mt-10 border-l-2 border-amber-400 pl-6 space-y-4'>
+			<section class='mt-8 sm:mt-10 border-l-2 border-amber-400 pl-4 sm:pl-6 space-y-4'>
 				<!-- Section heading with tight tracking -->
-			<h2 class='text-2xl font-bold text-foreground tracking-tight'><span class='font-serif italic text-amber-700 dark:text-amber-400'>0→1 Data Science.</span> From analysis to applications.</h2>
+			<h2 class='text-xl sm:text-2xl font-bold text-foreground tracking-tight'><span class='font-serif italic text-amber-700 dark:text-amber-400'>0→1 Data Science.</span> From applications to analysis.</h2>
 				<!-- Subtle divider -->
 				<div class='border-t border-border/50 pt-4'>
 					<p class='text-base text-muted-foreground'>
-						Hi, I'm Eeshan, and welcome to my personal data science lab. I believe the best way to understand data is to <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>build the system that creates it</span>. This site is my workshop 
-						where I practice the full loop: design the concept, build a working app, wire up analytics, do deep research or build models, and iterate based on what the data actually says. 
+						Hi, I'm Eeshan, and welcome to my personal data science lab. I believe the best way to understand data is to <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>build the system that creates it</span>. This site is my workshop
+						where I practice the full loop: design the concept, build a working app, wire up analytics, do deep research, publish the findings, and iterate based on what the data actually says. 
 					</p>
 					<p class='text-base text-muted-foreground mt-4'>
 						The goal isn't to replace experts. It's to build <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>product intuition, technical credibility, and empathy</span> by practicing the feedback loop end-to-end. Everything here is <a href='https://github.com/eeshansrivastava89/datascienceapps' target='_blank' class='underline hover:text-foreground'>open-source</a> and non-commercial. If you're learning to build, you can <a href='https://0to1datascience.substack.com' target='_blank' class='underline hover:text-foreground'>follow along</a> or <a href='/contribute' class='underline hover:text-foreground'>contribute</a>.
+					</p>
+					<p class='text-base text-muted-foreground mt-4'>
+						I use AI to build faster, but the product decisions, architecture choices, and analysis approach come from my own skills and experience.
 					</p>
 				</div>
 			</section>
@@ -112,9 +115,9 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- ============================================ -->
 			<!-- PROJECTS                                     -->
 			<!-- ============================================ -->
-			<section class='mt-10 space-y-4'>
-				<h2 class='text-2xl font-bold text-foreground'>Projects</h2>
-				<p class='text-base text-muted-foreground'>Try the live apps, generate some data, learn about the methods.</p>
+			<section class='mt-8 sm:mt-10 space-y-4'>
+				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Projects</h2>
+				<p class='text-base text-muted-foreground'>Each app applies a data science method to a real problem. Interact, contribute data, explore the published analysis.</p>
 				<div class='space-y-3'>
 					{activeProjects.map((project) => (
 						<ProjectCard project={project} variant='compact' />
@@ -135,8 +138,8 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- ============================================ -->
 			<!-- RECENT POSTS                                 -->
 			<!-- ============================================ -->
-			<section class='mt-10 space-y-4'>
-				<h2 class='text-2xl font-bold text-foreground'>Recent Posts</h2>
+			<section class='mt-8 sm:mt-10 space-y-4'>
+				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Recent Posts</h2>
 				{recentPosts.length > 0 ? (
 					<ul class='flex flex-col gap-y-3 list-none p-0 m-0'>
 						{recentPosts.map((post) => (
@@ -158,8 +161,8 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- NEWSLETTER SIGNUP                            -->
 			<!-- Opens Substack with email pre-filled         -->
 			<!-- ============================================ -->
-			<section class='mt-10'>
-				<div class='border border-border bg-primary-foreground p-8'>
+			<section class='mt-8 sm:mt-10'>
+				<div class='border border-border bg-primary-foreground p-4 sm:p-8'>
 					<div class='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
 						<div class='flex items-start gap-3'>
 							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />

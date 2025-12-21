@@ -6,8 +6,9 @@ name: A/B Testing Memory Game
 url: /ab-simulator/
 hubUrl: /projects/ab-simulator
 status: live
-description: Interactive tool for learning A/B testing fundamentals. Run experiments, visualize statistical significance, and understand the math behind the scenes.
-shortDescription: Interactive tool for learning A/B testing fundamentals
+description: A live A/B test studying how game difficulty affects player behavior. Play the memory game, contribute data, and explore the published analysis.
+shortDescription: A live A/B test on game difficulty and player behavior
+image: /images/projects/ab-simulator.png
 tags:
   - name: Astro / React / Tailwind
   - name: Posthog

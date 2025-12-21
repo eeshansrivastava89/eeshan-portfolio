@@ -77,7 +77,7 @@ Views and RPCs expose aggregated data via PostgREST. Frontend calls `/rest/v1/rp
 - **Brutally minimal documentation** — Don't create new md files unless asked for
 - **End of task metric** — Calculate precise % of lines added/removed
 
-## Contributor Workflow Mindset
+## Claude should think about the full app structure when making changes
 
 - **Think like a new contributor** — Every change should consider: "If someone runs `create-package.mjs` tomorrow, will they get this pattern for free?"
 - **DRY is non-negotiable** — Before writing new code, ask: Can this be reused? Should it live in `packages/shared/`? Is there an existing pattern?
