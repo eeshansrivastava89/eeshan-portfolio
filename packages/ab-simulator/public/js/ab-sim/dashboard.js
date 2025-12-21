@@ -281,6 +281,14 @@
 			.bindPopup(`<strong>${d.city}, ${d.country}</strong><br>Variant ${d.variant}<br>Completions: ${d.completions}<br>Avg Time: ${(d.avg_time_ms / 1000).toFixed(2)}s`)
 			.addTo(leafletMap)
 		})
+
+		// Fly to most recent completion location
+		const mostRecent = geoData.reduce((a, b) =>
+			new Date(a.last_completion_at) > new Date(b.last_completion_at) ? a : b
+		)
+		if (mostRecent && mostRecent.lat && mostRecent.lon) {
+			leafletMap.flyTo([mostRecent.lat, mostRecent.lon], 8)
+		}
 	}
 
 	async function updateDashboard() {

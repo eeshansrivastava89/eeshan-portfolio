@@ -59,7 +59,7 @@ import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
 
 		<!-- Puzzle Section -->
 		<div id='puzzle-section' class='space-y-4 rounded-2xl border bg-card/95 p-4'>
-			<h3 class='text-lg font-semibold'>Memorize the pineapple locations, then find them all 🍍</h3>
+			<h3 class='text-lg font-semibold'>Memorize the pineapple locations, then find them all 🍍. <span class='text-amber-600 dark:text-amber-400'>7 seconds to memorize, 60 seconds to find.</span></h3>
 
 			<!-- Three-column layout: Grid (1/3) + Controls/Progress (1/3) + Stats (1/3) -->
 			<div class='grid gap-6 md:grid-cols-2 xl:grid-cols-3'>
@@ -148,8 +148,8 @@ import AppLayout from '../../../shared/src/layouts/AppLayout.astro'
 		<div id='dashboard-section' class='space-y-6 rounded-lg border bg-card p-4'>
 			<div class='flex items-center justify-between'>
 				<div>
-					<h3 class='mb-3 text-lg font-semibold'>📊 Analytics Dashboard</h3>
-					<p class='text-xs text-muted-foreground'>Real-time A/B test results</p>
+					<h3 class='mb-3 text-lg font-semibold'>📊 Live Dashboard</h3>
+					<p class='text-sm text-muted-foreground'>Real-time descriptive stats. But don't conclude experiment using this data. <br />Check the detailed statistical analysis in <a href='/projects/ab-simulator' class='whitespace-nowrap font-semibold text-sky-600 underline decoration-sky-300 underline-offset-2 hover:text-sky-700 dark:text-sky-400 dark:decoration-sky-600 dark:hover:text-sky-300'>Project&nbsp;Docs&nbsp;→</a></p>
 				</div>
 				<div class='flex items-center gap-3'>
 					<button
