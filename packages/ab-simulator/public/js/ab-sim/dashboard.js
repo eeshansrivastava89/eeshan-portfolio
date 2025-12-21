@@ -261,24 +261,20 @@
 			})
 		}
 
-		// Scale bubble radius (min 8, max 30)
-		const maxCompletions = Math.max(...geoData.map(d => d.completions))
-		const scaleRadius = (count) => 8 + (count / maxCompletions) * 22
-
-		// Add markers
+		// Add markers (constant size)
 		geoData.forEach(d => {
 			const color = d.variant === 'A' ? colors.variantA : colors.variantB
 			const borderColor = d.variant === 'A' ? '#b8860b' : '#2d4a9e'
 
 			L.circleMarker([d.lat, d.lon], {
-				radius: scaleRadius(d.completions),
+				radius: 12,
 				fillColor: color,
 				color: borderColor,
 				weight: 2,
 				opacity: 1,
 				fillOpacity: 0.8
 			})
-			.bindPopup(`<strong>${d.city}, ${d.country}</strong><br>Variant ${d.variant}<br>Completions: ${d.completions}<br>Avg Time: ${(d.avg_time_ms / 1000).toFixed(2)}s`)
+			.bindPopup(`<strong>${d.city || 'Unknown City'}, ${d.country}</strong><br>Variant ${d.variant}<br>Completions: ${d.completions}<br>Avg Time: ${(d.avg_time_ms / 1000).toFixed(2)}s`)
 			.addTo(leafletMap)
 		})
 
