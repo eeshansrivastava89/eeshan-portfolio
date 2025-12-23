@@ -173,51 +173,85 @@
 		)
 	}
 
-	function renderCompletionsTable(completions, theme) {
-		const isDark = document.documentElement.classList.contains('dark')
+	// Cache previous completions to avoid unnecessary re-renders (preserves scroll position)
+	let prevCompletionsHash = null
+
+	function renderCompletionsTable(completions) {
+		const container = document.getElementById('completions-table')
+		if (!container) return
+
 		const hasData = completions && completions.length > 0
-		const columns = hasData ? Object.keys(completions[0]) : ['No Data']
-		Plotly.newPlot(
-			'completions-table',
-			[
-				{
-					type: 'table',
-					header: {
-						values: columns.map((col) => `<b>${col.replace(/_/g, ' ').toUpperCase()}</b>`),
-						align: 'center',
-						fill: { color: isDark ? '#1f2937' : '#f3f4f6' },
-						font: { color: theme.font.color, size: 12, family: 'Inter, monospace' },
-						height: 28,
-						line: { color: isDark ? '#374151' : '#e5e7eb', width: 1 }
-					},
-					cells: {
-						values: hasData
-							? columns.map((col) => completions.map((row) => row[col]))
-							: [['No completions yet']],
-						align: 'center',
-						fill: {
-							color: hasData
-								? [completions.map((c, i) => (i % 2 === 0 ? 'rgba(0,0,0,0.02)' : 'rgba(0,0,0,0)'))]
-								: 'rgba(0,0,0,0)'
-						},
-						font: {
-							color: hasData ? theme.font.color : '#9ca3af',
-							size: 11,
-							family: 'Inter, monospace'
-						},
-						height: 24,
-						line: { color: isDark ? '#374151' : '#e5e7eb', width: 1 }
-					}
-				}
-			],
-			{
-				margin: { l: 0, r: 0, t: 0, b: 0 },
-				paper_bgcolor: 'transparent',
-				plot_bgcolor: 'transparent',
-				height: hasData ? 280 : 80
-			},
-			{ ...chartConfig, scrollZoom: false }
-		)
+
+		// Skip re-render if data unchanged (preserves scroll position)
+		const newHash = JSON.stringify(completions)
+		if (newHash === prevCompletionsHash) return
+		prevCompletionsHash = newHash
+
+		if (!hasData) {
+			container.innerHTML = `
+				<div class="flex h-20 items-center justify-center text-xs text-muted-foreground">
+					No completions yet
+				</div>
+			`
+			return
+		}
+
+		// Compact column headers
+		const colLabels = {
+			'Variant': 'V',
+			'Username': 'Player',
+			'Time to Complete': 'Time',
+			'Total Guesses': 'Guesses',
+			'When': 'When',
+			'City': 'City',
+			'Country': 'Country'
+		}
+
+		const columns = Object.keys(completions[0])
+
+		container.innerHTML = `
+			<div class="max-h-72 overflow-auto rounded-lg border border-border">
+				<table class="w-full text-xs">
+					<thead class="sticky top-0 bg-muted text-[10px] uppercase tracking-wide text-muted-foreground">
+						<tr>
+							${columns.map((col) => `<th class="whitespace-nowrap px-2 py-2 font-semibold">${colLabels[col] || col}</th>`).join('')}
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-border">
+						${completions
+							.map(
+								(row, i) => `
+							<tr class="${i % 2 === 0 ? 'bg-background' : 'bg-muted/20'} hover:bg-muted/40 transition-colors">
+								${columns
+									.map((col) => {
+										const val = row[col] ?? '—'
+										// Variant badge
+										if (col === 'Variant') {
+											const color = val === 'A' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300'
+											return `<td class="px-2 py-1.5 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded font-bold text-[10px] ${color}">${val}</span></td>`
+										}
+										// Numeric - monospace
+										if (col === 'Time to Complete') {
+											return `<td class="whitespace-nowrap px-2 py-1.5 text-center font-mono tabular-nums">${val}s</td>`
+										}
+										if (col === 'Total Guesses') {
+											return `<td class="px-2 py-1.5 text-center font-mono tabular-nums">${val}</td>`
+										}
+										// Truncate long usernames
+										if (col === 'Username') {
+											return `<td class="max-w-[100px] truncate px-2 py-1.5" title="${val}">${val}</td>`
+										}
+										return `<td class="whitespace-nowrap px-2 py-1.5 text-center">${val}</td>`
+									})
+									.join('')}
+							</tr>
+						`
+							)
+							.join('')}
+					</tbody>
+				</table>
+			</div>
+		`
 	}
 
 	// Store Leaflet map instance
@@ -329,7 +363,7 @@
 			renderFunnelChart(funnel, theme)
 			renderAvgTimeChart(overview.stats, theme)
 			renderDistributionChart(distribution || {}, theme)
-			renderCompletionsTable(completions, theme)
+			renderCompletionsTable(completions)
 			renderGeoMap(geoData || [])
 			document.getElementById('last-updated').innerHTML =
 				`Last updated: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`

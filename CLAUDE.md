@@ -1,111 +1,139 @@
-# CLAUDE.md
+# CLAUDE.md — Claude's Memory for datascienceapps
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+> **This is my memory file.** It loads automatically at conversation start. If context feels stale or you're starting a major task, ask me to "refresh memory" and I'll:
+> 1. Re-scan `docs/ARCHITECTURE.md`, `docs/CONTRIBUTING.md`, `internal/docs/ACTIVE_WORK.md`
+> 2. Check `gh issue list --state open` for current work
+> 3. Review `git log --oneline -20` for recent changes
+> 4. Explore the codebase structure with `tree -L 3`
+> 5. Read key source files (projectLoader.ts, projects.ts, schema files)
+>
+> **Codebase is source of truth over docs** — always verify against actual implementation.
 
-## Build & Development Commands
+---
 
-```bash
-pnpm dev              # Start dev server on port 3000
-pnpm build            # Full production build (packages + main site)
-pnpm lint             # Prettier + ESLint fix
-pnpm preview          # Preview production build locally
+## 🏗️ Architecture Overview
 
-# Package-specific
-pnpm dev:ab-sim       # Dev server for ab-simulator only
-pnpm --filter @eeshans/shared build
-pnpm --filter @eeshans/ab-simulator dev
+**Static-first monorepo** with React islands for interactivity. Three-layer structure:
 
-# Create new app package
-node scripts/create-package.mjs <name> "<Display Name>" "<Description>"
+| Layer | Location | Purpose |
+|-------|----------|---------|
+| **Shared** | `packages/shared/` | Layouts, components, utilities (`@eeshans/shared`) |
+| **Portfolio Site** | `src/` | Main site: `/`, `/about`, `/writing`, `/projects`, `/contribute` |
+| **App Packages** | `packages/{app}/` | Standalone apps like `/ab-simulator/` |
 
-# Run notebooks locally
-node scripts/run-notebook.mjs              # Run all notebooks
-node scripts/run-notebook.mjs ab-simulator # Run specific folder
-node scripts/run-notebook.mjs --list       # List available notebooks
+**Tech stack:** Astro 4.x, React 19, Tailwind CSS, TypeScript, pnpm workspaces
+
+**Key files:**
+- `packages/shared/src/data/projectLoader.ts` — Aggregates project YAMLs via `getAllProjects()`, `getProjectById()`
+- `packages/shared/src/lib/projects.ts` — Project types, status helpers
+- `src/layouts/ProjectHubLayout.astro` — Reusable hub page template
+- `scripts/create-package.mjs` — Scaffolds new apps with templates from `scripts/templates/`
+
+---
+
+## 📊 Data Pipeline (No Backend!)
+
+```
+User → PostHog SDK → Cloudflare Worker → PostHog Cloud
+                                              ↓
+                     ┌──────────────────┬─────┴─────┐
+                     │ Batch (hourly)   │ Webhook   │
+                     │ posthog_batch_   │ posthog_  │
+                     │ events           │ events    │
+                     └────────┬─────────┴─────┬─────┘
+                              ↓               ↓
+                         SQL Views + RPCs (PostgREST API)
+                              ↓
+                         React Islands + Plotly Charts
 ```
 
-## Architecture Overview
+**Two data paths:**
+- **Batch** (hourly): General analytics → `posthog_batch_events`
+- **Webhook** (real-time): App-specific events → `posthog_events` (for leaderboards, live stats)
 
-**Monorepo structure with three layers:**
+**Key principle:** No backend code. SQL views + PostgREST = instant API.
 
-1. **`packages/shared/`** — Shared layouts, components, utilities (import via `@eeshans/shared`)
-2. **`src/`** — Main portfolio site (routes: `/`, `/about`, `/writing`, `/projects`, `/contribute`)
-3. **`packages/{app-name}/`** — Standalone apps with own routes (e.g., `/ab-simulator/`)
+---
 
-**Tech stack:** Astro 4.4 (static-first), React 19 (islands), Tailwind CSS, TypeScript, pnpm workspaces
+## 🎮 Current Live Project: A/B Simulator
 
-**Data pipeline:** PostHog → Cloudflare Worker proxy → Supabase PostgreSQL → PostgREST API → React islands
+**Location:** `packages/ab-simulator/`
 
-## Key Patterns
+**Game logic** (vanilla ES6 modules in `public/js/ab-sim/`):
+- `core.js` — State machine: IDLE → MEMORIZE → HUNT → RESULT
+- `analytics.js` — PostHog events + feature flags
+- `supabase-api.js` — PostgREST calls (leaderboard, variantOverview, etc.)
+- `dashboard.js` — Plotly charts with adaptive polling
 
-### Project Data Model (DRY)
-Each project has three linked parts:
-- **App:** Route at `/{projectId}/` (interactive app in `packages/{projectId}/`)
-- **Hub page:** Route at `/projects/{projectId}/` (overview, analysis links)
-- **Metadata:** `packages/shared/src/data/projects/{projectId}.yaml`
+**A/B Test:** PostHog feature flag `memory-game-difficulty` (3 vs 4 pineapples)
 
-Project data auto-loads via `projectLoader.ts` with `getAllProjects()` and `getProjectById(id)`.
+---
 
-### Notebook → Astro Data Contract
-- Notebooks write YAML to `public/analysis/{projectId}/{notebookId}.yaml`
-- Astro reads at build time via shared `NotebookSummary` component
-- Use `analytics/lib/summary.py` → `write_notebook_summary()` in notebook final cells
+## 🗄️ Database Schema
 
-### Two Analytics Pipelines
-- **Batch (hourly):** All events in `posthog_batch_events` table
-- **Webhook (real-time):** App-specific events in `posthog_events` table
+**Tables:**
+| Table | Purpose |
+|-------|---------|
+| `posthog_batch_events` | Hourly batch export (pageviews, all events) |
+| `posthog_events` | Real-time webhook (game events) with generated columns for `variant`, `completion_time_seconds` |
+| `likes` | Page likes with distinct_id |
+| `analytics_run_log` | Notebook execution logs |
 
-Views and RPCs expose aggregated data via PostgREST. Frontend calls `/rest/v1/rpc/{function_name}`.
+**Key Views:** `v_project_engagement_stats`, `v_variant_overview`, `v_conversion_funnel`, `v_ab_completions_geo`
 
-### Deployment
-- Docker multi-stage build (Node → Nginx)
-- Auto-deploy via GitHub Actions on push to main
-- Jupyter notebooks auto-run weekly and publish to `/analysis/{projectId}/`
+**Key RPCs:** `leaderboard()`, `variant_overview()`, `project_engagement_stats()`, `recent_completions()`, `ab_completions_geo()`
 
-## Working Philosophy
+**Schema reference:** `internal/supabase-schema-live.sql`
 
-- **Fix root causes, not symptoms** — Research docs/code deeply before claiming to understand a problem
-- **Chunk-based delivery** — Complete small, verifiable pieces. Ask user before proceeding to next chunk
-- **Show the work** — Explain briefly and ask for permission before acting, even in agent mode
-- **Don't do workarounds by default** — If stuck, ask the user for help
-- **Brutalize scope** — Remove features/configs/dependencies that don't earn their weight. Prefer simplicity over completeness
-- **Enterprise mindset** — Every decision should be defensible in a real company context. No toy code
-- **Tools over custom code** — Prefer established tools (PostHog, Tailwind) over rolling custom solutions
-- **Test thoroughly before shipping** — Build locally, test all features, verify production-like behavior
-- **Commit small, clear changes** — One logical fix per commit. Descriptive messages. Easy to review and rollback
-- **Code inspection over assumptions** — Read actual files/output. Don't guess about behavior
-- **Brutally minimal documentation** — Don't create new md files unless asked for
-- **End of task metric** — Calculate precise % of lines added/removed
+---
 
-## Claude should think about the full app structure when making changes
+## 🚀 CI/CD
 
-- **Think like a new contributor** — Every change should consider: "If someone runs `create-package.mjs` tomorrow, will they get this pattern for free?"
-- **DRY is non-negotiable** — Before writing new code, ask: Can this be reused? Should it live in `packages/shared/`? Is there an existing pattern?
-- **Propagate dependencies systematically** — When adding new functionality:
-  1. `analytics/requirements.txt` for Python deps
-  2. `package.json` for JS deps
-  3. `scripts/create-package.mjs` — does the generated package need this?
-  4. `scripts/templates/` — do templates need updating to use the new pattern?
+**Single workflow:** `.github/workflows/build-and-deploy.yml`
 
-## Component Placement
+1. Runs notebooks (every 4 hours) → publishes HTML/YAML to `public/analysis/`
+2. Builds Astro site
+3. Deploys to Fly.io
 
-- **`packages/shared/src/components/`** — Reusable across projects (Breadcrumbs, ProjectCard, NotebookSummary)
-- **`src/components/`** — Site-specific, only used by the main Astro site
+**Trigger:** Push to main, schedule (every 4 hours), or manual dispatch.
 
-## Code Patterns
+---
 
-- **Check existing patterns first** — Before creating a new component, read similar existing ones to understand available utilities and conventions
-- **Test the full pipeline early** — Don't assume code works. Run `pnpm build`, check actual output, verify in browser
-- **Astro build-time data** — Use `fs.readFileSync` + `js-yaml` for build-time data loading, not dynamic `import()`
+## 🧭 Working Philosophy
 
-## User's Workflow
+1. **Fix root causes, not symptoms** — Research deeply before claiming to understand
+2. **Chunk-based delivery** — Complete small, verifiable pieces. Ask before proceeding
+3. **Show the work** — Explain briefly and ask for permission before acting
+4. **Don't do workarounds** — If stuck, ask the user for help
+5. **Brutalize scope** — Remove features/configs/dependencies that don't earn their weight
+6. **Enterprise mindset** — Defensible decisions, no toy code
+7. **Tools over custom code** — Prefer PostHog, Tailwind, Supabase
+8. **Test thoroughly** — Build locally, verify production-like behavior
+9. **Commit small, clear changes** — One logical fix per commit
+10. **Code inspection over assumptions** — Read actual files/output, don't guess
+11. **End-of-task metric** — Calculate % of lines added/removed
+12. **No "claude" in commit messages**
 
-1. Ideate with the AI assistant on UX, backend, frontend, data science
-2. Think through architecture before planning todos
-3. Plan out and document the todos and tasks in one of the existing md files or ask user
-4. As much as possible, use existing coding patterns and existing DRY patterns
-5. Create GitHub issues for these tasks — ask user first
-6. Execute tasks
-7. Verify locally and approach chunk by chunk
-8. Commit & push + close out GitHub issues — ask user first
-9. do not add anything about "claude" in commit messages
+---
+
+## 🔧 Adding New Apps
+
+```bash
+node scripts/create-package.mjs my-app "My App" "Short description"
+```
+
+**Creates:**
+- `packages/my-app/` — Full Astro package
+- `src/pages/projects/my-app.astro` — Hub page using ProjectHubLayout
+- `packages/shared/src/data/projects/my-app.yaml` — Project metadata
+- `analytics/notebooks/my-app/` — Sample notebook
+- `src/content/post/my-app-getting-started.md` — Sample post
+
+**Convention:**
+- Hub page: `/projects/{id}`
+- App: `/{id}/`
+
+
+---
+
+*Last refreshed: December 2025*
