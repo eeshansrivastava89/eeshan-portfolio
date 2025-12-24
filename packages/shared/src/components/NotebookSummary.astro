@@ -82,6 +82,9 @@ const statusConfig = {
 
 const status = data ? statusConfig[data.status] : null
 
+// Count warnings for header display
+const warningCount = data?.warnings?.length || 0
+
 // Delta arrow helper
 const deltaIcon = (dir?: string) => {
 	if (dir === 'up') return 'lucide:trending-up'
@@ -122,7 +125,14 @@ const formatTimestamp = (isoString?: string) => {
 					<Icon name={status.icon} class={`h-6 w-6 ${status.color}`} />
 					<div>
 						<h3 class='font-semibold text-foreground'>{data.title}</h3>
-						<span class={`text-sm font-medium ${status.color}`}>{status.label}</span>
+						<span class='text-sm'>
+							<span class={`font-medium ${status.color}`}>{status.label}</span>
+							{warningCount > 0 ? (
+								<span class='text-amber-600 dark:text-amber-400'> — {warningCount} warning{warningCount > 1 ? 's' : ''} below</span>
+							) : (
+								<span class='text-muted-foreground'> — no warnings</span>
+							)}
+						</span>
 					</div>
 				</div>
 				<div class='flex items-center gap-4'>
@@ -144,7 +154,9 @@ const formatTimestamp = (isoString?: string) => {
 
 		{/* Decision callout */}
 		<div class='px-5 py-4 bg-muted/30 border-b border-border'>
-			<p class='text-foreground font-medium'>{data.decision}</p>
+			<p class='text-foreground'>
+				<span class='font-semibold'>Decision:</span> {data.decision}
+			</p>
 		</div>
 
 		{/* Metrics grid */}
@@ -167,15 +179,6 @@ const formatTimestamp = (isoString?: string) => {
 						)}
 					</div>
 				))}
-			</div>
-		)}
-
-		{/* Power analysis */}
-		{data.power_analysis && (
-			<div class='px-5 py-3 border-t border-border bg-muted/20'>
-				<p class='text-sm text-muted-foreground'>
-					<span class='font-medium'>Power: </span>{data.power_analysis}
-				</p>
 			</div>
 		)}
 

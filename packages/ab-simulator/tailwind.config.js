@@ -6,7 +6,8 @@ const config = {
 	content: [
 		'./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
 		'./public/**/*.js',
-		'../shared/src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'
+		'../shared/src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
+		'../../src/components/**/*.{tsx,ts,jsx,js}'  // Root src components (SubscribeDialog, etc.)
 	],
 	theme: {
 		container: baseTheme.container,

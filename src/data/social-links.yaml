@@ -9,10 +9,10 @@ socialLinks:
     icon: simple-icons:linkedin
     label: LinkedIn
   
-  # - name: x
-  #   url: https://x.com/notesundrground
-  #   icon: simple-icons:x
-  #   label: X
+  - name: x
+    url: https://x.com/notesundrground
+    icon: simple-icons:x
+    label: X
   
   # - name: bluesky
   #   url: https://bsky.app/profile/eeshans.bsky.social

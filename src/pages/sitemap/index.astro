@@ -1,11 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '../../../packages/shared/src/components/Breadcrumbs.astro'
-import { getCollection } from 'astro:content'
-
-// Get all posts
-const allPosts = await getCollection('post', ({ data }) => !data.draft)
-const sortedPosts = allPosts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
 
 // Build site tree structure
 interface TreeNode {
@@ -39,13 +34,13 @@ const siteTree: TreeNode[] = [
   {
     name: 'Analysis',
     path: '/analysis',
-    icon: '📚',
-    description: 'Unified notebooks and posts',
+    icon: '📊',
+    description: 'Notebooks and Substack posts',
     children: [
       {
         name: 'A/B Simulator Analysis',
         path: '/analysis?project=ab-simulator',
-        icon: '📊',
+        icon: '🎯',
         description: 'Filtered analysis for A/B Simulator'
       }
     ]
@@ -57,28 +52,16 @@ const siteTree: TreeNode[] = [
     description: 'Interactive A/B testing game'
   },
   {
-    name: 'Writing',
-    path: '/writing',
-    icon: '✍️',
-    description: 'Blog posts and essays',
-    children: sortedPosts.map(post => ({
-      name: post.data.title,
-      path: `/writing/${post.slug}`,
-      icon: post.data.category === 'technical' ? '💻' : '💭',
-      description: post.data.description?.slice(0, 60) + (post.data.description && post.data.description.length > 60 ? '...' : '')
-    }))
-  },
-  {
     name: 'Contribute on GitHub',
     path: 'https://github.com/eeshansrivastava89/datascienceapps/blob/main/docs/CONTRIBUTING.md',
     icon: '🤝',
     description: 'Contribution guide and workflow'
   },
   {
-    name: 'RSS Feed',
-    path: '/rss.xml',
-    icon: '📡',
-    description: 'Subscribe to updates'
+    name: 'Substack Newsletter',
+    path: 'https://0to1datascience.substack.com',
+    icon: '📮',
+    description: '0→1 Data Science newsletter'
   },
   {
     name: 'Visual Sitemap',
@@ -130,20 +113,20 @@ const totalPages = countNodes(siteTree)
           <li class="relative">
             {/* Connector line */}
             <div class="absolute left-[11px] top-0 h-full w-px bg-gradient-to-b from-border to-transparent" />
-            
+
             {/* Node */}
-            <a 
+            <a
               href={node.path}
               class="group relative flex items-start gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-accent/50 hover:shadow-sm"
             >
               {/* Branch connector */}
               <div class="absolute left-0 top-[18px] h-px w-3 bg-border" />
-              
+
               {/* Icon */}
               <span class="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-sm shadow-sm ring-1 ring-border/50 transition-all group-hover:ring-accent group-hover:shadow-md">
                 {node.icon}
               </span>
-              
+
               {/* Content */}
               <div class="min-w-0 flex-1 pt-0.5">
                 <div class="flex items-center gap-2">
@@ -160,13 +143,13 @@ const totalPages = countNodes(siteTree)
                   </p>
                 )}
               </div>
-              
+
               {/* Arrow */}
               <svg class="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
             </a>
-            
+
             {/* Children */}
             {node.children && node.children.length > 0 && (
               <ul class="ml-6 mt-1 space-y-1 border-l border-dashed border-border/60 pl-4">
@@ -174,8 +157,8 @@ const totalPages = countNodes(siteTree)
                   <li class="relative">
                     {/* Branch connector */}
                     <div class="absolute -left-4 top-[18px] h-px w-4 border-t border-dashed border-border/60" />
-                    
-                    <a 
+
+                    <a
                       href={child.path}
                       class="group relative flex items-start gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent/50 hover:shadow-sm"
                     >
@@ -183,7 +166,7 @@ const totalPages = countNodes(siteTree)
                       <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-muted/80 text-xs ring-1 ring-border/30 transition-all group-hover:ring-accent group-hover:shadow-sm">
                         {child.icon}
                       </span>
-                      
+
                       {/* Content */}
                       <div class="min-w-0 flex-1">
                         <div class="flex items-center gap-2">
@@ -200,7 +183,7 @@ const totalPages = countNodes(siteTree)
                           </p>
                         )}
                       </div>
-                      
+
                       {/* Arrow */}
                       <svg class="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -218,16 +201,13 @@ const totalPages = countNodes(siteTree)
     <!-- Legend -->
     <div class="mt-6 flex flex-wrap gap-4 text-xs text-muted-foreground">
       <div class="flex items-center gap-1.5">
-        <span>💻</span> Technical
-      </div>
-      <div class="flex items-center gap-1.5">
-        <span>💭</span> Essay
-      </div>
-      <div class="flex items-center gap-1.5">
-        <span>📊</span> Project
+        <span>📊</span> Analysis
       </div>
       <div class="flex items-center gap-1.5">
         <span>🎮</span> Interactive
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span>📮</span> External
       </div>
     </div>
 

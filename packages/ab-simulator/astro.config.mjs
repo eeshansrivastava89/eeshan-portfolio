@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import icon from 'astro-icon';
+import react from '@astrojs/react';
 
 // Environment variables are loaded via symlinked .env file (points to ../../.env)
 // This allows the package to access PUBLIC_* vars from the workspace root
@@ -14,6 +15,7 @@ export default defineConfig({
 		format: 'directory'
 	},
 	integrations: [
+		react(),
 		tailwind({
 			applyBaseStyles: false
 		}),

@@ -1,5 +1,5 @@
 ---
-
+import { SubscribeDialog } from '../../../../../src/components/SubscribeDialog'
 ---
 
 <header class='mb-12 flex w-full flex-wrap pb-3 text-sm sm:flex-nowrap sm:justify-start'>
@@ -7,39 +7,32 @@
 		class='relative mx-auto flex w-full items-center justify-between sm:flex sm:items-center'
 		aria-label='global'
 	>
-		<a class='flex-none text-xl font-serif font-semibold' href='/' aria-label='Brand'>Eeshan S.</a>
+		<a class='flex-none text-xl font-serif font-semibold text-foreground' href='/' aria-label='Brand'>Eeshan S.</a>
 
 		<div class='flex flex-row items-center justify-center gap-x-2 sm:gap-x-5 md:gap-x-7'>
 			<a
-				href='/about'
-				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium hover:text-foreground/75'
-				aria-label='Nav Menu Item'
-				>About
-			</a>
-			<a
 				href='/projects'
-				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium hover:text-foreground/75'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
 				aria-label='Nav Menu Item'
 				>Projects
 			</a>
 			<a
 				href='/analysis'
-				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium hover:text-foreground/75'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
 				aria-label='Nav Menu Item'
 				>Analysis
 			</a>
 			<a
-				href='https://0to1datascience.substack.com/'
-				target='_blank'
-				rel='noopener noreferrer'
-				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium hover:text-foreground/75'
-				aria-label='Subscribe'
-				>Subscribe
+				href='/about'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
+				aria-label='Nav Menu Item'
+				>About
 			</a>
+			<SubscribeDialog client:load />
 
 			<button
 				id='toggleDarkMode'
-				class='relative rounded-md border border-border p-1.5 transition-all hover:bg-border'
+				class='relative rounded-md border border-border p-1.5 text-foreground transition-all hover:bg-border'
 			>
 				<span class='sr-only'>Dark Theme</span>
 				<svg

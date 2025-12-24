@@ -9,11 +9,14 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^4.4.2",
     "@iconify-json/lucide": "^1.2.81",
     "astro": "^5.16.0",
     "astro-icon": "^1.1.5",
     "dotenv": "^17.2.3",
     "js-yaml": "^4.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {

@@ -1,19 +1,15 @@
-import rss from '@astrojs/rss'
-import { siteConfig } from '@/site-config'
-import { getAllPosts } from '@/utils'
+/**
+ * RSS Feed - Redirects to Substack
+ *
+ * All written content now lives on Substack. This endpoint redirects
+ * to the canonical Substack RSS feed for subscribers.
+ */
 
-export const GET = async () => {
-	const posts = await getAllPosts()
-
-	return rss({
-		title: siteConfig.title,
-		description: siteConfig.description,
-		site: import.meta.env.SITE,
-		items: posts.map((post) => ({
-			title: post.data.title,
-			description: post.data.description,
-			pubDate: post.data.publishDate,
-			link: `/blog/${post.slug}`
-		}))
+export const GET = () => {
+	return new Response(null, {
+		status: 301,
+		headers: {
+			'Location': 'https://0to1datascience.substack.com/feed'
+		}
 	})
 }

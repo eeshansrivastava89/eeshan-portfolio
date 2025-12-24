@@ -1,40 +1,32 @@
 title: 'A/B Test: Pineapple Finder Difficulty'
 project_id: ab-simulator
-status: inconclusive
+status: significant
 decision: Do NOT ship Variant B — guardrail metrics show significant drops in completion
   and engagement.
-methods:
-  - Frequentist
-  - Chi-square
-  - Welch's t-test
-tags:
-  - ab-testing
-  - conversion
-  - power-analysis
 metrics:
 - label: Completion Time
-  value: +2.5s
-  delta: +30.7%
+  value: +2.6s
+  delta: +34.2%
   delta_direction: up
-  context: p=0.088, not significant
+  context: p=0.044, significant
 - label: Completion Rate
-  value: 63%
-  delta: -23.5%
+  value: 66%
+  delta: -21.0%
   delta_direction: down
-  context: vs 83% control
+  context: vs 84% control
 - label: Repeat Rate
-  value: 26%
-  delta: -8.8pp
+  value: 46%
+  delta: -0.0pp
   delta_direction: down
-  context: vs 35% control
+  context: vs 46% control
 - label: Effect Size
-  value: d=0.27
-  context: negligible (<0.2)
-generated_at: '2025-12-22T04:58:51.752713'
-power_analysis: 40% power — need 215 per group for 80%
+  value: d=0.29
+  context: small
+generated_at: '2025-12-24T00:27:27.651374'
+power_analysis: 52% power — need 185 per group for 80%
 warnings:
-- Sample Ratio Mismatch detected (37%/63% vs expected 50/50)
-- Underpowered experiment (40% power, need 80%)
-- Significant drop in completion rate (83% → 63%)
+- Sample Ratio Mismatch detected (38%/62% vs expected 50/50)
+- Underpowered experiment (52% power, need 80%)
+- Significant drop in completion rate (84% → 66%)
 methodology: Welch's t-test (primary), Chi-square (completion rate), Z-test (repeat
   rate)

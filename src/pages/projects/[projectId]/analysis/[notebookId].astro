@@ -169,32 +169,22 @@ try {
       </div>
       
       {lastUpdated && (
-        <div class='flex items-center justify-between'>
-          <div class='flex items-center gap-4 text-sm text-muted-foreground'>
-            <span class='flex items-center gap-1.5'>
-              <Icon name='mdi:calendar' class='h-4 w-4' />
-              Last updated: {lastUpdated}
-            </span>
-            <span class='flex items-center gap-1.5'>
-              <Icon name='mdi:refresh' class='h-4 w-4' />
-              Refreshes {refreshSchedule}
-            </span>
-          </div>
-          <label id='code-toggle' class='group flex cursor-pointer items-center gap-2'>
-            <span class='text-xs font-medium text-slate-500 dark:text-slate-400'>Show code</span>
-            <div class='relative'>
-              <input type='checkbox' id='code-checkbox' class='peer sr-only' />
-              <div class='h-5 w-9 rounded-full bg-slate-300 transition-colors peer-checked:bg-emerald-500 dark:bg-slate-600 dark:peer-checked:bg-emerald-500'></div>
-              <div class='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-4'></div>
-            </div>
-          </label>
+        <div class='flex items-center gap-4 text-sm text-muted-foreground'>
+          <span class='flex items-center gap-1.5'>
+            <Icon name='mdi:calendar' class='h-4 w-4' />
+            Last updated: {lastUpdated}
+          </span>
+          <span class='flex items-center gap-1.5'>
+            <Icon name='mdi:refresh' class='h-4 w-4' />
+            Refreshes {refreshSchedule}
+          </span>
         </div>
       )}
     </header>
 
     <!-- Notebook Content -->
     {notebookExists ? (
-      <div class='notebook-container hide-code overflow-hidden rounded-lg border border-border bg-white'>
+      <div class='notebook-container overflow-hidden rounded-lg border border-border bg-card'>
         <Fragment set:html={notebookHtml} />
       </div>
     ) : (
@@ -234,67 +224,96 @@ try {
   .notebook-container {
     padding: 2rem;
   }
-  
+
   /* Override Jupyter notebook styles for better integration */
   .notebook-container :global(.jp-Notebook),
   .notebook-container :global(.jp-Cell) {
     background: transparent;
   }
-  
+
   .notebook-container :global(img) {
     max-width: 100%;
     height: auto;
   }
-  
+
   .notebook-container :global(table) {
     border-collapse: collapse;
     margin: 1rem 0;
   }
-  
+
   .notebook-container :global(th),
   .notebook-container :global(td) {
     border: 1px solid #ddd;
     padding: 0.5rem;
     text-align: left;
   }
-  
+
   .notebook-container :global(pre) {
     overflow-x: auto;
     padding: 1rem;
     background: #f5f5f5;
     border-radius: 4px;
   }
-  
-  /* Dark mode handling */
-  :global(.dark) .notebook-container {
-    border-color: rgba(255, 255, 255, 0.1);
-    background: #1a1a1a;
+
+  /* ============================================ */
+  /* DARK MODE - Comprehensive overrides         */
+  /* ============================================ */
+
+  /* Base text color for entire notebook */
+  :global(.dark) .notebook-container,
+  :global(.dark) .notebook-container :global(*) {
+    color: #e0e0e0;
   }
-  
+
+  /* Markdown content - headings and text */
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown),
+  :global(.dark) .notebook-container :global(.jp-RenderedHTMLCommon) {
+    color: #e0e0e0;
+  }
+
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h1),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h2),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h3),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h4),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown p),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown li),
+  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown strong) {
+    color: #f0f0f0;
+  }
+
+  /* Code blocks and pre */
   :global(.dark) .notebook-container :global(pre) {
     background: #2d2d2d;
+    color: #e0e0e0;
   }
-  
+
+  /* Output cells */
+  :global(.dark) .notebook-container :global(.jp-OutputArea-output),
+  :global(.dark) .notebook-container :global(.jp-RenderedText) {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+
+  /* Input prompts (In [1]:) */
+  :global(.dark) .notebook-container :global(.jp-InputPrompt),
+  :global(.dark) .notebook-container :global(.jp-OutputPrompt) {
+    color: #888;
+  }
+
+  /* Tables */
   :global(.dark) .notebook-container :global(th),
   :global(.dark) .notebook-container :global(td) {
     border-color: #444;
+    color: #e0e0e0;
   }
 
-  /* Hide code cells when toggle is off */
-  .notebook-container.hide-code :global(.jp-InputArea),
-  .notebook-container.hide-code :global(.jp-Cell-inputWrapper) {
-    display: none;
+  /* Links */
+  :global(.dark) .notebook-container :global(a) {
+    color: #6db3f2;
+  }
+
+  /* Code syntax highlighting - preserve colors */
+  :global(.dark) .notebook-container :global(.highlight) {
+    background: #2d2d2d;
   }
 </style>
-
-<script>
-  // Toggle code visibility
-  const checkbox = document.getElementById('code-checkbox') as HTMLInputElement
-  const container = document.querySelector('.notebook-container')
-
-  if (checkbox && container) {
-    checkbox.addEventListener('change', () => {
-      container.classList.toggle('hide-code', !checkbox.checked)
-    })
-  }
-</script>

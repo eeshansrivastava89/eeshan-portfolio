@@ -25,12 +25,14 @@ import { getAllProjects } from '../../packages/shared/src/data/projectLoader'
 import ProjectCard from '../../packages/shared/src/components/ProjectCard.astro'
 import Timeline from '../../packages/shared/src/components/Timeline.astro'
 
-// Load posts
-import { getAllPosts, sortMDByDate } from '@/utils'
-import PostPreview from '@/components/writing/PostPreview.astro'
+// Load Substack posts
+import { getSubstackPosts } from '../../packages/shared/src/lib/substack'
+import SubstackPostPreview from '../../packages/shared/src/components/SubstackPostPreview.astro'
+import substackMappingsRaw from '../../packages/shared/src/data/substack-posts.yaml?raw'
 
-const allPosts = await getAllPosts()
-const recentPosts = sortMDByDate(allPosts).slice(0, 3)
+const SUBSTACK_RSS_URL = 'https://0to1datascience.substack.com/feed'
+const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
+const recentSubstackPosts = allSubstackPosts.slice(0, 5)
 
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)
@@ -135,21 +137,21 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			</section>
 
 			<!-- ============================================ -->
-			<!-- RECENT POSTS                                 -->
+			<!-- RECENT SUBSTACK POSTS                        -->
 			<!-- ============================================ -->
 			<section class='mt-8 sm:mt-10 space-y-4'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Recent Posts</h2>
-				{recentPosts.length > 0 ? (
+				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Recent Substack Posts</h2>
+				{recentSubstackPosts.length > 0 ? (
 					<ul class='flex flex-col gap-y-3 list-none p-0 m-0'>
-						{recentPosts.map((post) => (
-							<PostPreview post={post} />
+						{recentSubstackPosts.map((post) => (
+							<SubstackPostPreview post={post} withDesc />
 						))}
 					</ul>
 				) : (
 					<p class='text-muted-foreground'>No posts yet.</p>
 				)}
-				<a 
-					href='/writing' 
+				<a
+					href='/analysis'
 					class='inline-block text-sm text-muted-foreground hover:text-foreground transition'
 				>
 					View all posts →
@@ -166,7 +168,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 						<div class='flex items-start gap-3'>
 							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
 							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Sign up for my Newsletter</h2>
+								<h2 class='text-xl font-bold text-foreground'>Subscribe for updates</h2>
 							<p class='text-sm text-muted-foreground'>Updates from 0→1 data science. What works, what breaks, what I'm learning.</p>
 							</div>
 						</div>
