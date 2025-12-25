@@ -1,6 +1,6 @@
 # Architecture V2: Site Simplification
 
-> **Status:** Phase 1-5 Complete ✅ | Phase 13 Complete ✅ | Phase 14 Complete ✅ | Phase 15 Complete ✅ | Phase 16 Planned
+> **Status:** Phase 1-5 Complete ✅ | Phase 13 Complete ✅ | Phase 14 Complete ✅ | Phase 15 Complete ✅ | Phase 16 Deferred ⏸️
 > **Date:** December 2024
 > **Goal:** Simplify UX by focusing the main site on **projects + unified analysis page**, moving writing to Substack.
 
@@ -570,39 +570,47 @@ Eliminated architectural debt accumulated during rapid development:
 
 # Phase 16: QA Automation
 
-> **Status:** Planned
+> **Status:** Deferred ⏸️
 > **Goal:** Add automated regression detection for core site flows, UI stability, and content integrity.
 
 ---
 
-## Why This Change?
+## Why Deferred?
 
-Today, only RPC smoke checks run on schedule. The rest of the system (navigation, rendering, styling, and analysis surfaces) lacks automated regression coverage.
+The ROI is negative for a 1-app portfolio with a single developer:
 
----
+| Proposed | Reality |
+|----------|---------|
+| Playwright smoke tests | Manual QA takes 2 minutes. Build already validates routes. |
+| Visual regression | You see every change. No CSS drift risk. |
+| Lighthouse CI | Astro static sites are already fast. No perf issues. |
+| YAML validation | Build fails on malformed YAML. Already caught. |
 
-## Architecture Impact
-
-- Introduce a QA workflow that runs on PRs and scheduled intervals.
-- Lightweight smoke coverage for all key routes.
-- Visual regression snapshots for top pages.
-- Content schema validation for YAML-driven data.
-
----
-
-## Action Items
-
-- [ ] Add Lighthouse CI checks for performance/accessibility/SEO thresholds.
-- [ ] Add Playwright smoke tests for base routes and A/B Simulator flow.
-- [ ] Add visual regression snapshots for critical pages.
-- [ ] Add YAML schema validation for project data + analysis outputs.
-- [ ] Define a minimal desktop + mobile test matrix.
+**Current coverage is sufficient:**
+- `pnpm build` validates imports, TypeScript, YAML, and generates all pages
+- RPC smoke checks run on schedule for Supabase
 
 ---
 
-## Success Metrics
+## Revisit When
 
-- [ ] No broken routes in CI.
-- [ ] Core pages render with zero console errors.
-- [ ] Visual diffs caught before deploy.
-- [ ] Performance thresholds enforced in CI.
+- **3+ apps** — Add Playwright smoke tests for each route
+- **External contributors** — Add visual regression to catch CSS mistakes
+- **Performance issues** — Add Lighthouse CI with failing thresholds
+- **Broken YAML shipped twice** — Add schema validation
+
+---
+
+## Lightweight Alternative (If Needed Later)
+
+Single Playwright test (~15 min to set up):
+```typescript
+test('core pages load without errors', async ({ page }) => {
+  for (const route of ['/', '/ab-simulator/', '/analysis']) {
+    await page.goto(route)
+    expect(page.locator('body')).toBeVisible()
+  }
+})
+```
+
+This catches 80% of regressions with minimal maintenance.
