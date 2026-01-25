@@ -1,0 +1,16 @@
+# Local LLM Bench
+# Status: live
+
+id: local-llm-bench
+name: Local LLM Bench
+url: https://eeshansrivastava89.github.io/local-llm-bench/
+status: live
+external: true
+description: Evaluate local LLM accuracy on structured data extraction. Tests models' ability to extract JSON from unstructured text with ground-truth comparison, F1 scoring, and fuzzy matching. Supports MLX and Ollama backends. Generates interactive reports with charts and per-model analysis.
+shortDescription: Benchmark local LLMs on structured data extraction accuracy
+image: /images/projects/local-llm-bench.png
+tags:
+  - name: LocalAI
+  - name: MLX
+  - name: Ollama
+  - name: Python
