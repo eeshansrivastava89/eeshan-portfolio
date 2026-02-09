@@ -30,7 +30,7 @@ import { getSubstackPosts } from '@shared/lib/substack'
 import SubstackPostPreview from '@shared/components/SubstackPostPreview.astro'
 import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
 
-const SUBSTACK_RSS_URL = 'https://0to1datascience.substack.com/feed'
+const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
 const recentSubstackPosts = allSubstackPosts.slice(0, 5)
 
@@ -80,7 +80,7 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 							}
 							<span class='text-muted-foreground'>|</span>
 							<a
-							href='https://0to1datascience.substack.com'
+							href='https://theasymptotic.substack.com'
 								target='_blank'
 								class='group flex items-center gap-2 text-sm'
 							>
@@ -97,16 +97,11 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 			<!-- PHILOSOPHY (condensed - full version on About) -->
 			<!-- ============================================ -->
 			<section class='mt-8 sm:mt-10 border-l-2 border-amber-400 pl-4 sm:pl-6 space-y-3'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground tracking-tight'>
-					<span class='font-serif italic text-amber-700 dark:text-amber-400'>0→1 Data Science.</span> From applications to analysis.
-				</h2>
 				<p class='text-base text-muted-foreground'>
 					I lead data science teams at <a href='https://www.starbucks.com' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>Starbucks</a> and build
-					<a href='https://eeshans.com/projects/' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>personal projects</a>
-					here to explore what's next in data science, AI & software. Everything is
-					<a href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>open source</a>—explore the
-					<a href='https://eeshans.com/analysis/' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>analysis</a> or
-					<a href='https://0to1datascience.substack.com' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>follow along</a>.
+					<a href='https://eeshans.com/projects/' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>projects</a>
+					here to explore what's next in data science, AI & privacy. Everything is
+					<a href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>open source</a>. Explore the projects, analyses, or follow me on Substack.
 				</p>
 			</section>
 
@@ -165,14 +160,14 @@ const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
 						<div class='flex items-start gap-3'>
 							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
 							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Subscribe for updates</h2>
-							<p class='text-sm text-muted-foreground'>Updates from 0→1 data science. What works, what breaks, what I'm learning.</p>
+								<h2 class='text-xl font-bold text-foreground'>Subscribe to my newsletter for updates</h2>
+							<p class='text-sm text-muted-foreground'>Updates from my newsletter: <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>Asymptotic</span>. Pragmatic takes on AI, data science, and privacy.</p>
 							</div>
 						</div>
 						<form 
 							class='flex w-full gap-2 sm:w-auto'
 							id="newsletter-form"
-						onsubmit="event.preventDefault(); const email = this.email.value; if(email) window.open('https://0to1datascience.substack.com/subscribe?email=' + encodeURIComponent(email), '_blank');"
+						onsubmit="event.preventDefault(); const email = this.email.value; if(email) window.open('https://theasymptotic.substack.com/subscribe?email=' + encodeURIComponent(email), '_blank');"
 						>
 							<input 
 								type="email" 

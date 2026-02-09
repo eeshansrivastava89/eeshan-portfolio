@@ -107,7 +107,15 @@ function decodeHTML(html: string): string {
     '&apos;': "'",
   }
 
-  return html.replace(/&[^;]+;/g, (entity) => entities[entity] || entity)
+  return html.replace(/&[^;]+;/g, (entity) => {
+    if (entities[entity]) return entities[entity]
+    // Handle numeric entities like &#8212; and &#x2014;
+    const numMatch = entity.match(/^&#(\d+);$/)
+    if (numMatch) return String.fromCodePoint(Number(numMatch[1]))
+    const hexMatch = entity.match(/^&#x([0-9a-fA-F]+);$/)
+    if (hexMatch) return String.fromCodePoint(parseInt(hexMatch[1], 16))
+    return entity
+  })
 }
 
 /**

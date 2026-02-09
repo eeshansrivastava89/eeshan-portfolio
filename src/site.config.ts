@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
 		}
 	},
 	// Substack RSS feed URL
-	substackRssUrl: 'https://0to1datascience.substack.com/feed'
+	substackRssUrl: 'https://theasymptotic.substack.com/feed'
 }
 
 export const menuLinks: Array<{ title: string; path: string }> = [

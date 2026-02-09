@@ -9,7 +9,7 @@ export const GET = () => {
 	return new Response(null, {
 		status: 301,
 		headers: {
-			'Location': 'https://0to1datascience.substack.com/feed'
+			'Location': 'https://theasymptotic.substack.com/feed'
 		}
 	})
 }

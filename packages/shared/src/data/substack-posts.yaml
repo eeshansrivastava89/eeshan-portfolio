@@ -4,5 +4,5 @@
 # Add entries as you publish posts that relate to specific projects.
 
 posts:
-  - url: https://0to1datascience.substack.com/p/building-an-ab-testing-memory-game
+  - url: https://theasymptotic.substack.com/p/building-an-ab-testing-memory-game
     project_id: ab-simulator

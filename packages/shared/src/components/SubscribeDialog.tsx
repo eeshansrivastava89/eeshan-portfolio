@@ -24,7 +24,7 @@ export function SubscribeDialog() {
     e.preventDefault()
     if (email) {
       window.open(
-        `https://0to1datascience.substack.com/subscribe?email=${encodeURIComponent(email)}`,
+        `https://theasymptotic.substack.com/subscribe?email=${encodeURIComponent(email)}`,
         '_blank'
       )
       setOpen(false)
@@ -48,9 +48,9 @@ export function SubscribeDialog() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#FF6719]/10">
             <SubstackIcon className="h-7 w-7 text-[#FF6719]" />
           </div>
-          <DialogTitle className="text-xl">Follow along on Substack</DialogTitle>
+          <DialogTitle className="text-xl">Follow my Substack: <span className="italic bg-amber-200/60 dark:bg-amber-400/25 px-1">Asymptotic</span></DialogTitle>
           <DialogDescription className="text-base">
-            Get updates on what works, what breaks, and what I'm learning building data science applications.
+            Pragmatic takes on AI, data science, and privacy.
           </DialogDescription>
         </DialogHeader>
 
