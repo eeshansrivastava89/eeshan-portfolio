@@ -1,25 +1,30 @@
 ---
 /**
  * Full Substack article page — mirrors content with Substack canonical.
- * Reader-experience hub, not first-party publishing.
+ * Two-column layout: TOC sidebar (same position as homepage) + article content.
  */
 import BaseHead from '@/components/BaseHead.astro'
 import ThemeProvider from '@/components/ThemeProvider.astro'
+import ArticleSidebar from '@/components/ArticleSidebar.astro'
 import '../../styles/substack-article.css'
 
 import { getSubstackPosts } from '@/lib/substack'
+import { extractToc } from '@/lib/toc'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
 export async function getStaticPaths() {
   const posts = await getSubstackPosts('https://theasymptotic.substack.com/feed', substackMappingsRaw)
 
-  return posts.map(post => ({
-    params: { slug: post.slug },
-    props: { post }
-  }))
+  return posts.map(post => {
+    const { toc, html } = extractToc(post.content)
+    return {
+      params: { slug: post.slug },
+      props: { post, toc, processedHtml: html }
+    }
+  })
 }
 
-const { post } = Astro.props
+const { post, toc, processedHtml } = Astro.props
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -44,56 +49,62 @@ function formatDate(date: Date): string {
   <body class='bg-background text-foreground'>
     <ThemeProvider />
 
-    <article class='writing-page'>
-      <header class='writing-header'>
-        <a href='/' class='writing-back'>← eeshans.com</a>
-        <h1 class='writing-title'>{post.title}</h1>
-        <div class='writing-meta'>
-          <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>
-          <span class='writing-meta-sep'>·</span>
-          <span>Eeshan Srivastava</span>
+    <div class='article-layout'>
+      <ArticleSidebar title={post.title} toc={toc} />
+
+      <main class='article-main'>
+        <header class='article-header'>
+          <!-- Mobile back link (sidebar hidden on mobile) -->
+          <a href='/' class='article-mobile-back'>← eeshans.com</a>
+          <h1 class='article-title'>{post.title}</h1>
+          <div class='article-meta'>
+            <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>
+            <span class='article-meta-sep'>·</span>
+            <span>Eeshan Srivastava</span>
+          </div>
+        </header>
+
+        <div class='substack-content'>
+          <Fragment set:html={processedHtml} />
         </div>
-      </header>
 
-      <div class='substack-content'>
-        <Fragment set:html={post.content} />
-      </div>
-
-      <footer class='writing-footer'>
-        <p class='writing-attribution'>
-          Originally published on <a href={post.link} target='_blank' rel='noopener noreferrer'>Asymptotic</a>
-        </p>
-        <a href='/' class='writing-back-bottom'>← Back to eeshans.com</a>
-      </footer>
-    </article>
+        <footer class='article-footer'>
+          <p class='article-attribution'>
+            Originally published on <a href={post.link} target='_blank' rel='noopener noreferrer'>Asymptotic</a>
+          </p>
+          <a href='/' class='article-back-bottom'>← Back to eeshans.com</a>
+        </footer>
+      </main>
+    </div>
   </body>
 </html>
 
 <style>
-  .writing-page {
-    max-width: 680px;
+  .article-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 48px 24px 80px;
     font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
   }
 
-  .writing-header {
+  .article-main {
+    padding: 48px 48px 80px;
+    max-width: 720px;
+  }
+
+  .article-mobile-back {
+    display: none;
+  }
+
+  .article-header {
     margin-bottom: 40px;
   }
 
-  .writing-back {
-    font-size: 13px;
-    color: hsl(var(--muted-foreground));
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 24px;
-  }
-
-  .writing-back:hover {
-    color: hsl(var(--foreground));
-  }
-
-  .writing-title {
+  .article-title {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: 700;
@@ -102,41 +113,63 @@ function formatDate(date: Date): string {
     color: hsl(var(--foreground));
   }
 
-  .writing-meta {
+  .article-meta {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     color: hsl(var(--muted-foreground));
   }
 
-  .writing-meta-sep {
+  .article-meta-sep {
     margin: 0 6px;
   }
 
-  .writing-footer {
+  .article-footer {
     margin-top: 48px;
     padding-top: 24px;
     border-top: 1px solid hsl(var(--border));
   }
 
-  .writing-attribution {
+  .article-attribution {
     font-size: 13px;
     color: hsl(var(--muted-foreground));
     margin-bottom: 16px;
   }
 
-  .writing-attribution a {
+  .article-attribution a {
     color: hsl(var(--foreground));
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .writing-back-bottom {
+  .article-back-bottom {
     font-size: 13px;
     color: hsl(var(--muted-foreground));
     text-decoration: none;
   }
 
-  .writing-back-bottom:hover {
+  .article-back-bottom:hover {
     color: hsl(var(--foreground));
+  }
+
+  @media (max-width: 900px) {
+    .article-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .article-main {
+      padding: 24px 20px 64px;
+    }
+
+    .article-mobile-back {
+      display: inline-block;
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+
+    .article-mobile-back:hover {
+      color: hsl(var(--foreground));
+    }
   }
 </style>
