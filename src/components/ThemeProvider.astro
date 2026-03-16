@@ -1,42 +1,53 @@
 <script is:inline>
 	const lightModePref = window.matchMedia('(prefers-color-scheme: light)')
 
-	// Get user preference from local storage or from browser preference
-	function getUserPref() {
-		const storedTheme = localStorage.getItem('theme') ?? undefined
-		return storedTheme || (lightModePref.matches ? 'light' : 'dark')
+	function getMode() {
+		return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
 	}
 
-	function setTheme(newTheme) {
-		if (newTheme !== 'light' && newTheme !== 'dark') {
-			return console.log(`Invalid theme value '${newTheme}' received. Expected 'light' or 'dark'.`)
-		}
+	function getThemeName() {
+		return localStorage.getItem('theme-name') || 'coffee'
+	}
 
-		localStorage.setItem('theme', newTheme)
-
+	function setMode(newMode) {
+		if (newMode !== 'light' && newMode !== 'dark') return
+		localStorage.setItem('theme', newMode)
 		const root = document.documentElement
-
-		// if current dark theme and new theme is dark, return
-		if (newTheme === 'dark' && root.classList.contains('dark')) {
-			return
-		} else if (newTheme === 'light' && !root.classList.contains('dark')) {
-			return
+		if (newMode === 'dark') {
+			root.classList.add('dark')
+		} else {
+			root.classList.remove('dark')
 		}
-
-		root.classList.toggle('dark')
 	}
 
-	// Initial Setup
-	setTheme(getUserPref())
+	function setThemeName(name) {
+		localStorage.setItem('theme-name', name)
+		document.documentElement.setAttribute('data-theme', name)
+		// Update switcher UI if present
+		document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+			btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === name)
+		})
+	}
 
-	// View Transitions hook to restore theme
-	document.addEventListener('astro:after-swap', () => setTheme(getUserPref()))
+	// Initial setup
+	setMode(getMode())
+	setThemeName(getThemeName())
 
-	// Listen for theme-change custom event
-	document.addEventListener('theme-change', (e) => {
-		setTheme(e.detail.theme)
+	// View Transitions hook
+	document.addEventListener('astro:after-swap', () => {
+		setMode(getMode())
+		setThemeName(getThemeName())
 	})
 
-	// Listen for prefers-color-scheme change
-	lightModePref.addEventListener('change', (e) => setTheme(e.matches ? 'light' : 'dark'))
+	// Listen for mode toggle
+	document.addEventListener('theme-change', (e) => {
+		setMode(e.detail.theme)
+	})
+
+	// Listen for theme-name change
+	document.addEventListener('theme-name-change', (e) => {
+		setThemeName(e.detail.name)
+	})
+
+	lightModePref.addEventListener('change', (e) => setMode(e.matches ? 'light' : 'dark'))
 </script>

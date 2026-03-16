@@ -8,8 +8,12 @@
 @tailwind utilities;
 
 @layer base {
-	:root {
-		--background: 0 0% 100%;  /* Pure white */
+	/* ═══════════════════════════════════════════════
+	   THEME: Basic (default — clean neutral gray)
+	   ═══════════════════════════════════════════════ */
+	:root,
+	[data-theme="basic"] {
+		--background: 0 0% 100%;
 		--foreground: 240 10% 1%;
 		--card: 0 0% 100%;
 		--card-foreground: 240 10% 3.9%;
@@ -21,7 +25,7 @@
 		--secondary-foreground: 240 5.9% 10%;
 		--muted: 240 4.8% 95.9%;
 		--muted-foreground: 240 3.8% 20%;
-		--accent: 240 4.8% 95.9%
+		--accent: 240 4.8% 95.9%;
 		--accent-foreground: 240 5.9% 10%;
 		--destructive: 0 72.22% 50.59%;
 		--destructive-foreground: 0 0% 98%;
@@ -30,7 +34,8 @@
 		--ring: 240 5.9% 10%;
 		--radius: 0.5rem;
 	}
-	.dark {
+	.dark[data-theme="basic"],
+	.dark:not([data-theme]) {
 		--background: 240 10% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 240 10% 3.9%;
@@ -50,6 +55,98 @@
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
 		--ring: 240 4.9% 83.9%;
+	}
+
+	/* ═══════════════════════════════════════════════
+	   THEME: Coffee (warm browns, inspired by Bearded Theme)
+	   ═══════════════════════════════════════════════ */
+	[data-theme="coffee"] {
+		--background: 30 20% 97%;
+		--foreground: 24 15% 10%;
+		--card: 30 20% 97%;
+		--card-foreground: 24 15% 10%;
+		--popover: 30 20% 97%;
+		--popover-foreground: 24 15% 10%;
+		--primary: 24 60% 25%;
+		--primary-foreground: 35 30% 95%;
+		--secondary: 30 15% 92%;
+		--secondary-foreground: 24 15% 10%;
+		--muted: 30 15% 92%;
+		--muted-foreground: 24 10% 40%;
+		--accent: 30 60% 50%;
+		--accent-foreground: 24 15% 10%;
+		--destructive: 0 65% 48%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 30 12% 85%;
+		--input: 30 12% 85%;
+		--ring: 24 60% 25%;
+	}
+	.dark[data-theme="coffee"] {
+		--background: 24 18% 8%;
+		--foreground: 35 25% 90%;
+		--card: 24 18% 8%;
+		--card-foreground: 35 25% 90%;
+		--popover: 24 18% 8%;
+		--popover-foreground: 35 25% 90%;
+		--primary: 35 25% 90%;
+		--primary-foreground: 24 18% 8%;
+		--secondary: 24 14% 14%;
+		--secondary-foreground: 35 25% 90%;
+		--muted: 24 14% 14%;
+		--muted-foreground: 30 15% 60%;
+		--accent: 30 55% 45%;
+		--accent-foreground: 35 25% 90%;
+		--destructive: 0 55% 35%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 24 12% 18%;
+		--input: 24 12% 18%;
+		--ring: 30 55% 45%;
+	}
+
+	/* ═══════════════════════════════════════════════
+	   THEME: Cappuccino (soft beige, warm terracotta)
+	   ═══════════════════════════════════════════════ */
+	[data-theme="cappuccino"] {
+		--background: 36 33% 97%;
+		--foreground: 20 20% 12%;
+		--card: 36 33% 97%;
+		--card-foreground: 20 20% 12%;
+		--popover: 36 33% 97%;
+		--popover-foreground: 20 20% 12%;
+		--primary: 16 50% 35%;
+		--primary-foreground: 36 30% 96%;
+		--secondary: 33 20% 91%;
+		--secondary-foreground: 20 20% 12%;
+		--muted: 33 20% 91%;
+		--muted-foreground: 20 12% 42%;
+		--accent: 16 55% 50%;
+		--accent-foreground: 36 30% 96%;
+		--destructive: 0 65% 48%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 33 16% 84%;
+		--input: 33 16% 84%;
+		--ring: 16 50% 35%;
+	}
+	.dark[data-theme="cappuccino"] {
+		--background: 20 16% 9%;
+		--foreground: 36 20% 88%;
+		--card: 20 16% 9%;
+		--card-foreground: 36 20% 88%;
+		--popover: 20 16% 9%;
+		--popover-foreground: 36 20% 88%;
+		--primary: 36 20% 88%;
+		--primary-foreground: 20 16% 9%;
+		--secondary: 20 12% 15%;
+		--secondary-foreground: 36 20% 88%;
+		--muted: 20 12% 15%;
+		--muted-foreground: 30 12% 58%;
+		--accent: 16 45% 48%;
+		--accent-foreground: 36 20% 88%;
+		--destructive: 0 50% 35%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 20 10% 18%;
+		--input: 20 10% 18%;
+		--ring: 16 45% 48%;
 	}
 }
 

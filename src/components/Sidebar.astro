@@ -1,4 +1,6 @@
 ---
+import ThemeSwitcher from './ThemeSwitcher.astro'
+
 import fs from 'fs'
 import yaml from 'js-yaml'
 import path from 'path'
@@ -14,71 +16,93 @@ const socialLinks = socialData.socialLinks
 ---
 
 <aside class='sidebar'>
-	<div class='sidebar-identity'>
-		<h1 class='sidebar-name'>Eeshan Srivastava</h1>
-		<p class='sidebar-role'>
-			<strong>Sr. Data Science Manager</strong> at Starbucks<br />
-			AI/ML, experimentation, recommendations for 40M+ users
-		</p>
-		<div class='sidebar-social'>
-			{socialLinks.map((link) => (
-				<a href={link.url} target='_blank' rel='noopener noreferrer'>{link.label}</a>
-			))}
-			<a href='/rss.xml'>RSS</a>
+	<!-- Always visible (desktop + mobile) -->
+	<div class='sidebar-top'>
+		<div class='sidebar-identity'>
+			<h1 class='sidebar-name'>Eeshan Srivastava</h1>
+			<p class='sidebar-role'>
+				<strong>Sr. Data Science Manager</strong> at Starbucks<br />
+				AI/ML, experimentation, recommendations for 40M+ users
+			</p>
+			<div class='sidebar-social'>
+				{socialLinks.map((link) => (
+					<a href={link.url} target='_blank' rel='noopener noreferrer'>{link.label}</a>
+				))}
+				<a href='/rss.xml'>RSS</a>
+			</div>
+			<ThemeSwitcher />
+		</div>
+
+		<!-- Mobile: compact nav + subscribe row -->
+		<div class='mobile-bar'>
+			<nav class='mobile-nav' id='mobile-nav'>
+				<a href='#writing'>Writing</a>
+				<a href='#projects'>Projects</a>
+				<a href='#opensource'>OSS</a>
+				<a href='#about'>About</a>
+			</nav>
+			<a class='mobile-subscribe' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
 		</div>
 	</div>
 
-	<nav class='sidebar-nav' id='sidebar-nav'>
-		<a href='#writing' data-section='writing'>Writing</a>
-		<a href='#projects' data-section='projects'>Projects</a>
-		<a href='#opensource' data-section='opensource'>Open Source</a>
-		<a href='#analysis' data-section='analysis'>Analysis</a>
-		<a href='#about' data-section='about'>About</a>
-	</nav>
+	<!-- Desktop only: full sidebar content -->
+	<div class='sidebar-expanded'>
+		<nav class='sidebar-nav' id='sidebar-nav'>
+			<a href='#writing' data-section='writing'>Writing</a>
+			<a href='#projects' data-section='projects'>Projects</a>
+			<a href='#opensource' data-section='opensource'>Open Source</a>
+			<a href='#analysis' data-section='analysis'>Analysis</a>
+			<a href='#about' data-section='about'>About</a>
+		</nav>
 
-	<div class='sidebar-credentials'>
-		<div class='sidebar-label'>Experience</div>
-		<div class='sidebar-credential'>
-			<span class='sidebar-company'>Starbucks <span class='sidebar-title'>— Sr. Manager, Data Science</span></span>
-			<span class='sidebar-years'>2019–now</span>
+		<div class='sidebar-credentials'>
+			<div class='sidebar-label'>Experience</div>
+			<div class='sidebar-credential'>
+				<span class='sidebar-company'>Starbucks <span class='sidebar-title'>— Sr. Manager, Data Science</span></span>
+				<span class='sidebar-years'>2019–now</span>
+			</div>
+			<div class='sidebar-credential'>
+				<span class='sidebar-company'>Overstock <span class='sidebar-title'>— Manager, Analytics</span></span>
+				<span class='sidebar-years'>2016–19</span>
+			</div>
+			<div class='sidebar-credential'>
+				<span class='sidebar-company'>Amazon <span class='sidebar-title'>— Sr. PM Intern</span></span>
+				<span class='sidebar-years'>2015</span>
+			</div>
+			<div class='sidebar-credential' style='margin-top:4px;'>
+				<span class='sidebar-edu'>MIT/EdX · Case Western · GGSIPU</span>
+			</div>
 		</div>
-		<div class='sidebar-credential'>
-			<span class='sidebar-company'>Overstock <span class='sidebar-title'>— Manager, Analytics</span></span>
-			<span class='sidebar-years'>2016–19</span>
-		</div>
-		<div class='sidebar-credential'>
-			<span class='sidebar-company'>Amazon <span class='sidebar-title'>— Sr. PM Intern</span></span>
-			<span class='sidebar-years'>2015</span>
-		</div>
-		<div class='sidebar-credential' style='margin-top:4px;'>
-			<span class='sidebar-edu'>MIT/EdX · Case Western · GGSIPU</span>
-		</div>
-	</div>
 
-	<div class='sidebar-currently'>
-		<div class='sidebar-label'>Currently</div>
-		<div class='sidebar-currently-item'>
-			<span class='sidebar-emoji'>✍</span>
-			<span>Writing about <a href='#writing'>agentic coding workflows</a></span>
+		<div class='sidebar-currently'>
+			<div class='sidebar-label'>Currently</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>✍</span>
+				<span>Writing about <a href='#writing'>agentic coding workflows</a></span>
+			</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>🔧</span>
+				<span>Building <a href='https://github.com/eeshansrivastava89/sidequests' target='_blank'>Sidequests</a></span>
+			</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>📚</span>
+				<span>MIT MicroMasters in Statistics</span>
+			</div>
 		</div>
-		<div class='sidebar-currently-item'>
-			<span class='sidebar-emoji'>🔧</span>
-			<span>Building <a href='https://github.com/eeshansrivastava89/sidequests' target='_blank'>Sidequests</a></span>
-		</div>
-		<div class='sidebar-currently-item'>
-			<span class='sidebar-emoji'>📚</span>
-			<span>MIT MicroMasters in Statistics</span>
-		</div>
-	</div>
 
-	<div class='sidebar-newsletter'>
-		<div class='sidebar-newsletter-name'>Asymptotic</div>
-		<p class='sidebar-newsletter-desc'>Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</p>
-		<a class='sidebar-subscribe-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
+		<div class='sidebar-newsletter'>
+			<div class='sidebar-newsletter-name'>Asymptotic</div>
+			<p class='sidebar-newsletter-desc'>Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</p>
+			<a class='sidebar-subscribe-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
+		</div>
 	</div>
 </aside>
 
 <style>
+	/* ═══════ Mobile bar (hidden on desktop) ═══════ */
+	.mobile-bar { display: none; }
+
+	/* ═══════ Desktop sidebar ═══════ */
 	.sidebar {
 		position: sticky;
 		top: 0;
@@ -155,11 +179,7 @@ const socialLinks = socialData.socialLinks
 		font-weight: 450;
 	}
 
-	.sidebar-nav a:hover {
-		color: hsl(var(--foreground));
-		background: hsl(var(--muted));
-	}
-
+	.sidebar-nav a:hover,
 	.sidebar-nav a.active {
 		color: hsl(var(--foreground));
 		background: hsl(var(--muted));
@@ -280,20 +300,82 @@ const socialLinks = socialData.socialLinks
 		color: hsl(var(--background));
 	}
 
+	/* ═══════ Mobile (< 900px) ═══════ */
 	@media (max-width: 900px) {
 		.sidebar {
 			position: relative;
 			height: auto;
 			border-right: none;
 			border-bottom: 1px solid hsl(var(--border));
-			padding: 24px;
+			padding: 20px 20px 0;
+			overflow: visible;
+		}
+
+		.sidebar-expanded { display: none; }
+
+		.sidebar-name { font-size: 20px; }
+
+		.sidebar-role {
+			font-size: 11px;
+			margin-bottom: 8px;
+		}
+
+		.sidebar-role br { display: none; }
+
+		.mobile-bar {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 0;
+			border-top: 1px solid hsl(var(--border));
+			margin-top: 8px;
+		}
+
+		.mobile-nav {
+			display: flex;
+			gap: 4px;
+			flex: 1;
+			overflow-x: auto;
+		}
+
+		.mobile-nav a {
+			font-size: 12px;
+			font-weight: 450;
+			color: hsl(var(--muted-foreground));
+			padding: 4px 10px;
+			border-radius: 6px;
+			text-decoration: none;
+			white-space: nowrap;
+			transition: all 0.15s;
+		}
+
+		.mobile-nav a:hover {
+			color: hsl(var(--foreground));
+			background: hsl(var(--muted));
+		}
+
+		.mobile-subscribe {
+			flex-shrink: 0;
+			padding: 6px 14px;
+			background: hsl(var(--foreground));
+			color: hsl(var(--background));
+			border-radius: 6px;
+			font-size: 11px;
+			font-weight: 600;
+			text-decoration: none;
+			transition: opacity 0.15s;
+		}
+
+		.mobile-subscribe:hover {
+			opacity: 0.9;
+			color: hsl(var(--background));
 		}
 	}
 </style>
 
 <script>
-	// Smooth scroll for nav links
-	document.querySelectorAll('#sidebar-nav a').forEach(link => {
+	// Smooth scroll for both desktop and mobile nav
+	document.querySelectorAll('#sidebar-nav a, #mobile-nav a').forEach(link => {
 		link.addEventListener('click', (e) => {
 			const href = link.getAttribute('href')
 			if (href?.startsWith('#')) {
@@ -304,7 +386,7 @@ const socialLinks = socialData.socialLinks
 		})
 	})
 
-	// Intersection Observer for active nav highlighting
+	// Intersection Observer for active nav (desktop)
 	const sections = document.querySelectorAll('section[id]')
 	const navLinks = document.querySelectorAll('#sidebar-nav a[data-section]')
 
