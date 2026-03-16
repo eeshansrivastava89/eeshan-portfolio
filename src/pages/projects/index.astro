@@ -1,51 +1,297 @@
 ---
-/**
- * Projects Index Page
- * Lists all projects with full ProjectCard and upcoming timeline
- */
-import PageLayout from '../../layouts/BaseLayout.astro'
-import Section from '../../components/Section.astro'
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import ListingSidebar from '@/components/ListingSidebar.astro'
+import { Icon } from 'astro-icon/components'
 
-import { getLiveProjects, getProjectsByStatus } from '@/lib/projects'
+import { getLiveProjects, getProjectsByStatus, STATUS_CONFIG } from '@/lib/projects'
 import { getAllProjects } from '@/data/projectLoader'
-import ProjectCard from '@/components/ProjectCard.astro'
-import Timeline from '@/components/Timeline.astro'
 
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)
 const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
-const activeProjects = [...liveProjects, ...inProgressProjects] // Cards for live + in-progress
 const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
+
+const sections = [
+  { key: 'live', label: 'Live', projects: liveProjects },
+  { key: 'building', label: 'Building', projects: inProgressProjects },
+  { key: 'planned', label: 'Planned', projects: upcomingProjects },
+].filter(s => s.projects.length > 0)
 ---
 
-<PageLayout meta={{ title: 'Projects' }}>
-	<div class='flex w-full flex-col gap-y-10'>
-		<Breadcrumbs currentLabel="Projects" />
-		<Section title='Projects'>
-			<p class='text-base text-muted-foreground'>
-				Each project applies a data science method to a real problem, generates real user data (non-identifiable of course), and is supported by published research you can dive into. Want to build alongside? <a href='https://github.com/eeshansrivastava89/datascienceapps/blob/main/docs/CONTRIBUTING.md' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>Contribute</a> a new project or improve an existing one.
-			</p>
-		</Section>
+<html lang='en' class='scroll-smooth'>
+  <head>
+    <BaseHead title='Projects' description='Data science projects — each applies a method to a real problem.' />
+  </head>
+  <body class='bg-background text-foreground'>
+    <ThemeProvider />
+    <div class='listing-layout'>
+      <ListingSidebar
+        title='Projects'
+        description='Each project applies a data science method to a real problem with real users and published analysis.'
+      >
+        <div class='status-nav'>
+          {sections.map(s => (
+            <a href={`#status-${s.key}`} class='status-link'>
+              <span class='status-dot' data-status={s.key}></span>
+              {s.label}
+              <span class='status-count'>{s.projects.length}</span>
+            </a>
+          ))}
+        </div>
+      </ListingSidebar>
 
-		{activeProjects.length > 0 && (
-			<Section title='Active'>
-				<div class='space-y-4'>
-					{activeProjects.map((project) => (
-						<ProjectCard project={project} variant='full' />
-					))}
-				</div>
-			</Section>
-		)}
+      <main class='listing-main'>
+        <div class='listing-mobile-header'>
+          <a href='/' class='listing-mobile-back'>← Home</a>
+          <h1 class='listing-mobile-title'>Projects</h1>
+        </div>
 
-		{upcomingProjects.length > 0 && (
-			<Section title="What's Next">
-				<Timeline 
-					inProgressProjects={[]} 
-					upcomingProjects={upcomingProjects}
-					title=""
-				/>
-			</Section>
-		)}
-	</div>
-</PageLayout>
+        {sections.map(section => (
+          <section id={`status-${section.key}`} class='project-group'>
+            <h2 class='group-heading'>
+              <span class='group-dot' data-status={section.key}></span>
+              {section.label}
+            </h2>
+            {section.projects.map(project => (
+              <div class='project-full-card'>
+                <div class='project-full-header'>
+                  <h3 class='project-full-name'>{project.name}</h3>
+                  <div class='project-full-links'>
+                    {project.url && (
+                      <a href={project.url} target={project.external ? '_blank' : undefined} class='project-link'>
+                        Try it →
+                      </a>
+                    )}
+                    {project.repo && (
+                      <a href={project.repo} target='_blank' rel='noopener noreferrer' class='project-link'>
+                        <Icon name='simple-icons:github' class='project-link-icon' />
+                        Repo
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <p class='project-full-desc'>{project.description}</p>
+                <div class='project-full-meta'>
+                  <div class='project-full-tags'>
+                    {project.tags.map(tag => (
+                      <span class='project-full-tag'>{tag.name}</span>
+                    ))}
+                  </div>
+                  {project.evidence && project.evidence.length > 0 && (
+                    <div class='project-full-evidence'>
+                      {project.evidence.map(e => (
+                        <span class='evidence-item'>{e}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </section>
+        ))}
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .listing-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .listing-main {
+    padding: 48px 48px 80px;
+    max-width: 800px;
+  }
+
+  .listing-mobile-header { display: none; }
+
+  .status-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .status-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .status-link:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--muted));
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-dot[data-status='live'] { background: #4ade80; }
+  .status-dot[data-status='building'] { background: #fbbf24; }
+  .status-dot[data-status='planned'] { background: #9ca3af; }
+
+  .status-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: hsl(var(--muted-foreground));
+    margin-left: auto;
+  }
+
+  .project-group {
+    margin-bottom: 40px;
+  }
+
+  .group-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .group-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .group-dot[data-status='live'] { background: #4ade80; }
+  .group-dot[data-status='building'] { background: #fbbf24; }
+  .group-dot[data-status='planned'] { background: #9ca3af; }
+
+  .project-full-card {
+    padding: 20px;
+    background: hsl(var(--muted));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  .project-full-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    gap: 12px;
+  }
+
+  .project-full-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+  }
+
+  .project-full-links {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .project-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid hsl(var(--border));
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+
+  .project-link:hover {
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--foreground) / 0.3);
+  }
+
+  .project-link-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .project-full-desc {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .project-full-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .project-full-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .project-full-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 4px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .project-full-evidence {
+    display: flex;
+    gap: 12px;
+  }
+
+  .evidence-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  @media (max-width: 900px) {
+    .listing-layout { grid-template-columns: 1fr; }
+    .listing-main { padding: 24px 20px 64px; }
+    .listing-mobile-header { display: block; margin-bottom: 24px; }
+    .listing-mobile-back {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .listing-mobile-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+    }
+    .project-full-header { flex-direction: column; gap: 8px; }
+  }
+</style>

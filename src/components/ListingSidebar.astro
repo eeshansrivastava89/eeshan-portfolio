@@ -1,0 +1,107 @@
+---
+import { Icon } from 'astro-icon/components'
+import SidebarNewsletter from './SidebarNewsletter.astro'
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+---
+
+<aside class='listing-sidebar'>
+  <div class='listing-sidebar-top'>
+    <a href='/' class='listing-sidebar-back'>
+      <Icon name='lucide:home' class='listing-sidebar-icon' />
+      <span>Home</span>
+    </a>
+    <h1 class='listing-sidebar-title'>{title}</h1>
+    <p class='listing-sidebar-desc'>{description}</p>
+  </div>
+
+  <div class='listing-sidebar-filters'>
+    <slot />
+  </div>
+
+  <div class='listing-sidebar-bottom'>
+    <hr class='listing-sidebar-rule' />
+    <SidebarNewsletter />
+  </div>
+</aside>
+
+<style>
+  .listing-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 24px 20px 32px;
+    border-right: 1px solid hsl(var(--border));
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+
+  .listing-sidebar::-webkit-scrollbar { width: 0; }
+
+  .listing-sidebar-top {
+    margin-bottom: 16px;
+  }
+
+  .listing-sidebar-back {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 450;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: color 0.15s;
+  }
+
+  .listing-sidebar-back:hover {
+    color: hsl(var(--foreground));
+  }
+
+  .listing-sidebar-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .listing-sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin-bottom: 6px;
+  }
+
+  .listing-sidebar-desc {
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.5;
+  }
+
+  .listing-sidebar-filters {
+    padding: 12px 0;
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .listing-sidebar-bottom {
+    margin-top: auto;
+  }
+
+  .listing-sidebar-rule {
+    border: none;
+    border-top: 1px solid hsl(var(--border));
+    margin: 0 0 10px 0;
+  }
+
+  @media (max-width: 900px) {
+    .listing-sidebar {
+      display: none;
+    }
+  }
+</style>
