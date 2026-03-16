@@ -1,5 +1,6 @@
 ---
 import ThemeSwitcher from './ThemeSwitcher.astro'
+import { Icon } from 'astro-icon/components'
 
 import fs from 'fs'
 import yaml from 'js-yaml'
@@ -26,9 +27,15 @@ const socialLinks = socialData.socialLinks
 			</p>
 			<div class='sidebar-social'>
 				{socialLinks.map((link) => (
-					<a href={link.url} target='_blank' rel='noopener noreferrer'>{link.label}</a>
+					<a href={link.url} target='_blank' rel='noopener noreferrer' title={link.label}>
+						<Icon name={link.icon} class='sidebar-social-icon' />
+						<span>{link.label}</span>
+					</a>
 				))}
-				<a href='/rss.xml'>RSS</a>
+				<a href='/rss.xml' title='RSS'>
+					<Icon name='lucide:rss' class='sidebar-social-icon' />
+					<span>RSS</span>
+				</a>
 			</div>
 			<ThemeSwitcher />
 		</div>
@@ -91,7 +98,10 @@ const socialLinks = socialData.socialLinks
 		</div>
 
 		<div class='sidebar-newsletter'>
-			<div class='sidebar-newsletter-name'>Asymptotic</div>
+			<div class='sidebar-newsletter-name'>
+				<Icon name='simple-icons:substack' class='sidebar-newsletter-icon' />
+				Asymptotic
+			</div>
 			<p class='sidebar-newsletter-desc'>Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</p>
 			<a class='sidebar-subscribe-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
 		</div>
@@ -145,6 +155,9 @@ const socialLinks = socialData.socialLinks
 	}
 
 	.sidebar-social a {
+		display: flex;
+		align-items: center;
+		gap: 3px;
 		color: hsl(var(--muted-foreground));
 		font-size: 11px;
 		font-family: 'JetBrains Mono', monospace;
@@ -157,6 +170,12 @@ const socialLinks = socialData.socialLinks
 	.sidebar-social a:hover {
 		color: hsl(var(--foreground));
 		border-bottom-color: hsl(var(--muted-foreground));
+	}
+
+	.sidebar-social-icon {
+		width: 12px;
+		height: 12px;
+		flex-shrink: 0;
 	}
 
 	.sidebar-nav {
@@ -272,6 +291,15 @@ const socialLinks = socialData.socialLinks
 		font-weight: 600;
 		color: hsl(var(--foreground));
 		margin-bottom: 3px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.sidebar-newsletter-icon {
+		width: 14px;
+		height: 14px;
+		flex-shrink: 0;
 	}
 
 	.sidebar-newsletter-desc {

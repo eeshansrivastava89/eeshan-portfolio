@@ -8,6 +8,7 @@ import ContributionCalendar from '@/components/ContributionCalendar.astro'
 import ActivityTimeline from '@/components/ActivityTimeline.astro'
 import AboutRecognition from '@/components/AboutRecognition.astro'
 
+import { Icon } from 'astro-icon/components'
 import { siteConfig } from '@/site-config'
 
 // Load projects
@@ -74,10 +75,12 @@ const githubData = await getGitHubData()
 
 				<!-- Open Source -->
 				<section id='opensource' class='homepage-section'>
-					<div class='opensource-header'>
-						<h2 class='section-title'>Open Source</h2>
+					<div class='section-header'>
+						<h2>Open Source</h2>
+						<div class='section-line'></div>
 						<a class='gh-link' href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer'>
-							@eeshansrivastava89 →
+							<Icon name='simple-icons:github' class='gh-icon' />
+							<span>@eeshansrivastava89</span>
 						</a>
 					</div>
 
@@ -174,29 +177,25 @@ const githubData = await getGitHubData()
 		background: hsl(var(--border));
 	}
 
-	.opensource-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		margin-bottom: 20px;
-	}
-
-	.opensource-header .section-title {
-		font-family: 'Playfair Display', serif;
-		font-size: 20px;
-		font-weight: 600;
-		color: hsl(var(--foreground));
-	}
-
 	.gh-link {
+		display: flex;
+		align-items: center;
+		gap: 4px;
 		font-family: 'JetBrains Mono', monospace;
-		font-size: 12px;
+		font-size: 11px;
 		color: hsl(var(--muted-foreground));
 		text-decoration: none;
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
 	.gh-link:hover {
 		color: hsl(var(--foreground));
+	}
+
+	.gh-icon {
+		width: 14px;
+		height: 14px;
 	}
 
 	.homepage-placeholder {
