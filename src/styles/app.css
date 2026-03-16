@@ -9,51 +9,55 @@
 
 @layer base {
 	/* ═══════════════════════════════════════════════
-	   THEME: Coffee (default — warm browns, Bearded Theme inspired)
+	   THEME: Coffee (from Bearded Theme by BeardedBear)
+	   Light: Coffee Cream — Dark: Coffee
+	   github.com/BeardedBear/bearded-theme
 	   ═══════════════════════════════════════════════ */
 	:root,
 	[data-theme="coffee-light"] {
-		--background: 30 20% 97%;
-		--foreground: 24 15% 10%;
-		--card: 30 20% 97%;
-		--card-foreground: 24 15% 10%;
-		--popover: 30 20% 97%;
-		--popover-foreground: 24 15% 10%;
-		--primary: 24 60% 25%;
-		--primary-foreground: 35 30% 95%;
-		--secondary: 30 15% 92%;
-		--secondary-foreground: 24 15% 10%;
-		--muted: 30 15% 92%;
-		--muted-foreground: 24 10% 40%;
-		--accent: 30 60% 50%;
-		--accent-foreground: 24 15% 10%;
-		--destructive: 0 65% 48%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 30 12% 85%;
-		--input: 30 12% 85%;
-		--ring: 24 60% 25%;
+		/* Coffee Cream: bg #EAE4E1, fg #36221d, surface #e3dbd7 */
+		--background: 20 16% 90%;
+		--foreground: 12 32% 16%;
+		--card: 20 16% 90%;
+		--card-foreground: 12 32% 16%;
+		--popover: 20 16% 90%;
+		--popover-foreground: 12 32% 16%;
+		--primary: 12 32% 16%;
+		--primary-foreground: 20 16% 90%;
+		--secondary: 17 14% 87%;
+		--secondary-foreground: 12 32% 16%;
+		--muted: 17 14% 87%;
+		--muted-foreground: 9 8% 61%;
+		--accent: 13 58% 56%;
+		--accent-foreground: 20 16% 90%;
+		--destructive: 0 100% 61%;
+		--destructive-foreground: 20 16% 90%;
+		--border: 18 15% 75%;
+		--input: 18 15% 75%;
+		--ring: 13 58% 56%;
 		--radius: 0.5rem;
 	}
 	[data-theme="coffee-dark"] {
-		--background: 24 18% 8%;
-		--foreground: 35 25% 90%;
-		--card: 24 18% 8%;
-		--card-foreground: 35 25% 90%;
-		--popover: 24 18% 8%;
-		--popover-foreground: 35 25% 90%;
-		--primary: 35 25% 90%;
-		--primary-foreground: 24 18% 8%;
-		--secondary: 24 14% 14%;
-		--secondary-foreground: 35 25% 90%;
-		--muted: 24 14% 14%;
-		--muted-foreground: 30 15% 60%;
-		--accent: 30 55% 45%;
-		--accent-foreground: 35 25% 90%;
-		--destructive: 0 55% 35%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 24 12% 18%;
-		--input: 24 12% 18%;
-		--ring: 30 55% 45%;
+		/* Coffee: bg #292423, fg #ceb5b0, surface #231f1e */
+		--background: 8 7% 15%;
+		--foreground: 10 22% 75%;
+		--card: 8 7% 15%;
+		--card-foreground: 10 22% 75%;
+		--popover: 8 7% 15%;
+		--popover-foreground: 10 22% 75%;
+		--primary: 10 22% 75%;
+		--primary-foreground: 8 7% 15%;
+		--secondary: 12 8% 13%;
+		--secondary-foreground: 10 22% 75%;
+		--muted: 12 8% 13%;
+		--muted-foreground: 12 13% 30%;
+		--accent: 13 81% 70%;
+		--accent-foreground: 8 7% 15%;
+		--destructive: 0 100% 60%;
+		--destructive-foreground: 10 22% 75%;
+		--border: 20 7% 9%;
+		--input: 20 7% 9%;
+		--ring: 13 81% 70%;
 	}
 
 	/* ═══════════════════════════════════════════════
