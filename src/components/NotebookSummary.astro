@@ -10,17 +10,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import yaml from 'js-yaml'
 
-/**
- * Find the monorepo root by looking for pnpm-workspace.yaml
- */
-function findMonorepoRoot(): string {
-  let dir = process.cwd()
-  while (dir !== path.dirname(dir)) {
-    if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) {
-      return dir
-    }
-    dir = path.dirname(dir)
-  }
+/** Project root */
+function getProjectRoot(): string {
   return process.cwd()
 }
 
@@ -60,7 +51,7 @@ let data: SummaryData | null = null
 let error: string | null = null
 
 try {
-	const root = findMonorepoRoot()
+	const root = getProjectRoot()
 	const yamlPath = path.join(root, 'public', 'analysis', projectId, `${notebookId}.yaml`)
 	if (fs.existsSync(yamlPath)) {
 		const yamlContent = fs.readFileSync(yamlPath, 'utf-8')

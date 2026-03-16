@@ -23,7 +23,7 @@ const initialProjectId = Astro.url.searchParams.get('project')?.trim() || undefi
 // Serialize dates for React (convert Date objects to ISO strings for hydration)
 const serializedContent = allContent.map(item => ({
 	...item,
-	date: item.date.toISOString()
+	date: item.date instanceof Date ? item.date.toISOString() : item.date
 }))
 
 const meta = {
