@@ -37,17 +37,13 @@ const { title, toc } = Astro.props
 			</a>
 		))}
 
-		<div class='toc-follow'>
-			<hr class='toc-follow-rule' />
-			<a
-				href='https://theasymptotic.substack.com/subscribe'
-				target='_blank'
-				rel='noopener noreferrer'
-				class='toc-follow-link'
-			>
-				<Icon name='simple-icons:substack' class='toc-follow-icon' />
-				<span>Subscribe to Asymptotic for email updates</span>
-			</a>
+		<div class='toc-newsletter'>
+			<div class='toc-newsletter-name'>
+				<Icon name='simple-icons:substack' class='toc-newsletter-icon' />
+				Asymptotic
+			</div>
+			<p class='toc-newsletter-desc'>AI, data science, and privacy. Email updates.</p>
+			<a class='toc-newsletter-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
 		</div>
 	</nav>
 </aside>
@@ -81,8 +77,9 @@ const { title, toc } = Astro.props
 	.article-sidebar-link {
 		display: flex;
 		align-items: center;
-		gap: 4px;
-		font-size: 11px;
+		gap: 5px;
+		font-size: 13px;
+		font-weight: 450;
 		color: hsl(var(--muted-foreground));
 		text-decoration: none;
 		transition: color 0.15s;
@@ -93,8 +90,8 @@ const { title, toc } = Astro.props
 	}
 
 	.article-sidebar-icon {
-		width: 12px;
-		height: 12px;
+		width: 14px;
+		height: 14px;
 	}
 
 	.article-sidebar-sep {
@@ -153,35 +150,55 @@ const { title, toc } = Astro.props
 		font-size: 11px;
 	}
 
-	.toc-follow {
-		margin-top: 8px;
+	.toc-newsletter {
+		margin-top: 10px;
+		padding: 12px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 6px;
 	}
 
-	.toc-follow-rule {
-		border: none;
-		border-top: 1px solid hsl(var(--border));
-		margin: 0 0 8px 0;
-	}
-
-	.toc-follow-link {
+	.toc-newsletter-name {
+		font-family: 'Playfair Display', serif;
+		font-size: 13px;
+		font-weight: 600;
+		color: hsl(var(--foreground));
+		margin-bottom: 2px;
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		font-size: 11px;
-		color: hsl(var(--muted-foreground));
-		text-decoration: none;
-		padding: 4px 10px;
-		transition: color 0.15s;
+		gap: 5px;
 	}
 
-	.toc-follow-link:hover {
-		color: hsl(var(--foreground));
-	}
-
-	.toc-follow-icon {
+	.toc-newsletter-icon {
 		width: 12px;
 		height: 12px;
 		flex-shrink: 0;
+	}
+
+	.toc-newsletter-desc {
+		font-size: 10px;
+		color: hsl(var(--muted-foreground));
+		margin-bottom: 8px;
+		line-height: 1.4;
+	}
+
+	.toc-newsletter-btn {
+		display: block;
+		width: 100%;
+		padding: 6px 12px;
+		background: hsl(var(--foreground));
+		color: hsl(var(--background));
+		border-radius: 6px;
+		font-size: 11px;
+		font-weight: 600;
+		text-align: center;
+		text-decoration: none;
+		transition: opacity 0.15s;
+	}
+
+	.toc-newsletter-btn:hover {
+		opacity: 0.9;
+		color: hsl(var(--background));
 	}
 
 	@media (max-width: 900px) {
