@@ -5,7 +5,7 @@ import Sidebar from '@/components/Sidebar.astro'
 import WritingList from '@/components/WritingList.astro'
 import ProjectGrid from '@/components/ProjectGrid.astro'
 import ContributionCalendar from '@/components/ContributionCalendar.astro'
-import CommitFeed from '@/components/CommitFeed'
+import ActivityTimeline from '@/components/ActivityTimeline.astro'
 import AboutRecognition from '@/components/AboutRecognition.astro'
 
 import { siteConfig } from '@/site-config'
@@ -83,13 +83,13 @@ const githubData = await getGitHubData()
 
 					{githubData && githubData.weeks && githubData.weeks.length > 0 ? (
 						<>
-							<ContributionCalendar
-								weeks={githubData.weeks}
-								totalContributions={githubData.totalContributions}
-							/>
-							<CommitFeed client:idle />
-						</>
-					) : (
+								<ContributionCalendar
+									weeks={githubData.weeks}
+									totalContributions={githubData.totalContributions}
+								/>
+								<ActivityTimeline activities={githubData.recentActivity} />
+							</>
+						) : (
 						<p class='homepage-placeholder'>
 							GitHub data unavailable — will populate on next build with GITHUB_TOKEN.
 						</p>

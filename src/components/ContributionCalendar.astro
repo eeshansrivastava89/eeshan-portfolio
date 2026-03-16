@@ -13,7 +13,7 @@ const { weeks, totalContributions } = Astro.props
   <div class='contrib-header'>
     <span class='contrib-count'>{totalContributions.toLocaleString()} contributions in the last year</span>
   </div>
-  <div class='contrib-grid'>
+  <div class='contrib-grid' style={`--weeks: ${weeks.length};`}>
     {weeks.map(week => (
       <div class='contrib-week'>
         {week.contributionDays.map(day => (
@@ -44,32 +44,34 @@ const { weeks, totalContributions } = Astro.props
   }
 
   .contrib-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(var(--weeks), minmax(0, 1fr));
     gap: 3px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .contrib-grid::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .contrib-grid::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 2px;
+    width: 100%;
+    align-items: start;
   }
 
   .contrib-week {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: repeat(7, minmax(0, 1fr));
     gap: 3px;
-    flex-shrink: 0;
+    min-width: 0;
   }
 
   .contrib-day {
-    width: 11px;
-    height: 11px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 2px;
     outline: 1px solid hsl(var(--border) / 0.3);
+  }
+
+  @media (max-width: 900px) {
+    .contrib-grid {
+      gap: 2px;
+    }
+
+    .contrib-week {
+      gap: 2px;
+    }
   }
 </style>
