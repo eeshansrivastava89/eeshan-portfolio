@@ -1,0 +1,130 @@
+---
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
+
+const impactYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/impact.yaml'), 'utf8')
+const impactData = yaml.load(impactYaml) as { impact: Array<{ title: string; icon: string; visible: boolean; items: Array<{ text: string; link?: string }> }> }
+const allRecognition = impactData.impact
+---
+
+<section class='about-section' id='about'>
+	<div class='section-header'>
+		<h2>About & Recognition</h2>
+		<div class='section-line'></div>
+	</div>
+
+	<div class='about-narrative'>
+		<p>
+			12+ years across engineering, marketing analytics, modeling, and team leadership.
+			CS undergrad, MBA, currently pursuing MIT MicroMasters in Statistics.
+			Not ex-FAANG. Not Ivy League. Just someone who likes making things work,
+			learning by doing, and working with smart people.
+		</p>
+		<p>
+			On the side, I build apps on AI, data science & privacy to see what will hold up
+			beyond the hype cycles. Each project goes end-to-end — design, engineering, analytics,
+			published analysis. Everything here is open source and non-commercial.
+		</p>
+	</div>
+
+	<div class='recognition-grid'>
+		{allRecognition.map(section => (
+			section.items.map(item => (
+				<div class='recognition-item'>
+					<div class='recognition-type'>{section.title.replace(' & ', ' / ')}</div>
+					<div class='recognition-detail'>
+						{item.link ? (
+							<a href={item.link} target='_blank' rel='noopener noreferrer'>{item.text}</a>
+						) : (
+							item.text
+						)}
+					</div>
+				</div>
+			))
+		))}
+	</div>
+</section>
+
+<style>
+	.about-section {
+		margin-bottom: 56px;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 24px;
+	}
+
+	.section-header h2 {
+		font-family: 'Playfair Display', serif;
+		font-size: 20px;
+		font-weight: 600;
+		white-space: nowrap;
+		color: hsl(var(--foreground));
+	}
+
+	.section-line {
+		flex: 1;
+		height: 1px;
+		background: hsl(var(--border));
+	}
+
+	.about-narrative {
+		margin-bottom: 24px;
+	}
+
+	.about-narrative p {
+		font-size: 14px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.7;
+		margin-bottom: 12px;
+	}
+
+	.recognition-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+
+	.recognition-item {
+		padding: 16px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 6px;
+	}
+
+	.recognition-type {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 10px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		color: hsl(var(--muted-foreground));
+		margin-bottom: 8px;
+	}
+
+	.recognition-detail {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.5;
+	}
+
+	.recognition-detail a {
+		color: hsl(var(--foreground));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--border));
+		text-underline-offset: 2px;
+	}
+
+	.recognition-detail a:hover {
+		text-decoration-color: hsl(var(--foreground));
+	}
+
+	@media (max-width: 900px) {
+		.recognition-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

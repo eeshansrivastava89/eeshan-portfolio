@@ -1,191 +1,189 @@
 ---
-import PageLayout from '../layouts/BaseLayout.astro'
-import { Icon } from 'astro-icon/components'
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import Sidebar from '@/components/Sidebar.astro'
+import WritingList from '@/components/WritingList.astro'
+import ProjectGrid from '@/components/ProjectGrid.astro'
+import AboutRecognition from '@/components/AboutRecognition.astro'
 
-import { Image } from 'astro:assets'
-import profile from '../assets/profile.jpg'
-
-import fs from 'fs'
-import yaml from 'js-yaml'
-import path from 'path'
-
-// Load social links
-const socialLinksYaml = fs.readFileSync(
-	path.join(process.cwd(), 'src/data/social-links.yaml'),
-	'utf8'
-)
-const socialData = yaml.load(socialLinksYaml) as {
-	socialLinks: Array<{ name: string; url: string; icon: string; label: string }>
-}
-const socialLinks = socialData.socialLinks
+import { siteConfig } from '@/site-config'
 
 // Load projects
 import { getLiveProjects, getProjectsByStatus } from '@/lib/projects'
 import { getAllProjects } from '@/data/projectLoader'
-import ProjectCard from '@/components/ProjectCard.astro'
-import Timeline from '@/components/Timeline.astro'
 
 // Load Substack posts
 import { getSubstackPosts } from '@/lib/substack'
-import SubstackPostPreview from '@/components/SubstackPostPreview.astro'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
 const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
-const recentSubstackPosts = allSubstackPosts.slice(0, 5)
 
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)
 const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
-const activeProjects = [...liveProjects, ...inProgressProjects] // Cards for live + in-progress
-const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
+const activeProjects = [...liveProjects, ...inProgressProjects]
+
+// Featured project = first live project (A/B Simulator)
+const featuredProject = liveProjects[0]
 ---
 
-<PageLayout meta={{ title: 'Home' }}>
-	<div class='w-full'>
+<html lang={siteConfig.lang} class='scroll-smooth'>
+	<head>
+		<BaseHead title='Eeshan Srivastava' description={siteConfig.description} />
+	</head>
 
-		<!-- ============================================ -->
-		<!-- HERO: Compact horizontal card                -->
-		<!-- ============================================ -->
-			<section class='border border-border bg-primary-foreground p-4 sm:p-6 shadow-lg shadow-black/5'>
-				<div class='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
-					<!-- Profile Image -->
-					<Image
-						src={profile}
-						alt='profile photo'
-						class='h-28 w-28 shrink-0 rounded-full bg-[#FFBE98] p-1.5'
-						loading='eager'
-					/>
+	<body>
+		<ThemeProvider />
+		<div class='homepage'>
+			<Sidebar />
 
-					<!-- Name + Tagline + Socials -->
-					<div class='flex flex-col items-center gap-4 sm:items-start'>
-						<div class='text-center sm:text-left'>
-							<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
-							<p class='mt-1 text-lg text-muted-foreground'>
-							Engineer x Data Scientist x Leader
-						</p>
-						<!-- Social Links + Newsletter -->
-						<div class='flex flex-wrap items-center gap-x-3 gap-y-3'>
-							{
-								socialLinks.map((link) => (
-									<a
-										href={link.url}
-										target='_blank'
-										class='flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-all hover:bg-input'
-										aria-label={link.label}
-									>
-										<Icon name={link.icon} class='h-4 w-4' />
-									</a>
-								))
-							}
-							<span class='text-muted-foreground'>|</span>
-							<a
-							href='https://theasymptotic.substack.com'
-								target='_blank'
-								class='group flex items-center gap-2 text-sm'
-							>
-								<Icon name='simple-icons:substack' class='h-4 w-4 shrink-0' />
-								<span class='text-muted-foreground'>Newsletter</span>
-								<span class='font-medium text-foreground transition group-hover:translate-x-0.5'>Follow →</span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<!-- ============================================ -->
-			<!-- PHILOSOPHY (condensed - full version on About) -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 border-l-2 border-amber-400 pl-4 sm:pl-6 space-y-3'>
-				<p class='text-base text-muted-foreground'>
-					I lead data science teams at <a href='https://www.starbucks.com' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>Starbucks</a> and build
-					<a href='https://eeshans.com/projects/' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>projects</a>
-					here to explore what's next in data science, AI & privacy. Everything is
-					<a href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>open source</a>. Explore the projects, analyses, or follow me on Substack.
+			<main class='homepage-main'>
+				<!-- Intro -->
+				<p class='homepage-intro'>
+					I build apps on AI, data science & privacy to see what holds up beyond the hype.
+					Each project goes end-to-end — design, engineering, analytics, published analysis.
+					<strong>Everything is open source.</strong>
 				</p>
-			</section>
 
-			<!-- ============================================ -->
-			<!-- PROJECTS                                     -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 space-y-4'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Projects</h2>
-				<p class='text-base text-muted-foreground'>Each app applies a data science method to a real problem. Interact, contribute data, and explore the published analysis.</p>
-				<div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-					{activeProjects.map((project) => (
-						<ProjectCard project={project} variant='grid' />
-					))}
-				</div>
-				
-				<!-- What's Next Timeline (coming-soon only) -->
-				{upcomingProjects.length > 0 && (
-					<div class='mt-6'>
-						<Timeline 
-							inProgressProjects={[]} 
-							upcomingProjects={upcomingProjects} 
-						/>
+				<!-- Writing -->
+				<section id='writing' class='homepage-section'>
+					<WritingList posts={allSubstackPosts} />
+				</section>
+
+				<!-- Projects -->
+				<section id='projects' class='homepage-section'>
+					<div class='section-header'>
+						<h2>Projects</h2>
+						<div class='section-line'></div>
 					</div>
-				)}
-			</section>
+					<ProjectGrid projects={activeProjects} featured={featuredProject} />
+				</section>
 
-			<!-- ============================================ -->
-			<!-- RECENT SUBSTACK POSTS                        -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 space-y-4'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Recent Substack Posts</h2>
-				{recentSubstackPosts.length > 0 ? (
-					<ul class='flex flex-col gap-y-3 list-none p-0 m-0'>
-						{recentSubstackPosts.map((post) => (
-							<SubstackPostPreview post={post} withDesc />
-						))}
-					</ul>
-				) : (
-					<p class='text-muted-foreground'>No posts yet.</p>
-				)}
-				<a
-					href='/analysis'
-					class='inline-block text-sm text-muted-foreground hover:text-foreground transition'
-				>
-					View all posts →
-				</a>
-			</section>
-
-			<!-- ============================================ -->
-			<!-- NEWSLETTER SIGNUP                            -->
-			<!-- Opens Substack with email pre-filled         -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10'>
-				<div class='border border-border bg-primary-foreground p-4 sm:p-8'>
-					<div class='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-						<div class='flex items-start gap-3'>
-							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
-							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Subscribe to my newsletter for updates</h2>
-							<p class='text-sm text-muted-foreground'>Updates from my newsletter: <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>Asymptotic</span>. Pragmatic takes on AI, data science, and privacy.</p>
-							</div>
-						</div>
-						<form 
-							class='flex w-full gap-2 sm:w-auto'
-							id="newsletter-form"
-						onsubmit="event.preventDefault(); const email = this.email.value; if(email) window.open('https://theasymptotic.substack.com/subscribe?email=' + encodeURIComponent(email), '_blank');"
-						>
-							<input 
-								type="email" 
-								name="email" 
-								placeholder="you@email.com" 
-								required
-								class='flex-1 sm:w-64 px-4 py-2.5 text-sm border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground transition-all'
-							/>
-							<button 
-								type="submit" 
-								class='shrink-0 px-5 py-2.5 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-all hover:-translate-y-0.5'
-							>
-								Subscribe
-							</button>
-						</form>
+				<!-- Open Source (placeholder for Phase 3) -->
+				<section id='opensource' class='homepage-section'>
+					<div class='section-header'>
+						<h2>Open Source</h2>
+						<div class='section-line'></div>
 					</div>
-				</div>
-			</section>
+					<p class='homepage-placeholder'>
+						Contribution calendar and recent commits — coming in Phase 3.
+					</p>
+				</section>
 
-	</div>
-</PageLayout>
+				<!-- Analysis (placeholder) -->
+				<section id='analysis' class='homepage-section'>
+					<div class='section-header'>
+						<h2>Published Analysis</h2>
+						<div class='section-line'></div>
+					</div>
+					<p class='homepage-placeholder'>
+						Jupyter notebook analysis cards — coming soon.
+					</p>
+				</section>
+
+				<!-- About & Recognition -->
+				<AboutRecognition />
+
+				<!-- Footer -->
+				<footer class='homepage-footer'>
+					<p class='homepage-quote'>"Just someone who likes making things work, learning by doing, and working with smart people."</p>
+					<span class='homepage-location'>Seattle, WA</span>
+				</footer>
+			</main>
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	.homepage {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		min-height: 100vh;
+		max-width: 1280px;
+		margin: 0 auto;
+		font-family: 'Inter', -apple-system, sans-serif;
+		font-size: 14px;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.homepage-main {
+		padding: 48px 48px 80px 48px;
+		max-width: 800px;
+	}
+
+	.homepage-intro {
+		font-size: 15px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.7;
+		margin-bottom: 40px;
+		max-width: 560px;
+	}
+
+	.homepage-intro strong {
+		color: hsl(var(--foreground));
+		font-weight: 500;
+	}
+
+	.homepage-section {
+		margin-bottom: 56px;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 24px;
+	}
+
+	.section-header h2 {
+		font-family: 'Playfair Display', serif;
+		font-size: 20px;
+		font-weight: 600;
+		white-space: nowrap;
+		color: hsl(var(--foreground));
+	}
+
+	.section-line {
+		flex: 1;
+		height: 1px;
+		background: hsl(var(--border));
+	}
+
+	.homepage-placeholder {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		padding: 24px;
+		border: 1px dashed hsl(var(--border));
+		border-radius: 8px;
+		text-align: center;
+	}
+
+	.homepage-footer {
+		padding: 32px 0;
+		border-top: 1px solid hsl(var(--border));
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.homepage-quote {
+		font-style: italic;
+		max-width: 400px;
+	}
+
+	.homepage-location {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+	}
+
+	@media (max-width: 900px) {
+		.homepage {
+			grid-template-columns: 1fr;
+		}
+		.homepage-main {
+			padding: 32px 24px 64px;
+		}
+	}
+</style>

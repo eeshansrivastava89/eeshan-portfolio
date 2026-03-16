@@ -16,8 +16,13 @@ export interface Project {
   description: string
   shortDescription: string
   tags: ProjectTag[]
-  image?: string // Path to project thumbnail (e.g., /images/projects/ab-simulator.png)
-  external?: boolean // If true, url is external, hide Analysis button, disable stats
+  image?: string
+  external?: boolean
+  repo?: string
+  analysis_url?: string
+  methods?: string[]
+  evidence?: string[]
+  related_writing?: string[]
 }
 
 // Status badge configuration

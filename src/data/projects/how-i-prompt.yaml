@@ -9,7 +9,15 @@ external: true
 description: Analyze your Claude AI conversation history. Discover your prompting style, persona classification, and get a shareable wrapped-style report.
 shortDescription: Year-in-review visualization of your Claude conversations
 image: /images/projects/howiprompt.png
+repo: https://github.com/eeshansrivastava89/howiprompt
 tags:
   - name: Python
   - name: Claude AI
   - name: Data Visualization
+methods:
+  - Conversation Analysis
+  - Persona Classification
+evidence:
+  - "4,887 prompts analyzed"
+related_writing:
+  - what-4887-ai-prompts-say-about-how-we-talk-to-machines
