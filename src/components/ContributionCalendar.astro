@@ -46,13 +46,24 @@ const { weeks, totalContributions } = Astro.props
   .contrib-grid {
     display: flex;
     gap: 3px;
-    overflow: hidden;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .contrib-grid::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .contrib-grid::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 2px;
   }
 
   .contrib-week {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    flex-shrink: 0;
   }
 
   .contrib-day {
