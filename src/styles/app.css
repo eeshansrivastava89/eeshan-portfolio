@@ -9,58 +9,10 @@
 
 @layer base {
 	/* ═══════════════════════════════════════════════
-	   THEME: Basic (default — clean neutral gray)
+	   THEME: Coffee (default — warm browns, Bearded Theme inspired)
 	   ═══════════════════════════════════════════════ */
 	:root,
-	[data-theme="basic"] {
-		--background: 0 0% 100%;
-		--foreground: 240 10% 1%;
-		--card: 0 0% 100%;
-		--card-foreground: 240 10% 3.9%;
-		--popover: 0 0% 100%;
-		--popover-foreground: 240 10% 3.9%;
-		--primary: 240 5.9% 10%;
-		--primary-foreground: 0 0% 98%;
-		--secondary: 240 4.8% 95.9%;
-		--secondary-foreground: 240 5.9% 10%;
-		--muted: 240 4.8% 95.9%;
-		--muted-foreground: 240 3.8% 20%;
-		--accent: 240 4.8% 95.9%;
-		--accent-foreground: 240 5.9% 10%;
-		--destructive: 0 72.22% 50.59%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 240 5.9% 90%;
-		--input: 240 5.9% 90%;
-		--ring: 240 5.9% 10%;
-		--radius: 0.5rem;
-	}
-	.dark[data-theme="basic"],
-	.dark:not([data-theme]) {
-		--background: 240 10% 3.9%;
-		--foreground: 0 0% 98%;
-		--card: 240 10% 3.9%;
-		--card-foreground: 0 0% 98%;
-		--popover: 240 10% 3.9%;
-		--popover-foreground: 0 0% 98%;
-		--primary: 0 0% 98%;
-		--primary-foreground: 240 5.9% 10%;
-		--secondary: 240 3.7% 15.9%;
-		--secondary-foreground: 0 0% 98%;
-		--muted: 240 3.7% 15.9%;
-		--muted-foreground: 240 5% 72%;
-		--accent: 240 3.7% 15.9%;
-		--accent-foreground: 0 0% 98%;
-		--destructive: 0 62.8% 30.6%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 240 3.7% 15.9%;
-		--input: 240 3.7% 15.9%;
-		--ring: 240 4.9% 83.9%;
-	}
-
-	/* ═══════════════════════════════════════════════
-	   THEME: Coffee (warm browns, inspired by Bearded Theme)
-	   ═══════════════════════════════════════════════ */
-	[data-theme="coffee"] {
+	[data-theme="coffee-light"] {
 		--background: 30 20% 97%;
 		--foreground: 24 15% 10%;
 		--card: 30 20% 97%;
@@ -80,8 +32,9 @@
 		--border: 30 12% 85%;
 		--input: 30 12% 85%;
 		--ring: 24 60% 25%;
+		--radius: 0.5rem;
 	}
-	.dark[data-theme="coffee"] {
+	[data-theme="coffee-dark"] {
 		--background: 24 18% 8%;
 		--foreground: 35 25% 90%;
 		--card: 24 18% 8%;
@@ -104,49 +57,96 @@
 	}
 
 	/* ═══════════════════════════════════════════════
-	   THEME: Cappuccino (soft beige, warm terracotta)
+	   THEME: Catppuccin (Latte light / Mocha dark)
+	   Official palette: github.com/catppuccin/catppuccin
 	   ═══════════════════════════════════════════════ */
-	[data-theme="cappuccino"] {
-		--background: 36 33% 97%;
-		--foreground: 20 20% 12%;
-		--card: 36 33% 97%;
-		--card-foreground: 20 20% 12%;
-		--popover: 36 33% 97%;
-		--popover-foreground: 20 20% 12%;
-		--primary: 16 50% 35%;
-		--primary-foreground: 36 30% 96%;
-		--secondary: 33 20% 91%;
-		--secondary-foreground: 20 20% 12%;
-		--muted: 33 20% 91%;
-		--muted-foreground: 20 12% 42%;
-		--accent: 16 55% 50%;
-		--accent-foreground: 36 30% 96%;
-		--destructive: 0 65% 48%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 33 16% 84%;
-		--input: 33 16% 84%;
-		--ring: 16 50% 35%;
+	[data-theme="catppuccin-light"] {
+		--background: 220 23% 95%;
+		--foreground: 234 16% 35%;
+		--card: 220 23% 95%;
+		--card-foreground: 234 16% 35%;
+		--popover: 220 23% 95%;
+		--popover-foreground: 234 16% 35%;
+		--primary: 234 16% 35%;
+		--primary-foreground: 220 23% 95%;
+		--secondary: 223 13% 83%;
+		--secondary-foreground: 234 16% 35%;
+		--muted: 223 13% 83%;
+		--muted-foreground: 233 10% 47%;
+		--accent: 266 85% 58%;
+		--accent-foreground: 220 23% 95%;
+		--destructive: 347 87% 44%;
+		--destructive-foreground: 220 23% 95%;
+		--border: 228 11% 75%;
+		--input: 228 11% 75%;
+		--ring: 266 85% 58%;
 	}
-	.dark[data-theme="cappuccino"] {
-		--background: 20 16% 9%;
-		--foreground: 36 20% 88%;
-		--card: 20 16% 9%;
-		--card-foreground: 36 20% 88%;
-		--popover: 20 16% 9%;
-		--popover-foreground: 36 20% 88%;
-		--primary: 36 20% 88%;
-		--primary-foreground: 20 16% 9%;
-		--secondary: 20 12% 15%;
-		--secondary-foreground: 36 20% 88%;
-		--muted: 20 12% 15%;
-		--muted-foreground: 30 12% 58%;
-		--accent: 16 45% 48%;
-		--accent-foreground: 36 20% 88%;
-		--destructive: 0 50% 35%;
+	[data-theme="catppuccin-dark"] {
+		--background: 240 21% 15%;
+		--foreground: 226 64% 88%;
+		--card: 240 21% 15%;
+		--card-foreground: 226 64% 88%;
+		--popover: 240 21% 15%;
+		--popover-foreground: 226 64% 88%;
+		--primary: 226 64% 88%;
+		--primary-foreground: 240 21% 15%;
+		--secondary: 237 16% 23%;
+		--secondary-foreground: 226 64% 88%;
+		--muted: 237 16% 23%;
+		--muted-foreground: 228 24% 72%;
+		--accent: 267 84% 81%;
+		--accent-foreground: 240 21% 15%;
+		--destructive: 351 74% 73%;
+		--destructive-foreground: 240 21% 15%;
+		--border: 231 11% 48%;
+		--input: 231 11% 48%;
+		--ring: 267 84% 81%;
+	}
+
+	/* ═══════════════════════════════════════════════
+	   THEME: Classic (clean neutral gray)
+	   ═══════════════════════════════════════════════ */
+	[data-theme="classic-light"] {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 1%;
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		--primary: 240 5.9% 10%;
+		--primary-foreground: 0 0% 98%;
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 20%;
+		--accent: 240 4.8% 95.9%;
+		--accent-foreground: 240 5.9% 10%;
+		--destructive: 0 72.22% 50.59%;
 		--destructive-foreground: 0 0% 98%;
-		--border: 20 10% 18%;
-		--input: 20 10% 18%;
-		--ring: 16 45% 48%;
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 90%;
+		--ring: 240 5.9% 10%;
+	}
+	[data-theme="classic-dark"] {
+		--background: 240 10% 3.9%;
+		--foreground: 0 0% 98%;
+		--card: 240 10% 3.9%;
+		--card-foreground: 0 0% 98%;
+		--popover: 240 10% 3.9%;
+		--popover-foreground: 0 0% 98%;
+		--primary: 0 0% 98%;
+		--primary-foreground: 240 5.9% 10%;
+		--secondary: 240 3.7% 15.9%;
+		--secondary-foreground: 0 0% 98%;
+		--muted: 240 3.7% 15.9%;
+		--muted-foreground: 240 5% 72%;
+		--accent: 240 3.7% 15.9%;
+		--accent-foreground: 0 0% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 240 3.7% 15.9%;
+		--input: 240 3.7% 15.9%;
+		--ring: 240 4.9% 83.9%;
 	}
 }
 

@@ -1,53 +1,74 @@
 <script is:inline>
 	const lightModePref = window.matchMedia('(prefers-color-scheme: light)')
 
-	function getMode() {
-		return localStorage.getItem('theme') || (lightModePref.matches ? 'light' : 'dark')
+	// Theme format: "coffee-light", "coffee-dark", "catppuccin-light", etc.
+	// Stored in localStorage as "site-theme"
+	function getTheme() {
+		const stored = localStorage.getItem('site-theme')
+		if (stored) return stored
+		// Default: coffee, mode from system preference
+		return lightModePref.matches ? 'coffee-light' : 'coffee-dark'
 	}
 
-	function getThemeName() {
-		return localStorage.getItem('theme-name') || 'coffee'
-	}
-
-	function setMode(newMode) {
-		if (newMode !== 'light' && newMode !== 'dark') return
-		localStorage.setItem('theme', newMode)
+	function setTheme(theme) {
+		localStorage.setItem('site-theme', theme)
 		const root = document.documentElement
-		if (newMode === 'dark') {
+		root.setAttribute('data-theme', theme)
+
+		// Set .dark class for Tailwind dark: variants
+		if (theme.endsWith('-dark')) {
 			root.classList.add('dark')
 		} else {
 			root.classList.remove('dark')
 		}
-	}
 
-	function setThemeName(name) {
-		localStorage.setItem('theme-name', name)
-		document.documentElement.setAttribute('data-theme', name)
-		// Update switcher UI if present
+		// Update switcher button states
+		const family = theme.replace(/-light$/, '').replace(/-dark$/, '')
 		document.querySelectorAll('[data-theme-btn]').forEach(btn => {
-			btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === name)
+			btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === family)
+		})
+
+		// Update mode indicator on active button
+		document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+			const indicator = btn.querySelector('.theme-mode-indicator')
+			if (indicator && btn.getAttribute('data-theme-btn') === family) {
+				indicator.textContent = theme.endsWith('-dark') ? '☽' : '☼'
+			}
 		})
 	}
 
+	// Toggle: clicking a theme button cycles between its light and dark variant
+	window.__toggleTheme = function(family) {
+		const current = getTheme()
+		const currentFamily = current.replace(/-light$/, '').replace(/-dark$/, '')
+		const currentMode = current.endsWith('-dark') ? 'dark' : 'light'
+
+		if (family === currentFamily) {
+			// Same family — toggle mode
+			setTheme(family + '-' + (currentMode === 'light' ? 'dark' : 'light'))
+		} else {
+			// Different family — switch to it, keep current mode
+			setTheme(family + '-' + currentMode)
+		}
+	}
+
 	// Initial setup
-	setMode(getMode())
-	setThemeName(getThemeName())
+	setTheme(getTheme())
 
-	// View Transitions hook
-	document.addEventListener('astro:after-swap', () => {
-		setMode(getMode())
-		setThemeName(getThemeName())
+	// View Transitions
+	document.addEventListener('astro:after-swap', () => setTheme(getTheme()))
+
+	// System preference change
+	lightModePref.addEventListener('change', (e) => {
+		const current = getTheme()
+		const family = current.replace(/-light$/, '').replace(/-dark$/, '')
+		setTheme(family + '-' + (e.matches ? 'light' : 'dark'))
 	})
 
-	// Listen for mode toggle
+	// Legacy theme-change event (for Header toggle on non-homepage pages)
 	document.addEventListener('theme-change', (e) => {
-		setMode(e.detail.theme)
+		const current = getTheme()
+		const family = current.replace(/-light$/, '').replace(/-dark$/, '')
+		setTheme(family + '-' + e.detail.theme)
 	})
-
-	// Listen for theme-name change
-	document.addEventListener('theme-name-change', (e) => {
-		setThemeName(e.detail.name)
-	})
-
-	lightModePref.addEventListener('change', (e) => setMode(e.matches ? 'light' : 'dark'))
 </script>
