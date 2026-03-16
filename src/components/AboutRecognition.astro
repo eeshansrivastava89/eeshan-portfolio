@@ -3,6 +3,13 @@ import fs from 'fs'
 import yaml from 'js-yaml'
 import path from 'path'
 
+// Load timeline
+const timelineYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/timeline.yaml'), 'utf8')
+const timelineData = yaml.load(timelineYaml) as { timeline: Array<{ timespan: string; title: string; company: string; description: string; type?: string }> }
+const workItems = timelineData.timeline.filter(item => item.type !== 'education')
+const educationItems = timelineData.timeline.filter(item => item.type === 'education')
+
+// Load impact
 const impactYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/impact.yaml'), 'utf8')
 const impactData = yaml.load(impactYaml) as { impact: Array<{ title: string; icon: string; visible: boolean; items: Array<{ text: string; link?: string }> }> }
 const allRecognition = impactData.impact
@@ -14,35 +21,66 @@ const allRecognition = impactData.impact
 		<div class='section-line'></div>
 	</div>
 
-	<div class='about-narrative'>
+	<!-- Bio -->
+	<div class='about-bio'>
 		<p>
-			12+ years across engineering, marketing analytics, modeling, and team leadership.
-			CS undergrad, MBA, currently pursuing MIT MicroMasters in Statistics.
-			Not ex-FAANG. Not Ivy League. Just someone who likes making things work,
-			learning by doing, and working with smart people.
+			I lead a data science team at Starbucks focused on AI/ML, personalization, and experimentation — including recommendation models powering the Starbucks app for 40M+ users.
 		</p>
 		<p>
-			On the side, I build apps on AI, data science & privacy to see what will hold up
-			beyond the hype cycles. Each project goes end-to-end — design, engineering, analytics,
-			published analysis. Everything here is open source and non-commercial.
+			12+ years across engineering, marketing analytics, modeling, and team leadership. CS undergrad, MBA. Not ex-FAANG. Not Ivy League. Just someone who likes making things work, learning by doing, and working with smart people.
+		</p>
+		<p>
+			On the side, I build apps on AI, data science & privacy to see what holds up beyond the hype cycles. Each project goes end-to-end — product design, engineering, analytics, real users, published analysis. Everything is open source and non-commercial.
 		</p>
 	</div>
 
-	<div class='recognition-grid'>
-		{allRecognition.map(section => (
-			section.items.map(item => (
-				<div class='recognition-item'>
-					<div class='recognition-type'>{section.title.replace(' & ', ' / ')}</div>
-					<div class='recognition-detail'>
-						{item.link ? (
-							<a href={item.link} target='_blank' rel='noopener noreferrer'>{item.text}</a>
-						) : (
-							item.text
-						)}
-					</div>
+	<!-- Experience Timeline -->
+	<div class='about-timeline'>
+		<div class='about-label'>Experience</div>
+		{workItems.map(item => (
+			<div class='timeline-row'>
+				<div class='timeline-info'>
+					<span class='timeline-company'>{item.company}</span>
+					<span class='timeline-role'>{item.title}</span>
 				</div>
-			))
+				<span class='timeline-years'>{item.timespan}</span>
+			</div>
 		))}
+	</div>
+
+	<!-- Education -->
+	<div class='about-timeline'>
+		<div class='about-label'>Education</div>
+		{educationItems.map(item => (
+			<div class='timeline-row'>
+				<div class='timeline-info'>
+					<span class='timeline-company'>{item.company}</span>
+					<span class='timeline-role'>{item.title}</span>
+				</div>
+				<span class='timeline-years'>{item.timespan}</span>
+			</div>
+		))}
+	</div>
+
+	<!-- Recognition -->
+	<div class='about-recognition'>
+		<div class='about-label'>Recognition & Leadership</div>
+		<div class='recognition-grid'>
+			{allRecognition.map(section => (
+				section.items.map(item => (
+					<div class='recognition-item'>
+						<div class='recognition-type'>{section.title.replace(' & ', ' / ')}</div>
+						<div class='recognition-detail'>
+							{item.link ? (
+								<a href={item.link} target='_blank' rel='noopener noreferrer'>{item.text}</a>
+							) : (
+								item.text
+							)}
+						</div>
+					</div>
+				))
+			))}
+		</div>
 	</div>
 </section>
 
@@ -72,25 +110,79 @@ const allRecognition = impactData.impact
 		background: hsl(var(--border));
 	}
 
-	.about-narrative {
+	/* Bio */
+	.about-bio {
 		margin-bottom: 24px;
 	}
 
-	.about-narrative p {
+	.about-bio p {
 		font-size: 14px;
 		color: hsl(var(--muted-foreground));
 		line-height: 1.7;
-		margin-bottom: 12px;
+		margin-bottom: 10px;
+	}
+
+	/* Timeline */
+	.about-timeline {
+		margin-bottom: 20px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.about-label {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 10px;
+		color: hsl(var(--muted-foreground));
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-bottom: 10px;
+	}
+
+	.timeline-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding: 4px 0;
+	}
+
+	.timeline-info {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.timeline-company {
+		font-size: 13px;
+		font-weight: 500;
+		color: hsl(var(--foreground));
+	}
+
+	.timeline-role {
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+	}
+
+	.timeline-years {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+		white-space: nowrap;
+		flex-shrink: 0;
+		margin-left: 16px;
+	}
+
+	/* Recognition */
+	.about-recognition {
+		margin-bottom: 20px;
 	}
 
 	.recognition-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 12px;
+		gap: 10px;
 	}
 
 	.recognition-item {
-		padding: 16px;
+		padding: 14px;
 		background: hsl(var(--muted));
 		border: 1px solid hsl(var(--border));
 		border-radius: 6px;
@@ -102,7 +194,7 @@ const allRecognition = impactData.impact
 		text-transform: uppercase;
 		letter-spacing: 1px;
 		color: hsl(var(--muted-foreground));
-		margin-bottom: 8px;
+		margin-bottom: 6px;
 	}
 
 	.recognition-detail {

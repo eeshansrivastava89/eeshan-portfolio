@@ -63,22 +63,9 @@ const socialLinks = socialData.socialLinks
 		</nav>
 
 		<div class='sidebar-credentials'>
-			<div class='sidebar-label'>Experience</div>
-			<div class='sidebar-credential'>
-				<span class='sidebar-company'>Starbucks <span class='sidebar-title'>— Sr. Manager, Data Science</span></span>
-				<span class='sidebar-years'>2019–now</span>
-			</div>
-			<div class='sidebar-credential'>
-				<span class='sidebar-company'>Overstock <span class='sidebar-title'>— Manager, Analytics</span></span>
-				<span class='sidebar-years'>2016–19</span>
-			</div>
-			<div class='sidebar-credential'>
-				<span class='sidebar-company'>Amazon <span class='sidebar-title'>— Sr. PM Intern</span></span>
-				<span class='sidebar-years'>2015</span>
-			</div>
-			<div class='sidebar-credential' style='margin-top:4px;'>
-				<span class='sidebar-edu'>MIT/EdX · Case Western · GGSIPU</span>
-			</div>
+			<p class='sidebar-bio'>
+				12+ years across engineering, analytics, and data science leadership at Starbucks, Overstock, and Amazon. CS undergrad, MBA from Case Western, pursuing MIT MicroMasters in Statistics.
+			</p>
 		</div>
 
 		<div class='sidebar-currently'>
@@ -184,6 +171,7 @@ const socialLinks = socialData.socialLinks
 		gap: 1px;
 		margin-bottom: 0;
 		padding: 10px 0;
+		margin-top: 10px;
 		border-top: 1px solid hsl(var(--border));
 		border-bottom: 1px solid hsl(var(--border));
 	}
@@ -207,6 +195,12 @@ const socialLinks = socialData.socialLinks
 	.sidebar-credentials {
 		padding: 10px 0;
 		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.sidebar-bio {
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.5;
 	}
 
 	.sidebar-label {
