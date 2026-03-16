@@ -8,14 +8,14 @@ import { siteConfig } from '@/site-config'
 
 type Props = SiteMeta
 
-const { articleDate, description, ogImage, title } = Astro.props
+const { articleDate, description, ogImage, title, canonicalUrl } = Astro.props
 
 const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY || ''
 const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || 'https://api-v2.eeshans.com'
 
 const titleSeparator = '•'
 const siteTitle = `${title} ${titleSeparator} ${siteConfig.title}`
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const canonicalURL = canonicalUrl || new URL(Astro.url.pathname, Astro.site).href
 const socialImageURL = new URL(ogImage ? ogImage : '/social-card.png', Astro.url).href
 ---
 

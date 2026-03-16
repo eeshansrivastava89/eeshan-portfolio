@@ -36,9 +36,9 @@ function formatDate(date: Date): string {
       title={post.title}
       description={post.description}
       ogImage={post.coverImage}
+      articleDate={post.pubDate.toISOString()}
+      canonicalUrl={post.link}
     />
-    <!-- Canonical points to Substack — this is a mirror, not original publication -->
-    <link rel='canonical' href={post.link} />
   </head>
 
   <body class='bg-background text-foreground'>
