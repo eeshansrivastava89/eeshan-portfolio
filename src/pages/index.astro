@@ -65,7 +65,7 @@ const githubData = await getGitHubData()
 				<!-- Writing -->
 				<section id='writing' class='homepage-section'>
 					<div class='section-header'>
-						<h2>Writing</h2>
+						<h1>Writing</h1>
 						<div class='section-line'></div>
 					</div>
 					<WritingList posts={allSubstackPosts} />
@@ -74,7 +74,7 @@ const githubData = await getGitHubData()
 				<!-- Projects -->
 				<section id='projects' class='homepage-section'>
 					<div class='section-header'>
-						<h2>Projects</h2>
+						<h1>Projects</h1>
 						<div class='section-line'></div>
 					</div>
 					<ProjectGrid projects={activeProjects} featured={featuredProject} />
@@ -84,7 +84,7 @@ const githubData = await getGitHubData()
 				<!-- Open Source -->
 				<section id='opensource' class='homepage-section'>
 					<div class='section-header'>
-						<h2>Open Source</h2>
+						<h1>Open Source</h1>
 						<div class='section-line'></div>
 						<a class='gh-link' href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer'>
 							<Icon name='simple-icons:github' class='gh-icon' />
@@ -109,7 +109,7 @@ const githubData = await getGitHubData()
 				<!-- Analysis -->
 				<section id='analysis' class='homepage-section'>
 					<div class='section-header'>
-						<h2>Published Analysis</h2>
+						<h1>Published Analysis</h1>
 						<div class='section-line'></div>
 					</div>
 					{recentAnalysis.length > 0 ? (
@@ -190,6 +190,7 @@ const githubData = await getGitHubData()
 		margin-bottom: 24px;
 	}
 
+	.section-header h1,
 	.section-header h2 {
 		font-family: 'Playfair Display', serif;
 		font-size: 26px;
