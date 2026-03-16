@@ -38,25 +38,25 @@
 		--radius: 0.5rem;
 	}
 	[data-theme="coffee-dark"] {
-		/* Coffee: bg #292423, fg #ceb5b0, surface #231f1e */
+		/* Coffee: bg #292423, accent #F09177 — fg/muted boosted for readability */
 		--background: 8 7% 15%;
-		--foreground: 10 22% 75%;
+		--foreground: 10 18% 88%;
 		--card: 8 7% 15%;
-		--card-foreground: 10 22% 75%;
+		--card-foreground: 10 18% 88%;
 		--popover: 8 7% 15%;
-		--popover-foreground: 10 22% 75%;
-		--primary: 10 22% 75%;
+		--popover-foreground: 10 18% 88%;
+		--primary: 10 18% 88%;
 		--primary-foreground: 8 7% 15%;
-		--secondary: 12 8% 13%;
-		--secondary-foreground: 10 22% 75%;
-		--muted: 12 8% 13%;
-		--muted-foreground: 12 13% 30%;
+		--secondary: 12 8% 19%;
+		--secondary-foreground: 10 18% 88%;
+		--muted: 12 8% 19%;
+		--muted-foreground: 10 12% 60%;
 		--accent: 13 81% 70%;
 		--accent-foreground: 8 7% 15%;
 		--destructive: 0 100% 60%;
-		--destructive-foreground: 10 22% 75%;
-		--border: 20 7% 9%;
-		--input: 20 7% 9%;
+		--destructive-foreground: 10 18% 88%;
+		--border: 12 8% 22%;
+		--input: 12 8% 22%;
 		--ring: 13 81% 70%;
 	}
 
