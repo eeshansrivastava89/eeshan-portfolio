@@ -15,7 +15,7 @@ function formatDate(date: Date): string {
 ---
 
 {featured && (
-	<a class='writing-featured' href={featured.link} target='_blank' rel='noopener noreferrer'>
+	<a class='writing-featured' href={`/writing/${featured.slug}`}>
 		<span class='writing-badge'>Latest Post</span>
 		<h3 class='writing-featured-title'>{featured.title}</h3>
 		<p class='writing-featured-excerpt'>{featured.description}</p>
@@ -27,7 +27,7 @@ function formatDate(date: Date): string {
 
 <div class='writing-list'>
 	{rest.map((post) => (
-		<a class='writing-item' href={post.link} target='_blank' rel='noopener noreferrer'>
+		<a class='writing-item' href={`/writing/${post.slug}`}>
 			<span class='writing-date'>{formatDate(post.pubDate)}</span>
 			<div class='writing-col'>
 				<h4 class='writing-title'>{post.title}</h4>

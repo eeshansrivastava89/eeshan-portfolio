@@ -1,0 +1,142 @@
+---
+/**
+ * Full Substack article page — mirrors content with Substack canonical.
+ * Reader-experience hub, not first-party publishing.
+ */
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import '../../styles/substack-article.css'
+
+import { getSubstackPosts } from '@/lib/substack'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
+
+export async function getStaticPaths() {
+  const posts = await getSubstackPosts('https://theasymptotic.substack.com/feed', substackMappingsRaw)
+
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post }
+  }))
+}
+
+const { post } = Astro.props
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+---
+
+<html lang='en' class='scroll-smooth'>
+  <head>
+    <BaseHead
+      title={post.title}
+      description={post.description}
+      ogImage={post.coverImage}
+    />
+    <!-- Canonical points to Substack — this is a mirror, not original publication -->
+    <link rel='canonical' href={post.link} />
+  </head>
+
+  <body class='bg-background text-foreground'>
+    <ThemeProvider />
+
+    <article class='writing-page'>
+      <header class='writing-header'>
+        <a href='/' class='writing-back'>← eeshans.com</a>
+        <h1 class='writing-title'>{post.title}</h1>
+        <div class='writing-meta'>
+          <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>
+          <span class='writing-meta-sep'>·</span>
+          <span>Eeshan Srivastava</span>
+        </div>
+      </header>
+
+      <div class='substack-content'>
+        <Fragment set:html={post.content} />
+      </div>
+
+      <footer class='writing-footer'>
+        <p class='writing-attribution'>
+          Originally published on <a href={post.link} target='_blank' rel='noopener noreferrer'>Asymptotic</a>
+        </p>
+        <a href='/' class='writing-back-bottom'>← Back to eeshans.com</a>
+      </footer>
+    </article>
+  </body>
+</html>
+
+<style>
+  .writing-page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+
+  .writing-header {
+    margin-bottom: 40px;
+  }
+
+  .writing-back {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+
+  .writing-back:hover {
+    color: hsl(var(--foreground));
+  }
+
+  .writing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: hsl(var(--foreground));
+  }
+
+  .writing-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .writing-meta-sep {
+    margin: 0 6px;
+  }
+
+  .writing-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .writing-attribution {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 16px;
+  }
+
+  .writing-attribution a {
+    color: hsl(var(--foreground));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .writing-back-bottom {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+  }
+
+  .writing-back-bottom:hover {
+    color: hsl(var(--foreground));
+  }
+</style>

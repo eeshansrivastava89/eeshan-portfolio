@@ -1,0 +1,50 @@
+---
+/**
+ * Writing index — all Substack articles
+ */
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+import { getSubstackPosts } from '@/lib/substack'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
+
+const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
+const posts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+---
+
+<PageLayout meta={{ title: 'Writing', description: 'Articles on AI, data science, and privacy from Asymptotic.' }}>
+  <div class='w-full'>
+    <h1 class='text-2xl font-bold mb-2'>Writing</h1>
+    <p class='text-muted-foreground mb-8'>
+      Articles from <a href='https://theasymptotic.substack.com' target='_blank' class='underline hover:text-foreground'>Asymptotic</a> — pragmatic takes on AI, data science, and privacy.
+    </p>
+
+    <div class='flex flex-col'>
+      {posts.map(post => (
+        <a
+          href={`/writing/${post.slug}`}
+          class='group flex items-baseline gap-4 py-4 border-b border-border hover:bg-muted/50 -mx-4 px-4 rounded transition-colors'
+        >
+          <span class='font-mono text-xs text-muted-foreground whitespace-nowrap w-20 shrink-0'>
+            {formatDate(post.pubDate)}
+          </span>
+          <div>
+            <h2 class='text-sm font-medium group-hover:text-foreground transition-colors'>
+              {post.title}
+            </h2>
+            <p class='text-sm text-muted-foreground mt-1 line-clamp-1'>
+              {post.description}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</PageLayout>

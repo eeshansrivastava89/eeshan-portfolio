@@ -1,0 +1,165 @@
+/**
+ * Scoped styles for Substack article HTML rendered via content:encoded.
+ * Normalizes Substack's inline styles and class names to match site design.
+ */
+
+.substack-content {
+  font-size: 16px;
+  line-height: 1.75;
+  color: hsl(var(--foreground));
+}
+
+/* Headings */
+.substack-content h1,
+.substack-content h2,
+.substack-content h3,
+.substack-content h4 {
+  font-family: 'Playfair Display', serif;
+  color: hsl(var(--foreground));
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  line-height: 1.3;
+}
+
+.substack-content h2 { font-size: 1.5em; }
+.substack-content h3 { font-size: 1.25em; }
+.substack-content h4 { font-size: 1.1em; }
+
+/* Paragraphs */
+.substack-content p {
+  margin-bottom: 1.25em;
+}
+
+/* Links */
+.substack-content a {
+  color: hsl(var(--foreground));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--border));
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+
+.substack-content a:hover {
+  text-decoration-color: hsl(var(--foreground));
+}
+
+/* Images */
+.substack-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1.5em 0;
+}
+
+.substack-content figure {
+  margin: 1.5em 0;
+}
+
+.substack-content figcaption {
+  font-size: 0.85em;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  margin-top: 0.5em;
+}
+
+/* Blockquotes */
+.substack-content blockquote {
+  border-left: 3px solid hsl(var(--border));
+  padding-left: 1em;
+  margin: 1.5em 0;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+/* Code */
+.substack-content code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.875em;
+  padding: 0.15em 0.4em;
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+.substack-content pre {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.875em;
+  padding: 1em;
+  background: hsl(var(--muted));
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.substack-content pre code {
+  padding: 0;
+  background: transparent;
+}
+
+/* Lists */
+.substack-content ul,
+.substack-content ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+.substack-content li {
+  margin-bottom: 0.5em;
+}
+
+/* Tables */
+.substack-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.9em;
+}
+
+.substack-content th,
+.substack-content td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.substack-content th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+}
+
+/* Horizontal rule */
+.substack-content hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 2em 0;
+}
+
+/* Substack-specific: subscription widget, share buttons, etc. */
+.substack-content .subscription-widget-wrap,
+.substack-content .subscribe-widget,
+.substack-content .footer-wrap,
+.substack-content .post-footer {
+  display: none;
+}
+
+/* Substack embedded tweets/videos */
+.substack-content .tweet,
+.substack-content .twitter-tweet {
+  margin: 1.5em auto;
+}
+
+.substack-content iframe {
+  max-width: 100%;
+  margin: 1.5em 0;
+}
+
+/* Substack captions */
+.substack-content .captioned-image-container {
+  margin: 1.5em 0;
+}
+
+.substack-content .image-caption {
+  font-size: 0.85em;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  margin-top: 0.5em;
+}
