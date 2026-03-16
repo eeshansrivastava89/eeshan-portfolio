@@ -28,12 +28,12 @@ const socialLinks = socialData.socialLinks
 		</div>
 	</div>
 
-	<nav class='sidebar-nav'>
-		<a href='#writing'>Writing</a>
-		<a href='#projects'>Projects</a>
-		<a href='#opensource'>Open Source</a>
-		<a href='#analysis'>Analysis</a>
-		<a href='#about'>About</a>
+	<nav class='sidebar-nav' id='sidebar-nav'>
+		<a href='#writing' data-section='writing'>Writing</a>
+		<a href='#projects' data-section='projects'>Projects</a>
+		<a href='#opensource' data-section='opensource'>Open Source</a>
+		<a href='#analysis' data-section='analysis'>Analysis</a>
+		<a href='#about' data-section='about'>About</a>
 	</nav>
 
 	<div class='sidebar-credentials'>
@@ -156,6 +156,11 @@ const socialLinks = socialData.socialLinks
 	}
 
 	.sidebar-nav a:hover {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+	}
+
+	.sidebar-nav a.active {
 		color: hsl(var(--foreground));
 		background: hsl(var(--muted));
 	}
@@ -285,3 +290,38 @@ const socialLinks = socialData.socialLinks
 		}
 	}
 </style>
+
+<script>
+	// Smooth scroll for nav links
+	document.querySelectorAll('#sidebar-nav a').forEach(link => {
+		link.addEventListener('click', (e) => {
+			const href = link.getAttribute('href')
+			if (href?.startsWith('#')) {
+				e.preventDefault()
+				const target = document.querySelector(href)
+				target?.scrollIntoView({ behavior: 'smooth' })
+			}
+		})
+	})
+
+	// Intersection Observer for active nav highlighting
+	const sections = document.querySelectorAll('section[id]')
+	const navLinks = document.querySelectorAll('#sidebar-nav a[data-section]')
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					navLinks.forEach(link => link.classList.remove('active'))
+					const activeLink = document.querySelector(
+						`#sidebar-nav a[data-section="${entry.target.id}"]`
+					)
+					activeLink?.classList.add('active')
+				}
+			})
+		},
+		{ rootMargin: '-20% 0px -60% 0px' }
+	)
+
+	sections.forEach(section => observer.observe(section))
+</script>
