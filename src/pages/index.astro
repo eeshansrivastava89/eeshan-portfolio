@@ -139,6 +139,7 @@ const githubData = await getGitHubData()
 	.homepage-main {
 		padding: 48px 48px 80px 48px;
 		max-width: 800px;
+		scroll-snap-type: y proximity;
 	}
 
 	.homepage-intro {
@@ -156,6 +157,8 @@ const githubData = await getGitHubData()
 
 	.homepage-section {
 		margin-bottom: 56px;
+		scroll-snap-align: start;
+		scroll-margin-top: 24px;
 	}
 
 	.section-header {
