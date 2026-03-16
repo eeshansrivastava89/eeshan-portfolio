@@ -8,7 +8,9 @@ import { siteConfig } from '@/site-config'
 import { getAllProjects } from '@/data/projectLoader'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
-const allContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)
+const rawContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)
+// Analysis page only shows notebooks/ML work, not Substack articles
+const allContent = rawContent.filter(item => item.type === 'notebook')
 const allProjects = getAllProjects()
 const projectNames = Object.fromEntries(allProjects.map(p => [p.id, p.name]))
 
@@ -42,7 +44,7 @@ function formatDate(date: Date | string): string {
     <div class='listing-layout'>
       <ListingSidebar
         title='Analysis'
-        description='Published notebooks and articles across all projects.'
+        description='Published notebooks, ML experiments, and technical analysis across all projects.'
       >
         <div class='project-nav'>
           {projectIds.map(id => (

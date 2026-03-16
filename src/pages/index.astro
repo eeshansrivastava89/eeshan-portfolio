@@ -71,6 +71,7 @@ const githubData = await getGitHubData()
 						<div class='section-line'></div>
 					</div>
 					<ProjectGrid projects={activeProjects} featured={featuredProject} />
+					<a class='view-all-link' href='/projects'>View all projects →</a>
 				</section>
 
 				<!-- Open Source -->
@@ -107,6 +108,7 @@ const githubData = await getGitHubData()
 					<p class='homepage-placeholder'>
 						Jupyter notebook analysis cards — coming soon.
 					</p>
+					<a class='view-all-link' href='/analysis'>View all analysis →</a>
 				</section>
 
 				<!-- About & Recognition -->
@@ -196,6 +198,19 @@ const githubData = await getGitHubData()
 	.gh-icon {
 		width: 14px;
 		height: 14px;
+	}
+
+	.view-all-link {
+		display: inline-block;
+		margin-top: 16px;
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		text-decoration: none;
+		font-weight: 450;
+	}
+
+	.view-all-link:hover {
+		color: hsl(var(--foreground));
 	}
 
 	.homepage-placeholder {

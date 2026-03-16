@@ -13,17 +13,15 @@ const { title, toc } = Astro.props
 
 <aside class='article-sidebar'>
 	<div class='article-sidebar-top'>
-		<div class='article-sidebar-nav-links'>
-			<a href='/' class='article-sidebar-link'>
+		<nav class='article-sidebar-nav'>
+			<a href='/' class='article-nav-link'>
 				<Icon name='lucide:home' class='article-sidebar-icon' />
-				<span>Home</span>
+				Home
 			</a>
-			<span class='article-sidebar-sep'>·</span>
-			<a href='/writing' class='article-sidebar-link'>
-				<Icon name='lucide:file-text' class='article-sidebar-icon' />
-				<span>All writing</span>
-			</a>
-		</div>
+			<a href='/writing' class='article-nav-link'>Writing</a>
+			<a href='/projects' class='article-nav-link'>Projects</a>
+			<a href='/analysis' class='article-nav-link'>Analysis</a>
+		</nav>
 		<p class='article-sidebar-title'>{title}</p>
 	</div>
 
@@ -64,36 +62,33 @@ const { title, toc } = Astro.props
 		margin-bottom: 10px;
 	}
 
-	.article-sidebar-nav-links {
+	.article-sidebar-nav {
 		display: flex;
-		align-items: center;
-		gap: 6px;
+		flex-wrap: wrap;
+		gap: 4px;
 		margin-bottom: 12px;
 	}
 
-	.article-sidebar-link {
+	.article-nav-link {
 		display: flex;
 		align-items: center;
-		gap: 5px;
-		font-size: 13px;
-		font-weight: 450;
+		gap: 4px;
+		font-size: 11px;
 		color: hsl(var(--muted-foreground));
 		text-decoration: none;
-		transition: color 0.15s;
+		padding: 3px 8px;
+		border-radius: 6px;
+		transition: all 0.15s;
 	}
 
-	.article-sidebar-link:hover {
+	.article-nav-link:hover {
 		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
 	}
 
 	.article-sidebar-icon {
-		width: 14px;
-		height: 14px;
-	}
-
-	.article-sidebar-sep {
-		font-size: 10px;
-		color: hsl(var(--muted-foreground));
+		width: 12px;
+		height: 12px;
 	}
 
 	.article-sidebar-title {
