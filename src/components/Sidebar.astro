@@ -1,5 +1,6 @@
 ---
 import ThemeSwitcher from './ThemeSwitcher.astro'
+import SidebarNewsletter from './SidebarNewsletter.astro'
 import { Icon } from 'astro-icon/components'
 
 import fs from 'fs'
@@ -78,13 +79,9 @@ const socialLinks = socialData.socialLinks
 			</div>
 		</div>
 
-		<div class='sidebar-newsletter'>
-			<div class='sidebar-newsletter-name'>
-				<Icon name='simple-icons:substack' class='sidebar-newsletter-icon' />
-				Asymptotic
-			</div>
-			<p class='sidebar-newsletter-desc'>Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</p>
-			<a class='sidebar-subscribe-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
+		<div class='sidebar-bottom'>
+			<hr class='sidebar-bottom-rule' />
+			<SidebarNewsletter />
 		</div>
 	</div>
 </aside>
@@ -264,57 +261,14 @@ const socialLinks = socialData.socialLinks
 		flex-shrink: 0;
 	}
 
-	.sidebar-newsletter {
+	.sidebar-bottom {
 		margin-top: auto;
-		padding: 14px;
-		margin-block-start: 10px;
-		background: hsl(var(--muted));
-		border: 1px solid hsl(var(--border));
-		border-radius: 6px;
 	}
 
-	.sidebar-newsletter-name {
-		font-family: 'Playfair Display', serif;
-		font-size: 14px;
-		font-weight: 600;
-		color: hsl(var(--foreground));
-		margin-bottom: 3px;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	.sidebar-newsletter-icon {
-		width: 14px;
-		height: 14px;
-		flex-shrink: 0;
-	}
-
-	.sidebar-newsletter-desc {
-		font-size: 11px;
-		color: hsl(var(--muted-foreground));
-		margin-bottom: 10px;
-		line-height: 1.45;
-	}
-
-	.sidebar-subscribe-btn {
-		display: block;
-		width: 100%;
-		padding: 7px 14px;
-		background: hsl(var(--foreground));
-		color: hsl(var(--background));
+	.sidebar-bottom-rule {
 		border: none;
-		border-radius: 6px;
-		font-size: 12px;
-		font-weight: 600;
-		text-align: center;
-		text-decoration: none;
-		transition: opacity 0.15s;
-	}
-
-	.sidebar-subscribe-btn:hover {
-		opacity: 0.9;
-		color: hsl(var(--background));
+		border-top: 1px solid hsl(var(--border));
+		margin: 0 0 10px 0;
 	}
 
 	/* ═══════ Mobile (< 900px) ═══════ */
