@@ -215,6 +215,13 @@ const githubData = await getGitHubData()
 		color: hsl(var(--muted-foreground));
 		display: flex;
 		justify-content: space-between;
+		gap: 12px;
+	}
+
+	@media (max-width: 600px) {
+		.homepage-footer {
+			flex-direction: column;
+		}
 	}
 
 	.homepage-quote {

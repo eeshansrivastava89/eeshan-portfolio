@@ -51,42 +51,53 @@ function groupByDay(items: RecentActivity[]): DayGroup[] {
 }
 
 function aggregateItems(items: RecentActivity[]): RecentActivity[] {
-  const byRepoType = new Map<string, RecentActivity[]>()
+  // Group by repo + event category
+  const byRepoCategory = new Map<string, RecentActivity[]>()
 
   for (const item of items) {
-    // Group pushes to same repo
-    const isPush = !item.message.startsWith('Created ') &&
-                   !item.message.startsWith('Opened ') &&
-                   !item.message.startsWith('Closed ') &&
-                   !item.message.startsWith('Commented ') &&
-                   !item.message.startsWith('Published ') &&
-                   !item.message.includes(' PR: ') &&
-                   !item.message.includes(' issue: ')
-    const key = isPush ? `push:${item.repo}` : `other:${item.repo}:${item.message}`
+    const category = categorize(item.message)
+    const key = `${category}:${item.repo}`
 
-    if (!byRepoType.has(key)) {
-      byRepoType.set(key, [])
+    if (!byRepoCategory.has(key)) {
+      byRepoCategory.set(key, [])
     }
-    byRepoType.get(key)!.push(item)
+    byRepoCategory.get(key)!.push(item)
   }
 
   const result: RecentActivity[] = []
 
-  for (const [key, group] of byRepoType) {
-    if (key.startsWith('push:') && group.length > 2) {
-      // Aggregate multiple commits into one summary
+  for (const [key, group] of byRepoCategory) {
+    if (group.length <= 2) {
+      result.push(...group)
+    } else {
+      // Summarize repeated events
+      const category = key.split(':')[0]
+      const summaries: Record<string, string> = {
+        push: `${group.length} commits`,
+        issue: `${group.length} issue updates`,
+        pr: `${group.length} PR updates`,
+        comment: `${group.length} comments`,
+        other: `${group.length} updates`,
+      }
       result.push({
         repo: group[0].repo,
-        message: `${group.length} commits`,
+        message: summaries[category] || `${group.length} events`,
         time: group[0].time,
         url: group[0].url,
       })
-    } else {
-      result.push(...group)
     }
   }
 
   return result
+}
+
+function categorize(message: string): string {
+  if (message.includes(' PR: ')) return 'pr'
+  if (message.includes(' issue: ')) return 'issue'
+  if (message.startsWith('Commented ')) return 'comment'
+  if (message.startsWith('Created ')) return 'other'
+  if (message.startsWith('Published ')) return 'other'
+  return 'push'
 }
 
 function relativeTime(dateStr: string): string {
