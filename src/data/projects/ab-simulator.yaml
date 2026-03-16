@@ -3,7 +3,8 @@
 
 id: ab-simulator
 name: A/B Testing Memory Game
-url: /ab-simulator/
+url: https://eeshans.com/ab-simulator/
+external: true
 status: live
 description: A live experiment studying how game difficulty affects player behavior. Play the memory game, contribute real data, and explore the published statistical analysis.
 shortDescription: A live A/B test on game difficulty and player behavior
