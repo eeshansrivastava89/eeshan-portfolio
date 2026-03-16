@@ -4,12 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 */4 * * *'  # Every 4 hours
+    - cron: '0 */4 * * *'  # Every 4 hours (refreshes cached API data)
   workflow_dispatch:
-    inputs:
-      project_filter:
-        description: 'Filter notebooks by project ID (e.g., ab-simulator) or leave empty for all'
-        required: false
 
 jobs:
   build-and-deploy:
@@ -20,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # ─────────────────────────────────────────────────────────────
-      # 1. Setup environments
+      # 1. Setup
       # ─────────────────────────────────────────────────────────────
       - uses: pnpm/action-setup@v4
         with:
@@ -31,12 +27,6 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: 'analytics/requirements.txt'
-
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       # ─────────────────────────────────────────────────────────────
@@ -45,20 +35,8 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install
 
-      - name: Install Python dependencies
-        run: pip install -r analytics/requirements.txt
-
       # ─────────────────────────────────────────────────────────────
-      # 3. Run notebooks (generates fresh HTML/YAML to public/analysis/)
-      # ─────────────────────────────────────────────────────────────
-      - name: Run notebooks
-        env:
-          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
-          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
-        run: node scripts/run-notebook.mjs ${{ github.event.inputs.project_filter || '' }}
-
-      # ─────────────────────────────────────────────────────────────
-      # 4. Build Astro site (picks up fresh notebook outputs)
+      # 3. Build Astro site
       # ─────────────────────────────────────────────────────────────
       - name: Build Astro site
         run: pnpm run build
@@ -66,7 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ─────────────────────────────────────────────────────────────
-      # 5. Deploy to Fly.io
+      # 4. Deploy to Fly.io
       # ─────────────────────────────────────────────────────────────
       - name: Deploy to Fly.io
         run: flyctl deploy --remote-only

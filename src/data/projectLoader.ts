@@ -7,7 +7,7 @@
  * Files are loaded at build time via Vite's import.meta.glob
  */
 import yaml from 'js-yaml'
-import type { Project } from '../lib/projects'
+import type { Project } from '@/lib/projects'
 
 // Import all yaml files from projects/ directory
 const projectFiles = import.meta.glob('./projects/*.yaml', { 

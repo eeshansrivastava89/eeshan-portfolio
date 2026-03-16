@@ -5,12 +5,12 @@
  */
 import PageLayout from '../../layouts/BaseLayout.astro'
 import Section from '../../components/Section.astro'
-import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
 
-import { getLiveProjects, getProjectsByStatus } from '@shared/lib/projects'
-import { getAllProjects } from '@shared/data/projectLoader'
-import ProjectCard from '@shared/components/ProjectCard.astro'
-import Timeline from '@shared/components/Timeline.astro'
+import { getLiveProjects, getProjectsByStatus } from '@/lib/projects'
+import { getAllProjects } from '@/data/projectLoader'
+import ProjectCard from '@/components/ProjectCard.astro'
+import Timeline from '@/components/Timeline.astro'
 
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)

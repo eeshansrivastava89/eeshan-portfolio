@@ -20,15 +20,15 @@ const socialData = yaml.load(socialLinksYaml) as {
 const socialLinks = socialData.socialLinks
 
 // Load projects
-import { getLiveProjects, getProjectsByStatus } from '@shared/lib/projects'
-import { getAllProjects } from '@shared/data/projectLoader'
-import ProjectCard from '@shared/components/ProjectCard.astro'
-import Timeline from '@shared/components/Timeline.astro'
+import { getLiveProjects, getProjectsByStatus } from '@/lib/projects'
+import { getAllProjects } from '@/data/projectLoader'
+import ProjectCard from '@/components/ProjectCard.astro'
+import Timeline from '@/components/Timeline.astro'
 
 // Load Substack posts
-import { getSubstackPosts } from '@shared/lib/substack'
-import SubstackPostPreview from '@shared/components/SubstackPostPreview.astro'
-import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
+import { getSubstackPosts } from '@/lib/substack'
+import SubstackPostPreview from '@/components/SubstackPostPreview.astro'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
 const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)

@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eeshans.com — Mockup v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-raised: #111113;
+    --bg-surface: #18181b;
+    --bg-hover: #1e1e22;
+    --text: #ededef;
+    --text-secondary: #8b8b8e;
+    --text-muted: #5a5a5d;
+    --accent: #e8a44a;
+    --accent-dim: #e8a44a33;
+    --accent-hover: #f0b560;
+    --blue: #5b9fd4;
+    --green: #4ade80;
+    --green-dim: #4ade8022;
+    --border: #2a2a2e;
+    --border-subtle: #1e1e22;
+    --radius: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--text); text-decoration: none; }
+  a:hover { color: var(--accent); }
+
+  /* ===== LAYOUT ===== */
+  .page {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* ===== LEFT SIDEBAR (sticky, no scroll) ===== */
+  .sidebar {
+    position: sticky;
+    top: 30px; /* account for mockup banner */
+    height: calc(100vh - 30px);
+    overflow: hidden;
+    padding: 28px 24px 20px 32px;
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .identity { margin-bottom: 20px; }
+
+  .identity h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .identity .role {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .identity .role strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .social-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .social-row a {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .social-row a:hover {
+    color: var(--text);
+    border-bottom-color: var(--text-muted);
+  }
+
+  /* Sidebar nav */
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .sidebar-nav a {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: var(--radius);
+    transition: all 0.15s;
+    font-weight: 450;
+  }
+  .sidebar-nav a:hover {
+    color: var(--text);
+    background: var(--bg-hover);
+  }
+  .sidebar-nav a.active {
+    color: var(--text);
+    background: var(--bg-surface);
+  }
+
+  /* Credentials compact — inline style */
+  .credentials {
+    margin-bottom: 0;
+    padding: 14px 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .credential-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+  }
+
+  .credential-row .company {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .credential-row .years {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .credential-row .title {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  /* Currently section */
+  .currently {
+    padding: 14px 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .currently-item {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    padding: 2px 0;
+    font-size: 12px;
+  }
+
+  .currently-item .emoji {
+    font-size: 11px;
+    width: 16px;
+    flex-shrink: 0;
+  }
+
+  .currently-item .text {
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .currently-item .text a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-dim);
+    text-underline-offset: 2px;
+  }
+
+  /* Newsletter sidebar */
+  .newsletter-box {
+    margin-top: auto;
+    padding: 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .newsletter-box .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 3px;
+  }
+
+  .newsletter-box .desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+
+  .subscribe-btn {
+    display: block;
+    width: 100%;
+    padding: 7px 14px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .subscribe-btn:hover {
+    background: var(--accent-hover);
+    color: var(--bg);
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    padding: 48px 48px 80px 48px;
+    max-width: 800px;
+  }
+
+  /* Featured writing (hero section) */
+  .featured-writing {
+    margin-bottom: 56px;
+  }
+
+  .featured-writing .intro {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 560px;
+  }
+
+  .featured-writing .intro strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .featured-article {
+    display: block;
+    padding: 24px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-article:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-1px);
+  }
+
+  .featured-article .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .featured-article h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .featured-article .excerpt {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .featured-article .meta {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Writing list */
+  .writing-list {
+    margin-bottom: 56px;
+  }
+
+  .writing-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 12px;
+    margin: 0 -12px;
+    border-bottom: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    transition: background 0.15s;
+  }
+
+  .writing-item:hover {
+    background: var(--bg-raised);
+    border-color: transparent;
+  }
+
+  .writing-item .date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .writing-item .title-col h4 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
+
+  .writing-item .title-col .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 450;
+  }
+  .view-all:hover { color: var(--accent); }
+
+  /* Section divider */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .section-header .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Projects */
+  .projects-section {
+    margin-bottom: 56px;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .project-card {
+    padding: 20px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-1px);
+  }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .project-card .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+
+  .project-card .status .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .project-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .project-card .desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .project-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  .project-stats {
+    display: flex;
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .project-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .project-stat .val {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* GitHub Activity */
+  .github-section {
+    margin-bottom: 56px;
+  }
+
+  .github-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+  }
+
+  .github-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .github-header .gh-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .contribution-grid {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .contrib-week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .contrib-day {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background: var(--bg-surface);
+  }
+
+  .contrib-day.l1 { background: #0e4429; }
+  .contrib-day.l2 { background: #006d32; }
+  .contrib-day.l3 { background: #26a641; }
+  .contrib-day.l4 { background: #39d353; }
+
+  .recent-commits {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .commit-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+
+  .commit-item:hover {
+    background: var(--bg-raised);
+  }
+
+  .commit-item .msg {
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .commit-item .msg .repo {
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  .commit-item .time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Recognition section */
+  .recognition-section {
+    margin-bottom: 56px;
+  }
+
+  .recognition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .recognition-item {
+    padding: 16px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+  }
+
+  .recognition-item .type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .recognition-item .detail {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .recognition-item .detail strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .recognition-item .year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* Analysis / Notebooks */
+  .analysis-section {
+    margin-bottom: 56px;
+  }
+
+  .analysis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .analysis-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .analysis-item:hover {
+    border-color: var(--border);
+    transform: translateX(2px);
+  }
+
+  .analysis-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-surface);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .analysis-item .info h4 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .analysis-item .info .meta {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .analysis-item .arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    max-width: 800px;
+  }
+
+  .footer .quote {
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 400px;
+  }
+
+  .footer .location {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .page {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      position: relative;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 32px 24px;
+    }
+    .main {
+      padding: 32px 24px 64px;
+    }
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+    .project-card.featured {
+      grid-template-columns: 1fr;
+    }
+    .recognition-grid {
+      grid-template-columns: 1fr;
+    }
+    .stats-row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .featured-article h3 {
+      font-size: 18px;
+    }
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+  /* Mockup watermark */
+  .mockup-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--accent);
+    color: var(--bg);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  body { padding-top: 30px; }
+</style>
+</head>
+<body>
+
+<div class="mockup-banner">Mockup v2 — Not Live</div>
+
+<div class="page">
+  <!-- ===== LEFT SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="identity">
+      <h1>Eeshan Srivastava</h1>
+      <div class="role">
+        <strong>Sr. Data Science Manager</strong> at Starbucks<br>
+        AI/ML, experimentation, recommendation systems for 40M+ users
+      </div>
+      <div class="social-row">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">X</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#writing" class="active">Writing</a>
+      <a href="#projects">Projects</a>
+      <a href="#github">Open Source</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#recognition">Recognition</a>
+    </nav>
+
+    <div class="credentials">
+      <div class="section-label">Experience</div>
+      <div class="credential-row">
+        <span class="company">Starbucks <span class="title">— Sr. Manager, Data Science</span></span>
+        <span class="years">2019–now</span>
+      </div>
+      <div class="credential-row">
+        <span class="company">Overstock <span class="title">— Manager, Analytics</span></span>
+        <span class="years">2016–19</span>
+      </div>
+      <div class="credential-row">
+        <span class="company">Amazon <span class="title">— Sr. PM Intern</span></span>
+        <span class="years">2015</span>
+      </div>
+      <div class="credential-row" style="margin-top:4px;">
+        <span class="company" style="font-size:11px; color: var(--text-muted);">MIT/EdX · Case Western · GGSIPU</span>
+      </div>
+    </div>
+
+    <div class="currently">
+      <div class="section-label">Currently</div>
+      <div class="currently-item">
+        <span class="emoji">&#9997;</span>
+        <span class="text">Writing about <a href="#">agentic coding workflows</a></span>
+      </div>
+      <div class="currently-item">
+        <span class="emoji">&#128295;</span>
+        <span class="text">Building <a href="#">Sidequests</a> — side project tracker</span>
+      </div>
+      <div class="currently-item">
+        <span class="emoji">&#128218;</span>
+        <span class="text">MIT MicroMasters in Statistics</span>
+      </div>
+    </div>
+
+    <div class="newsletter-box">
+      <div class="name">Asymptotic</div>
+      <div class="desc">Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</div>
+      <a class="subscribe-btn" href="#">Subscribe</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+
+    <!-- FEATURED WRITING -->
+    <section class="featured-writing" id="writing">
+      <p class="intro">
+        I build apps on AI, data science &amp; privacy to see what holds up beyond the hype.
+        Each project goes end-to-end&mdash;design, engineering, analytics, published analysis.
+        <strong>Everything is open source.</strong>
+      </p>
+
+      <a class="featured-article" href="#">
+        <span class="badge">Latest Post</span>
+        <h3>Agentic Coding for Non-Vibe Coders</h3>
+        <p class="excerpt">A workflow for building real things (not demos) with AI coding agents. How to keep the human in the loop without losing the speed.</p>
+        <span class="meta">Mar 7, 2026 &middot; 12 min read</span>
+      </a>
+
+      <div class="writing-list">
+        <a class="writing-item" href="#">
+          <span class="date">Feb 23</span>
+          <div class="title-col">
+            <h4>The Dopamine Trap of AI Coding</h4>
+            <p class="desc">The victory of solving a hard problem was sweeter when things used to take time.</p>
+          </div>
+        </a>
+        <a class="writing-item" href="#">
+          <span class="date">Jan 25</span>
+          <div class="title-col">
+            <h4>Local AI matters, but it's not ready yet</h4>
+            <p class="desc">Frontier models are extraordinary. On-device alternatives are not there yet for the average person.</p>
+          </div>
+        </a>
+        <a class="writing-item" href="#">
+          <span class="date">Jan 2</span>
+          <div class="title-col">
+            <h4>What 4,887 AI prompts say about how we talk to machines</h4>
+            <p class="desc">I analyzed a year of my Claude conversations. The patterns were more revealing than the content.</p>
+          </div>
+        </a>
+        <a class="writing-item" href="#">
+          <span class="date">Dec 21</span>
+          <div class="title-col">
+            <h4>From game design to p-values: Anatomy of a real A/B experiment</h4>
+            <p class="desc">Most data scientists inherit someone else's pipeline. I built one end-to-end.</p>
+          </div>
+        </a>
+      </div>
+      <a class="view-all" href="#">View all posts &rarr;</a>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="projects-section" id="projects">
+      <div class="section-header">
+        <h2>Projects</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="project-grid">
+        <div class="project-card featured">
+          <div>
+            <div class="status"><span class="dot"></span> Live &middot; Collecting Data</div>
+            <h3>A/B Testing Memory Game</h3>
+            <p class="desc">A live experiment studying how game difficulty affects player behavior. Play the memory game, contribute real data, and explore the published statistical analysis.</p>
+            <div class="tags">
+              <span class="tag">Astro</span>
+              <span class="tag">React</span>
+              <span class="tag">PostHog</span>
+              <span class="tag">Supabase</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+          <div>
+            <div class="project-stats" style="border:none; padding:0; flex-direction:column; gap:10px;">
+              <div class="project-stat"><span class="val">2,847</span> sessions played</div>
+              <div class="project-stat"><span class="val">68.3%</span> completion rate</div>
+              <div class="project-stat"><span class="val">4</span> published analyses</div>
+              <div class="project-stat"><span class="val">1</span> Substack article</div>
+              <div style="margin-top:8px;">
+                <a href="#" style="font-size:13px; color:var(--accent); font-weight:500;">Play it &rarr;</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="status"><span class="dot"></span> Live</div>
+          <h3>How I Prompt</h3>
+          <p class="desc">Analyze your Claude conversation history. Discover your prompting style and get a shareable wrapped-style report.</p>
+          <div class="tags">
+            <span class="tag">Python</span>
+            <span class="tag">Claude AI</span>
+            <span class="tag">Data Viz</span>
+          </div>
+          <div class="project-stats">
+            <div class="project-stat"><span class="val">4,887</span> prompts analyzed</div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="status"><span class="dot"></span> Live</div>
+          <h3>Local LLM Bench</h3>
+          <p class="desc">Benchmark local LLM accuracy on structured data extraction. F1 scoring, fuzzy matching, MLX &amp; Ollama.</p>
+          <div class="tags">
+            <span class="tag">MLX</span>
+            <span class="tag">Ollama</span>
+            <span class="tag">LocalAI</span>
+          </div>
+          <div class="project-stats">
+            <div class="project-stat"><span class="val">12</span> models tested</div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="status" style="color:var(--accent)"><span class="dot" style="background:var(--accent)"></span> Building</div>
+          <h3>Sidequests</h3>
+          <p class="desc">Track all your side projects in one place. Health, commit status, AI summaries. Completely hands-off.</p>
+          <div class="tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Supabase</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="status"><span class="dot"></span> Live</div>
+          <h3>Quizzard</h3>
+          <p class="desc">Real-time quiz app for live events. A free, self-hosted Kahoot/Mentimeter alternative with Supabase backend.</p>
+          <div class="tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Supabase</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GITHUB / OPEN SOURCE -->
+    <section class="github-section" id="github">
+      <div class="github-header">
+        <h2>Open Source</h2>
+        <a class="gh-link" href="#">@eeshansrivastava89 &rarr;</a>
+      </div>
+
+      <!-- Simulated contribution grid -->
+      <div class="contribution-grid">
+        <!-- 26 weeks simulated -->
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div><div class="contrib-day"></div><div class="contrib-day l2"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l1"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div></div>
+        <div class="contrib-week"><div class="contrib-day l3"></div><div class="contrib-day l1"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l2"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day l3"></div><div class="contrib-day l1"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l2"></div><div class="contrib-day l3"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day l3"></div><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l2"></div><div class="contrib-day l2"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day l2"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day"></div><div class="contrib-day l2"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day"></div></div>
+        <div class="contrib-week"><div class="contrib-day l1"></div><div class="contrib-day"></div><div class="contrib-day l1"></div><div class="contrib-day l1"></div><div class="contrib-day l3"></div></div>
+        <div class="contrib-week"><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day l4"></div><div class="contrib-day l2"></div><div class="contrib-day l1"></div></div>
+        <div class="contrib-week"><div class="contrib-day l2"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day l4"></div><div class="contrib-day l3"></div></div>
+        <div class="contrib-week"><div class="contrib-day l3"></div><div class="contrib-day l4"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div><div class="contrib-day l4"></div></div>
+        <div class="contrib-week"><div class="contrib-day l4"></div><div class="contrib-day l3"></div><div class="contrib-day l4"></div><div class="contrib-day l3"></div><div class="contrib-day l2"></div></div>
+      </div>
+
+      <div class="recent-commits">
+        <div class="commit-item">
+          <div class="msg"><span class="repo">datascienceapps</span> &middot; rebrand Substack from 0&rarr;1 Data Science to Asymptotic</div>
+          <span class="time">1w ago</span>
+        </div>
+        <div class="commit-item">
+          <div class="msg"><span class="repo">datascienceapps</span> &middot; add Local LLM Bench project</div>
+          <span class="time">1w ago</span>
+        </div>
+        <div class="commit-item">
+          <div class="msg"><span class="repo">sidequests</span> &middot; dashboard layout and project health scoring</div>
+          <span class="time">2w ago</span>
+        </div>
+        <div class="commit-item">
+          <div class="msg"><span class="repo">local-llm-bench</span> &middot; add MLX backend support and F1 scoring</div>
+          <span class="time">3w ago</span>
+        </div>
+        <div class="commit-item">
+          <div class="msg"><span class="repo">howiprompt</span> &middot; persona classification and wrapped report</div>
+          <span class="time">1mo ago</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PUBLISHED ANALYSIS -->
+    <section class="analysis-section" id="analysis">
+      <div class="section-header">
+        <h2>Published Analysis</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="analysis-list">
+        <a class="analysis-item" href="#">
+          <div class="analysis-icon">&#128202;</div>
+          <div class="info">
+            <h4>Player Behavior &amp; Completion Rates by Variant</h4>
+            <div class="meta">A/B Simulator &middot; Jupyter &middot; Updated Mar 2026</div>
+          </div>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="analysis-item" href="#">
+          <div class="analysis-icon">&#128200;</div>
+          <div class="info">
+            <h4>Time-to-Complete Distribution &amp; Funnel Analysis</h4>
+            <div class="meta">A/B Simulator &middot; Jupyter &middot; Updated Feb 2026</div>
+          </div>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="analysis-item" href="#">
+          <div class="analysis-icon">&#128300;</div>
+          <div class="info">
+            <h4>Statistical Significance Testing: Chi-squared &amp; Proportions</h4>
+            <div class="meta">A/B Simulator &middot; Jupyter &middot; Updated Jan 2026</div>
+          </div>
+          <span class="arrow">&rarr;</span>
+        </a>
+        <a class="analysis-item" href="#">
+          <div class="analysis-icon">&#129302;</div>
+          <div class="info">
+            <h4>Prompting Patterns Across 4,887 Claude Conversations</h4>
+            <div class="meta">How I Prompt &middot; Python &middot; Jan 2026</div>
+          </div>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- RECOGNITION -->
+    <section class="recognition-section" id="recognition">
+      <div class="section-header">
+        <h2>Recognition</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="recognition-grid">
+        <div class="recognition-item">
+          <div class="type">Award</div>
+          <div class="detail"><strong>5 Under 35</strong> &mdash; Weatherhead School of Management</div>
+          <div class="year">2024</div>
+        </div>
+        <div class="recognition-item">
+          <div class="type">Conference</div>
+          <div class="detail"><strong>Speaker</strong> &mdash; ODSC West</div>
+          <div class="year">2024</div>
+        </div>
+        <div class="recognition-item">
+          <div class="type">Conference</div>
+          <div class="detail"><strong>Speaker</strong> &mdash; Data Council</div>
+          <div class="year">2023</div>
+        </div>
+        <div class="recognition-item">
+          <div class="type">Media</div>
+          <div class="detail"><strong>What Really Matters Podcast</strong> &mdash; Weatherhead School</div>
+          <div class="year">2022</div>
+        </div>
+        <div class="recognition-item">
+          <div class="type">Publication</div>
+          <div class="detail"><strong>Towards Data Science</strong> &mdash; Technical articles on Medium</div>
+          <div class="year">2021–22</div>
+        </div>
+        <div class="recognition-item">
+          <div class="type">Mentorship</div>
+          <div class="detail"><strong>10+ mentored</strong> &mdash; Guest instructor, industry mentoring</div>
+          <div class="year">Ongoing</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="quote">"Just someone who likes making things work, learning by doing, and working with smart people."</div>
+      <div class="location">Seattle, WA</div>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>

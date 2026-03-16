@@ -36,9 +36,5 @@ export default defineConfig({
     },
     prefetch: true,
     output: 'static',
-    vite: {
-        build: {
-            emptyOutDir: false  // Don't clear dist, preserve package builds
-        }
-    }
+    vite: {}
 })
