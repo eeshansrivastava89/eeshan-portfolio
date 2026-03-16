@@ -1,0 +1,64 @@
+---
+import type { ContributionWeek } from '@/lib/github'
+
+interface Props {
+  weeks: ContributionWeek[]
+  totalContributions: number
+}
+
+const { weeks, totalContributions } = Astro.props
+---
+
+<div class='contrib-container'>
+  <div class='contrib-header'>
+    <span class='contrib-count'>{totalContributions.toLocaleString()} contributions in the last year</span>
+  </div>
+  <div class='contrib-grid'>
+    {weeks.map(week => (
+      <div class='contrib-week'>
+        {week.contributionDays.map(day => (
+          <div
+            class='contrib-day'
+            style={`background-color: ${day.contributionCount === 0 ? 'hsl(var(--muted))' : day.color};`}
+            title={`${day.date}: ${day.contributionCount} contribution${day.contributionCount !== 1 ? 's' : ''}`}
+          />
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .contrib-container {
+    margin-bottom: 16px;
+  }
+
+  .contrib-header {
+    margin-bottom: 8px;
+  }
+
+  .contrib-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .contrib-grid {
+    display: flex;
+    gap: 3px;
+    overflow: hidden;
+  }
+
+  .contrib-week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .contrib-day {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    outline: 1px solid hsl(var(--border) / 0.3);
+  }
+</style>

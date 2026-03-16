@@ -4,6 +4,8 @@ import ThemeProvider from '@/components/ThemeProvider.astro'
 import Sidebar from '@/components/Sidebar.astro'
 import WritingList from '@/components/WritingList.astro'
 import ProjectGrid from '@/components/ProjectGrid.astro'
+import ContributionCalendar from '@/components/ContributionCalendar.astro'
+import CommitFeed from '@/components/CommitFeed'
 import AboutRecognition from '@/components/AboutRecognition.astro'
 
 import { siteConfig } from '@/site-config'
@@ -16,6 +18,9 @@ import { getAllProjects } from '@/data/projectLoader'
 import { getSubstackPosts } from '@/lib/substack'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
+// Load GitHub data
+import { getGitHubData } from '@/lib/github'
+
 const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
 
@@ -26,6 +31,9 @@ const activeProjects = [...liveProjects, ...inProgressProjects]
 
 // Featured project = first live project (A/B Simulator)
 const featuredProject = liveProjects[0]
+
+// GitHub data (build-time, cached fallback)
+const githubData = await getGitHubData()
 ---
 
 <html lang={siteConfig.lang} class='scroll-smooth'>
@@ -64,16 +72,28 @@ const featuredProject = liveProjects[0]
 					<ProjectGrid projects={activeProjects} featured={featuredProject} />
 				</section>
 
-				<!-- Open Source (placeholder for Phase 3) -->
+				<!-- Open Source -->
 				<section id='opensource' class='homepage-section'>
-					<div class='section-header'>
-						<h2>Open Source</h2>
-						<div class='section-line'></div>
+					<div class='opensource-header'>
+						<h2 class='section-title'>Open Source</h2>
+						<a class='gh-link' href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer'>
+							@eeshansrivastava89 →
+						</a>
 					</div>
-					<p class='homepage-placeholder'>
-						Contribution calendar and recent commits — coming in Phase 3.
-					</p>
-				</section>
+
+					{githubData && githubData.weeks && githubData.weeks.length > 0 ? (
+						<>
+							<ContributionCalendar
+								weeks={githubData.weeks}
+								totalContributions={githubData.totalContributions}
+							/>
+							<CommitFeed client:idle />
+						</>
+					) : (
+						<p class='homepage-placeholder'>
+							GitHub data unavailable — will populate on next build with GITHUB_TOKEN.
+						</p>
+					)}</section>
 
 				<!-- Analysis (placeholder) -->
 				<section id='analysis' class='homepage-section'>
@@ -152,6 +172,31 @@ const featuredProject = liveProjects[0]
 		flex: 1;
 		height: 1px;
 		background: hsl(var(--border));
+	}
+
+	.opensource-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 20px;
+	}
+
+	.opensource-header .section-title {
+		font-family: 'Playfair Display', serif;
+		font-size: 20px;
+		font-weight: 600;
+		color: hsl(var(--foreground));
+	}
+
+	.gh-link {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		text-decoration: none;
+	}
+
+	.gh-link:hover {
+		color: hsl(var(--foreground));
 	}
 
 	.homepage-placeholder {
