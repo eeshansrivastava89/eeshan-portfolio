@@ -19,6 +19,9 @@ import { getAllProjects } from '@/data/projectLoader'
 import { getSubstackPosts } from '@/lib/substack'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
+// Load analysis data
+import { getAllAnalysisContent } from '@/lib/analysis'
+
 // Load GitHub data
 import { getGitHubData } from '@/lib/github'
 
@@ -32,6 +35,10 @@ const activeProjects = [...liveProjects, ...inProgressProjects]
 
 // Featured project = first live project (A/B Simulator)
 const featuredProject = liveProjects[0]
+
+// Analysis data (notebooks only, top 5)
+const allAnalysis = await getAllAnalysisContent(SUBSTACK_RSS_URL, substackMappingsRaw)
+const recentAnalysis = allAnalysis.filter(item => item.type === 'notebook').slice(0, 5)
 
 // GitHub data (build-time, cached fallback)
 const githubData = await getGitHubData()
@@ -99,15 +106,33 @@ const githubData = await getGitHubData()
 						</p>
 					)}</section>
 
-				<!-- Analysis (placeholder) -->
+				<!-- Analysis -->
 				<section id='analysis' class='homepage-section'>
 					<div class='section-header'>
 						<h2>Published Analysis</h2>
 						<div class='section-line'></div>
 					</div>
-					<p class='homepage-placeholder'>
-						Jupyter notebook analysis cards — coming soon.
-					</p>
+					{recentAnalysis.length > 0 ? (
+						<div class='analysis-list'>
+							{recentAnalysis.map(item => (
+								<a href={item.link} class='analysis-card'>
+									<div class='analysis-card-info'>
+										<h3 class='analysis-card-title'>{item.title}</h3>
+										{item.description && (
+											<p class='analysis-card-desc'>{item.description}</p>
+										)}
+									</div>
+									<span class='analysis-card-meta'>
+										{item.projectId || 'Analysis'}
+									</span>
+								</a>
+							))}
+						</div>
+					) : (
+						<p class='homepage-placeholder'>
+							No published analysis yet.
+						</p>
+					)}
 					<a class='view-all-link' href='/analysis'>View all analysis →</a>
 				</section>
 
@@ -198,6 +223,52 @@ const githubData = await getGitHubData()
 	.gh-icon {
 		width: 14px;
 		height: 14px;
+	}
+
+	.analysis-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.analysis-card {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		padding: 12px 14px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 8px;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.15s;
+	}
+
+	.analysis-card:hover {
+		border-color: hsl(var(--foreground) / 0.2);
+		transform: translateY(-1px);
+	}
+
+	.analysis-card-title {
+		font-size: 14px;
+		font-weight: 500;
+		color: hsl(var(--foreground));
+		margin-bottom: 2px;
+	}
+
+	.analysis-card-desc {
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.4;
+	}
+
+	.analysis-card-meta {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 10px;
+		color: hsl(var(--muted-foreground));
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
 	.view-all-link {
