@@ -12,7 +12,7 @@ const educationItems = timelineData.timeline.filter(item => item.type === 'educa
 // Load impact
 const impactYaml = fs.readFileSync(path.join(process.cwd(), 'src/data/impact.yaml'), 'utf8')
 const impactData = yaml.load(impactYaml) as { impact: Array<{ title: string; icon: string; visible: boolean; items: Array<{ text: string; link?: string }> }> }
-const allRecognition = impactData.impact
+const allRecognition = impactData.impact.filter(section => section.visible)
 ---
 
 <section class='about-section' id='about'>
