@@ -36,7 +36,10 @@ const { title, toc } = Astro.props
 				{entry.text}
 			</a>
 		))}
+	</nav>
 
+	<div class='toc-bottom'>
+		<hr class='toc-bottom-rule' />
 		<div class='toc-newsletter'>
 			<div class='toc-newsletter-name'>
 				<Icon name='simple-icons:substack' class='toc-newsletter-icon' />
@@ -45,7 +48,7 @@ const { title, toc } = Astro.props
 			<p class='toc-newsletter-desc'>AI, data science, and privacy. Email updates.</p>
 			<a class='toc-newsletter-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
 		</div>
-	</nav>
+	</div>
 </aside>
 
 <style>
@@ -113,11 +116,20 @@ const { title, toc } = Astro.props
 		gap: 1px;
 		padding: 10px 0;
 		border-top: 1px solid hsl(var(--border));
-		flex: 1;
 		overflow-y: auto;
 	}
 
 	.article-toc::-webkit-scrollbar { width: 0; }
+
+	.toc-bottom {
+		margin-top: auto;
+	}
+
+	.toc-bottom-rule {
+		border: none;
+		border-top: 1px solid hsl(var(--border));
+		margin: 0 0 10px 0;
+	}
 
 	.toc-link {
 		font-size: 12px;
