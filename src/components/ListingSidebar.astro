@@ -12,15 +12,6 @@ const { title, description } = Astro.props
 
 <aside class='listing-sidebar'>
   <div class='listing-sidebar-top'>
-    <nav class='listing-sidebar-nav'>
-      <a href='/' class='listing-nav-link'>
-        <Icon name='lucide:home' class='listing-sidebar-icon' />
-        Home
-      </a>
-      <a href='/writing' class='listing-nav-link'>Writing</a>
-      <a href='/projects' class='listing-nav-link'>Projects</a>
-      <a href='/analysis' class='listing-nav-link'>Analysis</a>
-    </nav>
     <h1 class='listing-sidebar-title'>{title}</h1>
     <p class='listing-sidebar-desc'>{description}</p>
   </div>
@@ -54,34 +45,6 @@ const { title, description } = Astro.props
     margin-bottom: 16px;
   }
 
-  .listing-sidebar-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 16px;
-  }
-
-  .listing-nav-link {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    color: hsl(var(--muted-foreground));
-    text-decoration: none;
-    padding: 3px 8px;
-    border-radius: 6px;
-    transition: all 0.15s;
-  }
-
-  .listing-nav-link:hover {
-    color: hsl(var(--foreground));
-    background: hsl(var(--muted));
-  }
-
-  .listing-sidebar-icon {
-    width: 12px;
-    height: 12px;
-  }
 
   .listing-sidebar-title {
     font-family: 'Playfair Display', serif;

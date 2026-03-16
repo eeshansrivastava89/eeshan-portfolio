@@ -2,6 +2,7 @@
 import BaseHead from '@/components/BaseHead.astro'
 import ThemeProvider from '@/components/ThemeProvider.astro'
 import ListingSidebar from '@/components/ListingSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
 import { Icon } from 'astro-icon/components'
 
 import { getLiveProjects, getProjectsByStatus, STATUS_CONFIG } from '@/lib/projects'
@@ -42,8 +43,8 @@ const sections = [
       </ListingSidebar>
 
       <main class='listing-main'>
+        <PageNav />
         <div class='listing-mobile-header'>
-          <a href='/' class='listing-mobile-back'>← Home</a>
           <h1 class='listing-mobile-title'>Projects</h1>
         </div>
 

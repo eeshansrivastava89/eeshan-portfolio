@@ -13,15 +13,6 @@ const { title, toc } = Astro.props
 
 <aside class='article-sidebar'>
 	<div class='article-sidebar-top'>
-		<nav class='article-sidebar-nav'>
-			<a href='/' class='article-nav-link'>
-				<Icon name='lucide:home' class='article-sidebar-icon' />
-				Home
-			</a>
-			<a href='/writing' class='article-nav-link'>Writing</a>
-			<a href='/projects' class='article-nav-link'>Projects</a>
-			<a href='/analysis' class='article-nav-link'>Analysis</a>
-		</nav>
 		<p class='article-sidebar-title'>{title}</p>
 	</div>
 
@@ -62,34 +53,6 @@ const { title, toc } = Astro.props
 		margin-bottom: 10px;
 	}
 
-	.article-sidebar-nav {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 4px;
-		margin-bottom: 12px;
-	}
-
-	.article-nav-link {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		font-size: 11px;
-		color: hsl(var(--muted-foreground));
-		text-decoration: none;
-		padding: 3px 8px;
-		border-radius: 6px;
-		transition: all 0.15s;
-	}
-
-	.article-nav-link:hover {
-		color: hsl(var(--foreground));
-		background: hsl(var(--muted));
-	}
-
-	.article-sidebar-icon {
-		width: 12px;
-		height: 12px;
-	}
 
 	.article-sidebar-title {
 		font-family: 'Playfair Display', serif;

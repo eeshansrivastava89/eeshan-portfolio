@@ -2,6 +2,7 @@
 import BaseHead from '@/components/BaseHead.astro'
 import ThemeProvider from '@/components/ThemeProvider.astro'
 import ListingSidebar from '@/components/ListingSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
 
 import { getSubstackPosts } from '@/lib/substack'
 import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
@@ -41,9 +42,9 @@ function formatDate(date: Date): string {
       </ListingSidebar>
 
       <main class='listing-main'>
+        <PageNav />
         <!-- Mobile header -->
         <div class='listing-mobile-header'>
-          <a href='/' class='listing-mobile-back'>← Home</a>
           <h1 class='listing-mobile-title'>Writing</h1>
         </div>
 

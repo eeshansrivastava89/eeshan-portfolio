@@ -2,6 +2,7 @@
 import BaseHead from '@/components/BaseHead.astro'
 import ThemeProvider from '@/components/ThemeProvider.astro'
 import ListingSidebar from '@/components/ListingSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
 
 import { getAllAnalysisContent } from '@/lib/analysis'
 import { siteConfig } from '@/site-config'
@@ -57,8 +58,8 @@ function formatDate(date: Date | string): string {
       </ListingSidebar>
 
       <main class='listing-main'>
+        <PageNav />
         <div class='listing-mobile-header'>
-          <a href='/' class='listing-mobile-back'>← Home</a>
           <h1 class='listing-mobile-title'>Analysis</h1>
         </div>
 

@@ -6,6 +6,7 @@
 import BaseHead from '@/components/BaseHead.astro'
 import ThemeProvider from '@/components/ThemeProvider.astro'
 import ArticleSidebar from '@/components/ArticleSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
 import '../../styles/substack-article.css'
 
 import { getSubstackPosts } from '@/lib/substack'
@@ -53,9 +54,8 @@ function formatDate(date: Date): string {
       <ArticleSidebar title={post.title} toc={toc} />
 
       <main class='article-main'>
+        <PageNav />
         <header class='article-header'>
-          <!-- Mobile back link (sidebar hidden on mobile) -->
-          <a href='/' class='article-mobile-back'>← eeshans.com</a>
           <h1 class='article-title'>{post.title}</h1>
           <div class='article-meta'>
             <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>
@@ -96,9 +96,6 @@ function formatDate(date: Date): string {
     max-width: 720px;
   }
 
-  .article-mobile-back {
-    display: none;
-  }
 
   .article-header {
     margin-bottom: 40px;
@@ -160,16 +157,5 @@ function formatDate(date: Date): string {
       padding: 24px 20px 64px;
     }
 
-    .article-mobile-back {
-      display: inline-block;
-      font-size: 13px;
-      color: hsl(var(--muted-foreground));
-      text-decoration: none;
-      margin-bottom: 20px;
-    }
-
-    .article-mobile-back:hover {
-      color: hsl(var(--foreground));
-    }
   }
 </style>
