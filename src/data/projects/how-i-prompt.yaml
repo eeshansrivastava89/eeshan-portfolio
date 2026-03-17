@@ -14,10 +14,5 @@ tags:
   - name: Python
   - name: Claude AI
   - name: Data Visualization
-methods:
-  - Conversation Analysis
-  - Persona Classification
-evidence:
-  - "4,887 prompts analyzed"
 related_writing:
   - what-4887-ai-prompts-say-about-how-we-talk-to-machines

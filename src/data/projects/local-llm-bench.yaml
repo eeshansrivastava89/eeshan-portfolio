@@ -15,11 +15,5 @@ tags:
   - name: MLX
   - name: Ollama
   - name: Python
-methods:
-  - F1 Scoring
-  - Fuzzy Matching
-  - Structured Extraction
-evidence:
-  - "12 models tested"
 related_writing:
   - local-ai-matters-but-its-not-ready-yet

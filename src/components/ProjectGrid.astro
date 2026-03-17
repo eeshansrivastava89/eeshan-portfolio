@@ -27,9 +27,6 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 				</div>
 			</div>
 			<div class='project-featured-stats'>
-				{featured.evidence?.map(e => (
-					<div class='project-evidence'>{e}</div>
-				))}
 				<div style='margin-top:8px;'>
 					<span class='project-cta'>Try it →</span>
 				</div>
@@ -50,14 +47,7 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 					<span class='project-tag'>{tag.name}</span>
 				))}
 			</div>
-			{project.evidence && project.evidence.length > 0 && (
-				<div class='project-card-stats'>
-					{project.evidence.slice(0, 1).map(e => (
-						<div class='project-evidence'>{e}</div>
-					))}
-				</div>
-			)}
-		</a>
+			</a>
 	))}
 </div>
 
@@ -157,16 +147,6 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		gap: 10px;
 	}
 
-	.project-card-stats {
-		padding-top: 12px;
-		border-top: 1px solid hsl(var(--border));
-	}
-
-	.project-evidence {
-		font-family: 'JetBrains Mono', monospace;
-		font-size: 11px;
-		color: hsl(var(--muted-foreground));
-	}
 
 	.project-cta {
 		font-size: 13px;

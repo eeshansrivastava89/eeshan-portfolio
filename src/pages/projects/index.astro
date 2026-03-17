@@ -79,13 +79,6 @@ const sections = [
                       <span class='project-full-tag'>{tag.name}</span>
                     ))}
                   </div>
-                  {project.evidence && project.evidence.length > 0 && (
-                    <div class='project-full-evidence'>
-                      {project.evidence.map(e => (
-                        <span class='evidence-item'>{e}</span>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
@@ -262,17 +255,6 @@ const sections = [
     background: hsl(var(--background));
     border: 1px solid hsl(var(--border));
     border-radius: 4px;
-    color: hsl(var(--muted-foreground));
-  }
-
-  .project-full-evidence {
-    display: flex;
-    gap: 12px;
-  }
-
-  .evidence-item {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
     color: hsl(var(--muted-foreground));
   }
 

@@ -20,8 +20,6 @@ export interface Project {
   external?: boolean
   repo?: string
   analysis_url?: string
-  methods?: string[]
-  evidence?: string[]
   related_writing?: string[]
 }
 
