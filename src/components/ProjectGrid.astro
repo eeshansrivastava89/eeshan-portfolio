@@ -7,80 +7,102 @@ interface Props {
 }
 
 const { projects, featured } = Astro.props
-const gridProjects = projects.filter(p => p.id !== featured?.id)
+const listProjects = projects.filter(p => p.id !== featured?.id)
 ---
 
-<div class='project-grid'>
+<div class='project-section'>
 	{featured && (
-		<a class='project-card project-featured' href={featured.url} target={featured.external ? '_blank' : undefined} rel={featured.external ? 'noopener noreferrer' : undefined}>
-			<div>
-				<div class='project-status'>
-					<span class='project-dot'></span>
-					{featured.status === 'live' ? 'Live · Collecting Data' : featured.status}
-				</div>
-				<h3 class='project-card-title'>{featured.name}</h3>
-				<p class='project-card-desc'>{featured.description}</p>
-				<div class='project-tags'>
-					{featured.tags.slice(0, 5).map(tag => (
-						<span class='project-tag'>{tag.name}</span>
-					))}
-				</div>
+		<a class='project-featured' href={featured.url} target={featured.external ? '_blank' : undefined} rel={featured.external ? 'noopener noreferrer' : undefined}>
+			<div class='project-status'>
+				<span class='project-dot' data-status={featured.status}></span>
+				{featured.status === 'live' ? 'Live · Collecting Data' : featured.status}
+				<span class='project-cta'>Try it →</span>
 			</div>
-			<div class='project-featured-stats'>
-				<div style='margin-top:8px;'>
-					<span class='project-cta'>Try it →</span>
-				</div>
+			<h3 class='project-featured-title'>{featured.name}</h3>
+			<p class='project-featured-desc'>{featured.description}</p>
+			<div class='project-tags'>
+				{featured.tags.slice(0, 5).map(tag => (
+					<span class='project-tag'>{tag.name}</span>
+				))}
 			</div>
 		</a>
 	)}
 
-	{gridProjects.map(project => (
-		<a class='project-card' href={project.url} target={project.external ? '_blank' : undefined} rel={project.external ? 'noopener noreferrer' : undefined}>
-			<div class='project-status'>
-				<span class='project-dot' data-status={project.status}></span>
-				{project.status === 'live' ? 'Live' : project.status === 'in-progress' ? 'Building' : project.status}
-			</div>
-			<h3 class='project-card-title'>{project.name}</h3>
-			<p class='project-card-desc'>{project.shortDescription}</p>
-			<div class='project-tags'>
-				{project.tags.slice(0, 3).map(tag => (
-					<span class='project-tag'>{tag.name}</span>
-				))}
-			</div>
+	<div class='project-list'>
+		{listProjects.map(project => (
+			<a class='project-row' href={project.url} target={project.external ? '_blank' : undefined} rel={project.external ? 'noopener noreferrer' : undefined}>
+				<div class='project-row-header'>
+					<div class='project-row-left'>
+						<span class='project-dot' data-status={project.status}></span>
+						<span class='project-row-status'>
+							{project.status === 'live' ? 'Live' : project.status === 'in-progress' ? 'Building' : project.status}
+						</span>
+						<h3 class='project-row-title'>{project.name}</h3>
+					</div>
+					<div class='project-row-right'>
+						<div class='project-tags'>
+							{project.tags.slice(0, 3).map(tag => (
+								<span class='project-tag'>{tag.name}</span>
+							))}
+						</div>
+						<span class='project-row-arrow'>→</span>
+					</div>
+				</div>
+				{project.shortDescription && (
+					<p class='project-row-desc'>{project.shortDescription}</p>
+				)}
 			</a>
-	))}
+		))}
+	</div>
 </div>
 
 <style>
-	.project-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
+	.project-section {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 	}
 
-	.project-card {
+	/* Featured card */
+	.project-featured {
 		padding: 20px;
 		background: hsl(var(--muted));
 		border: 1px solid hsl(var(--border));
 		border-radius: 8px;
-		transition: all 0.2s;
+		transition: all 0.15s;
 		cursor: pointer;
 		text-decoration: none;
 		color: inherit;
 	}
 
-	.project-card:hover {
+	.project-featured:hover {
 		border-color: hsl(var(--foreground) / 0.2);
 		transform: translateY(-1px);
 	}
 
-	.project-featured {
-		grid-column: 1 / -1;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 24px;
+	.project-featured-title {
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 6px;
+		line-height: 1.3;
+		color: hsl(var(--foreground));
 	}
 
+	.project-featured-desc {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.5;
+		margin-bottom: 14px;
+	}
+
+	.project-cta {
+		margin-left: auto;
+		font-size: 13px;
+		color: hsl(var(--foreground));
+		font-weight: 500;
+	}
+
+	/* Status */
 	.project-status {
 		display: inline-flex;
 		align-items: center;
@@ -89,6 +111,7 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		font-family: 'JetBrains Mono', monospace;
 		color: #16a34a;
 		margin-bottom: 10px;
+		width: 100%;
 	}
 	:global(.dark) .project-status {
 		color: #4ade80;
@@ -100,6 +123,7 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		border-radius: 50%;
 		background: #16a34a;
 		animation: pulse 2s infinite;
+		flex-shrink: 0;
 	}
 	:global(.dark) .project-dot {
 		background: #4ade80;
@@ -109,32 +133,20 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		background: #fbbf24;
 		animation: none;
 	}
+	:global(.dark) .project-dot[data-status='in-progress'] {
+		background: #fcd34d;
+	}
 
 	@keyframes pulse {
 		0%, 100% { opacity: 1; }
 		50% { opacity: 0.4; }
 	}
 
-	.project-card-title {
-		font-size: 16px;
-		font-weight: 600;
-		margin-bottom: 6px;
-		line-height: 1.3;
-		color: hsl(var(--foreground));
-	}
-
-	.project-card-desc {
-		font-size: 13px;
-		color: hsl(var(--muted-foreground));
-		line-height: 1.5;
-		margin-bottom: 14px;
-	}
-
+	/* Tags */
 	.project-tags {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
-		margin-bottom: 14px;
 	}
 
 	.project-tag {
@@ -147,25 +159,92 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		color: hsl(var(--muted-foreground));
 	}
 
-	.project-featured-stats {
+	/* List rows */
+	.project-list {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 8px;
 	}
 
+	.project-row {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 12px 14px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 8px;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.15s;
+	}
 
-	.project-cta {
-		font-size: 13px;
-		color: hsl(var(--foreground));
+	.project-row:hover {
+		border-color: hsl(var(--foreground) / 0.2);
+		transform: translateY(-1px);
+	}
+
+	.project-row-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.project-row-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	.project-row-status {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+		color: #16a34a;
+		white-space: nowrap;
+	}
+	:global(.dark) .project-row-status {
+		color: #4ade80;
+	}
+
+	.project-row-title {
+		font-size: 14px;
 		font-weight: 500;
+		color: hsl(var(--foreground));
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
-	@media (max-width: 900px) {
-		.project-grid {
-			grid-template-columns: 1fr;
+	.project-row-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-shrink: 0;
+	}
+
+	.project-row-arrow {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+	}
+
+	.project-row-desc {
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.4;
+		padding-left: 22px;
+	}
+
+	@media (max-width: 600px) {
+		.project-row-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 8px;
 		}
-		.project-featured {
-			grid-template-columns: 1fr;
+
+		.project-row-right {
+			padding-left: 22px;
 		}
 	}
 </style>
