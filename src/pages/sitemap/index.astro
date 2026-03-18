@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
 
 // Build site tree structure
 interface TreeNode {
@@ -35,13 +35,13 @@ const siteTree: TreeNode[] = [
     name: 'Analysis',
     path: '/analysis',
     icon: '📊',
-    description: 'Notebooks and Substack posts',
+    description: 'Published notebooks and statistical analysis',
     children: [
       {
         name: 'A/B Simulator Analysis',
-        path: '/analysis?project=ab-simulator',
+        path: 'https://absim.eeshans.com/analysis/',
         icon: '🎯',
-        description: 'Filtered analysis for A/B Simulator'
+        description: 'Statistical analysis of the A/B testing experiment'
       }
     ]
   },

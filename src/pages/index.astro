@@ -1,191 +1,333 @@
 ---
-import PageLayout from '../layouts/BaseLayout.astro'
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import Sidebar from '@/components/Sidebar.astro'
+import WritingList from '@/components/WritingList.astro'
+import ProjectGrid from '@/components/ProjectGrid.astro'
+import ContributionCalendar from '@/components/ContributionCalendar.astro'
+import ActivityTimeline from '@/components/ActivityTimeline.astro'
+import AboutRecognition from '@/components/AboutRecognition.astro'
+import PageNav from '@/components/PageNav.astro'
+
 import { Icon } from 'astro-icon/components'
-
-import { Image } from 'astro:assets'
-import profile from '../assets/profile.jpg'
-
-import fs from 'fs'
-import yaml from 'js-yaml'
-import path from 'path'
-
-// Load social links
-const socialLinksYaml = fs.readFileSync(
-	path.join(process.cwd(), 'src/data/social-links.yaml'),
-	'utf8'
-)
-const socialData = yaml.load(socialLinksYaml) as {
-	socialLinks: Array<{ name: string; url: string; icon: string; label: string }>
-}
-const socialLinks = socialData.socialLinks
+import { siteConfig } from '@/site-config'
 
 // Load projects
-import { getLiveProjects, getProjectsByStatus } from '@shared/lib/projects'
-import { getAllProjects } from '@shared/data/projectLoader'
-import ProjectCard from '@shared/components/ProjectCard.astro'
-import Timeline from '@shared/components/Timeline.astro'
+import { getLiveProjects, getProjectsByStatus } from '@/lib/projects'
+import { getAllProjects } from '@/data/projectLoader'
 
 // Load Substack posts
-import { getSubstackPosts } from '@shared/lib/substack'
-import SubstackPostPreview from '@shared/components/SubstackPostPreview.astro'
-import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
+import { getSubstackPosts } from '@/lib/substack'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
+
+// Load analysis data
+import { getAllAnalysisContent } from '@/lib/analysis'
+
+// Load GitHub data
+import { getGitHubData } from '@/lib/github'
 
 const SUBSTACK_RSS_URL = 'https://theasymptotic.substack.com/feed'
 const allSubstackPosts = await getSubstackPosts(SUBSTACK_RSS_URL, substackMappingsRaw)
-const recentSubstackPosts = allSubstackPosts.slice(0, 5)
 
 const allProjects = getAllProjects()
 const liveProjects = getLiveProjects(allProjects)
 const inProgressProjects = getProjectsByStatus(allProjects, 'in-progress')
-const activeProjects = [...liveProjects, ...inProgressProjects] // Cards for live + in-progress
-const upcomingProjects = getProjectsByStatus(allProjects, 'coming-soon')
+const activeProjects = [...liveProjects, ...inProgressProjects]
+
+// Featured project = first live project (A/B Simulator)
+const featuredProject = liveProjects[0]
+
+// Analysis data (notebooks only, top 5)
+const allAnalysis = await getAllAnalysisContent(SUBSTACK_RSS_URL, substackMappingsRaw)
+const recentAnalysis = allAnalysis.filter(item => item.type === 'notebook').slice(0, 5)
+
+// GitHub data (build-time, cached fallback)
+const githubData = await getGitHubData()
 ---
 
-<PageLayout meta={{ title: 'Home' }}>
-	<div class='w-full'>
+<html lang={siteConfig.lang} class='scroll-smooth'>
+	<head>
+		<BaseHead title='Home' description={siteConfig.description} />
+	</head>
 
-		<!-- ============================================ -->
-		<!-- HERO: Compact horizontal card                -->
-		<!-- ============================================ -->
-			<section class='border border-border bg-primary-foreground p-4 sm:p-6 shadow-lg shadow-black/5'>
-				<div class='flex flex-col items-center gap-6 sm:flex-row sm:items-start'>
-					<!-- Profile Image -->
-					<Image
-						src={profile}
-						alt='profile photo'
-						class='h-28 w-28 shrink-0 rounded-full bg-[#FFBE98] p-1.5'
-						loading='eager'
-					/>
+	<body>
+		<ThemeProvider />
+		<div class='homepage'>
+			<Sidebar />
 
-					<!-- Name + Tagline + Socials -->
-					<div class='flex flex-col items-center gap-4 sm:items-start'>
-						<div class='text-center sm:text-left'>
-							<h1 class='text-2xl font-bold sm:text-3xl'>Eeshan Srivastava</h1>
-							<p class='mt-1 text-lg text-muted-foreground'>
-							Engineer x Data Scientist x Leader
-						</p>
-						<!-- Social Links + Newsletter -->
-						<div class='flex flex-wrap items-center gap-x-3 gap-y-3'>
-							{
-								socialLinks.map((link) => (
-									<a
-										href={link.url}
-										target='_blank'
-										class='flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background transition-all hover:bg-input'
-										aria-label={link.label}
-									>
-										<Icon name={link.icon} class='h-4 w-4' />
-									</a>
-								))
-							}
-							<span class='text-muted-foreground'>|</span>
-							<a
-							href='https://theasymptotic.substack.com'
-								target='_blank'
-								class='group flex items-center gap-2 text-sm'
-							>
-								<Icon name='simple-icons:substack' class='h-4 w-4 shrink-0' />
-								<span class='text-muted-foreground'>Newsletter</span>
-								<span class='font-medium text-foreground transition group-hover:translate-x-0.5'>Follow →</span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</section>
+			<main class='homepage-main'>
+				<PageNav />
 
-			<!-- ============================================ -->
-			<!-- PHILOSOPHY (condensed - full version on About) -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 border-l-2 border-amber-400 pl-4 sm:pl-6 space-y-3'>
-				<p class='text-base text-muted-foreground'>
-					I lead data science teams at <a href='https://www.starbucks.com' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>Starbucks</a> and build
-					<a href='https://eeshans.com/projects/' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>projects</a>
-					here to explore what's next in data science, AI & privacy. Everything is
-					<a href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer' class='underline hover:text-foreground'>open source</a>. Explore the projects, analyses, or follow me on Substack.
+				<!-- Intro -->
+				<p class='homepage-intro'>
+					I build and write about AI, data science & privacy to see what will hold up beyond the hype cycles.
+					<strong>Everything is open source and transparent.</strong>
 				</p>
-			</section>
 
-			<!-- ============================================ -->
-			<!-- PROJECTS                                     -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 space-y-4'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Projects</h2>
-				<p class='text-base text-muted-foreground'>Each app applies a data science method to a real problem. Interact, contribute data, and explore the published analysis.</p>
-				<div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-					{activeProjects.map((project) => (
-						<ProjectCard project={project} variant='grid' />
-					))}
-				</div>
-				
-				<!-- What's Next Timeline (coming-soon only) -->
-				{upcomingProjects.length > 0 && (
-					<div class='mt-6'>
-						<Timeline 
-							inProgressProjects={[]} 
-							upcomingProjects={upcomingProjects} 
-						/>
+				<!-- Writing -->
+				<section id='writing' class='homepage-section'>
+					<div class='section-header'>
+						<h1>Writing</h1>
+						<div class='section-line'></div>
 					</div>
-				)}
-			</section>
+					<WritingList posts={allSubstackPosts} />
+				</section>
 
-			<!-- ============================================ -->
-			<!-- RECENT SUBSTACK POSTS                        -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10 space-y-4'>
-				<h2 class='text-xl sm:text-2xl font-bold text-foreground'>Recent Substack Posts</h2>
-				{recentSubstackPosts.length > 0 ? (
-					<ul class='flex flex-col gap-y-3 list-none p-0 m-0'>
-						{recentSubstackPosts.map((post) => (
-							<SubstackPostPreview post={post} withDesc />
-						))}
-					</ul>
-				) : (
-					<p class='text-muted-foreground'>No posts yet.</p>
-				)}
-				<a
-					href='/analysis'
-					class='inline-block text-sm text-muted-foreground hover:text-foreground transition'
-				>
-					View all posts →
-				</a>
-			</section>
+				<!-- Projects -->
+				<section id='projects' class='homepage-section'>
+					<div class='section-header'>
+						<h1>Projects</h1>
+						<div class='section-line'></div>
+					</div>
+					<ProjectGrid projects={activeProjects} featured={featuredProject} />
+					<a class='view-all-link' href='/projects'>View all projects →</a>
+				</section>
 
-			<!-- ============================================ -->
-			<!-- NEWSLETTER SIGNUP                            -->
-			<!-- Opens Substack with email pre-filled         -->
-			<!-- ============================================ -->
-			<section class='mt-8 sm:mt-10'>
-				<div class='border border-border bg-primary-foreground p-4 sm:p-8'>
-					<div class='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-						<div class='flex items-start gap-3'>
-							<Icon name='simple-icons:substack' class='h-6 w-6 mt-0.5 shrink-0 text-[#FF6719]' />
-							<div class='space-y-1'>
-								<h2 class='text-xl font-bold text-foreground'>Subscribe to my newsletter for updates</h2>
-							<p class='text-sm text-muted-foreground'>Updates from my newsletter: <span class='italic bg-amber-200/60 dark:bg-amber-400/25 px-1'>Asymptotic</span>. Pragmatic takes on AI, data science, and privacy.</p>
-							</div>
+				<!-- Open Source -->
+				<section id='opensource' class='homepage-section'>
+					<div class='section-header'>
+						<h1>Open Source</h1>
+						<div class='section-line'></div>
+						<a class='gh-link' href='https://github.com/eeshansrivastava89' target='_blank' rel='noopener noreferrer'>
+							<Icon name='simple-icons:github' class='gh-icon' />
+							<span>@eeshansrivastava89</span>
+						</a>
+					</div>
+
+					{githubData && githubData.weeks && githubData.weeks.length > 0 ? (
+						<>
+								<ContributionCalendar
+									weeks={githubData.weeks}
+									totalContributions={githubData.totalContributions}
+								/>
+								<ActivityTimeline activities={githubData.recentActivity} totals={githubData.activityTotals} />
+							</>
+						) : (
+						<p class='homepage-placeholder'>
+							GitHub data unavailable — will populate on next build with GITHUB_TOKEN.
+						</p>
+					)}</section>
+
+				<!-- Analysis -->
+				<section id='analysis' class='homepage-section'>
+					<div class='section-header'>
+						<h1>Published Analysis</h1>
+						<div class='section-line'></div>
+					</div>
+					{recentAnalysis.length > 0 ? (
+						<div class='analysis-list'>
+							{recentAnalysis.map(item => (
+								<a href={item.link} class='analysis-card'>
+									<div class='analysis-card-info'>
+										<h3 class='analysis-card-title'>{item.title}</h3>
+										{item.description && (
+											<p class='analysis-card-desc'>{item.description}</p>
+										)}
+									</div>
+									<span class='analysis-card-meta'>
+										{item.projectId || 'Analysis'}
+									</span>
+								</a>
+							))}
 						</div>
-						<form 
-							class='flex w-full gap-2 sm:w-auto'
-							id="newsletter-form"
-						onsubmit="event.preventDefault(); const email = this.email.value; if(email) window.open('https://theasymptotic.substack.com/subscribe?email=' + encodeURIComponent(email), '_blank');"
-						>
-							<input 
-								type="email" 
-								name="email" 
-								placeholder="you@email.com" 
-								required
-								class='flex-1 sm:w-64 px-4 py-2.5 text-sm border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground transition-all'
-							/>
-							<button 
-								type="submit" 
-								class='shrink-0 px-5 py-2.5 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-all hover:-translate-y-0.5'
-							>
-								Subscribe
-							</button>
-						</form>
-					</div>
-				</div>
-			</section>
+					) : (
+						<p class='homepage-placeholder'>
+							No published analysis yet.
+						</p>
+					)}
+					<a class='view-all-link' href='/analysis'>View all analysis →</a>
+				</section>
 
-	</div>
-</PageLayout>
+				<!-- About & Recognition -->
+				<AboutRecognition />
+
+				<!-- Footer -->
+				<footer class='homepage-footer'>
+					<p class='homepage-quote'>"Just someone who likes making things work, learning by doing, and working with smart people."</p>
+					<span class='homepage-location'>Seattle, WA</span>
+				</footer>
+			</main>
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	.homepage {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		min-height: 100vh;
+		max-width: 1280px;
+		margin: 0 auto;
+		font-family: 'Inter', -apple-system, sans-serif;
+		font-size: 14px;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.homepage-main {
+		padding: 48px 48px 80px 48px;
+		max-width: 800px;
+	}
+
+	.homepage-intro {
+		font-size: 15px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.7;
+		margin-bottom: 40px;
+		max-width: 560px;
+	}
+
+	.homepage-intro strong {
+		color: hsl(var(--foreground));
+		font-weight: 500;
+	}
+
+	.homepage-section {
+		margin-bottom: 56px;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 24px;
+	}
+
+	.section-header h1,
+	.section-header h2 {
+		font-family: 'Playfair Display', serif;
+		font-size: 26px;
+		font-weight: 600;
+		white-space: nowrap;
+		color: hsl(var(--foreground));
+	}
+
+	.section-line {
+		flex: 1;
+		height: 1px;
+		background: hsl(var(--border));
+	}
+
+	.gh-link {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+		text-decoration: none;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.gh-link:hover {
+		color: hsl(var(--foreground));
+	}
+
+	.gh-icon {
+		width: 14px;
+		height: 14px;
+	}
+
+	.analysis-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.analysis-card {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		padding: 12px 14px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 8px;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.15s;
+	}
+
+	.analysis-card:hover {
+		border-color: hsl(var(--foreground) / 0.2);
+		transform: translateY(-1px);
+	}
+
+	.analysis-card-title {
+		font-size: 14px;
+		font-weight: 500;
+		color: hsl(var(--foreground));
+		margin-bottom: 2px;
+	}
+
+	.analysis-card-desc {
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.4;
+	}
+
+	.analysis-card-meta {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 10px;
+		color: hsl(var(--muted-foreground));
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.view-all-link {
+		display: inline-block;
+		margin-top: 16px;
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		text-decoration: none;
+		font-weight: 450;
+	}
+
+	.view-all-link:hover {
+		color: hsl(var(--foreground));
+	}
+
+	.homepage-placeholder {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		padding: 24px;
+		border: 1px dashed hsl(var(--border));
+		border-radius: 8px;
+		text-align: center;
+	}
+
+	.homepage-footer {
+		padding: 32px 0;
+		border-top: 1px solid hsl(var(--border));
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	@media (max-width: 600px) {
+		.homepage-footer {
+			flex-direction: column;
+		}
+	}
+
+	.homepage-quote {
+		font-style: italic;
+		max-width: 400px;
+	}
+
+	.homepage-location {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+	}
+
+	@media (max-width: 900px) {
+		.homepage {
+			grid-template-columns: 1fr;
+		}
+		.homepage-main {
+			padding: 32px 24px 64px;
+		}
+	}
+</style>

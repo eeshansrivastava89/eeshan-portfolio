@@ -1,8 +1,62 @@
 ---
-/**
- * Root site header - imports from shared package for DRY
- */
-import SharedHeader from '@shared/components/layout/Header.astro'
+import { SubscribeDialog } from '../SubscribeDialog'
 ---
 
-<SharedHeader />
+<header class='mb-12 flex w-full flex-wrap pb-3 text-sm sm:flex-nowrap sm:justify-start'>
+	<nav
+		class='relative mx-auto flex w-full items-center justify-between sm:flex sm:items-center'
+		aria-label='global'
+	>
+		<a class='flex-none text-xl font-serif font-semibold text-foreground' href='/' aria-label='Brand'>Eeshan S.</a>
+
+		<div class='flex flex-row items-center justify-center gap-x-2 sm:gap-x-5 md:gap-x-7'>
+			<a
+				href='/writing'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
+				aria-label='Nav Menu Item'
+				>Writing
+			</a>
+			<a
+				href='/projects'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
+				aria-label='Nav Menu Item'
+				>Projects
+			</a>
+			<a
+				href='/about'
+				class='flex-none text-sm sm:text-[1.05rem] font-serif font-medium text-foreground hover:text-foreground/75'
+				aria-label='Nav Menu Item'
+				>About
+			</a>
+			<SubscribeDialog client:load />
+
+			<button
+				id='toggleDarkMode'
+				class='relative rounded-md border border-border p-1.5 text-foreground transition-all hover:bg-border'
+				title='Toggle light/dark'
+			>
+				<span class='sr-only'>Toggle theme</span>
+				<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='block dark:hidden'>
+					<path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/>
+				</svg>
+				<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='hidden dark:block'>
+					<circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/>
+				</svg>
+			</button>
+		</div>
+	</nav>
+</header>
+
+<script>
+	function getCurrentTheme() {
+		return localStorage.getItem('theme')
+	}
+	const toggleDarkModeButton = document.getElementById('toggleDarkMode')
+
+	toggleDarkModeButton?.addEventListener('click', () => {
+		const toggleDarkModeEvent = new CustomEvent('theme-change', {
+			detail: { theme: getCurrentTheme() === 'light' ? 'dark' : 'light' }
+		})
+		document.dispatchEvent(toggleDarkModeEvent)
+	})
+</script>

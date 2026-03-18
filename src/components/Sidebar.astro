@@ -1,0 +1,391 @@
+---
+import ThemeSwitcher from './ThemeSwitcher.astro'
+import SidebarNewsletter from './SidebarNewsletter.astro'
+import { Icon } from 'astro-icon/components'
+
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
+
+const socialLinksYaml = fs.readFileSync(
+	path.join(process.cwd(), 'src/data/social-links.yaml'),
+	'utf8'
+)
+const socialData = yaml.load(socialLinksYaml) as {
+	socialLinks: Array<{ name: string; url: string; icon: string; label: string }>
+}
+const socialLinks = socialData.socialLinks
+---
+
+<aside class='sidebar'>
+	<!-- Always visible (desktop + mobile) -->
+	<div class='sidebar-top'>
+		<div class='sidebar-identity'>
+			<h1 class='sidebar-name'>Eeshan S.</h1><!-- h1 intentional -->
+			<p class='sidebar-role'>
+				<strong>Sr. Data Science Manager</strong> at Starbucks<br />
+				AI/ML, experimentation and marketing analytics.
+			</p>
+			<div class='sidebar-social'>
+				{socialLinks.map((link) => (
+					<a href={link.url} target='_blank' rel='noopener noreferrer' title={link.label}>
+						<Icon name={link.icon} class='sidebar-social-icon' />
+						<span>{link.label}</span>
+					</a>
+				))}
+				<a href='/rss.xml' title='RSS'>
+					<Icon name='lucide:rss' class='sidebar-social-icon' />
+					<span>RSS</span>
+				</a>
+			</div>
+			<ThemeSwitcher />
+		</div>
+
+		<!-- Mobile: compact nav + subscribe row -->
+		<div class='mobile-bar'>
+			<nav class='mobile-nav' id='mobile-nav'>
+				<a href='#writing'>Writing</a>
+				<a href='#projects'>Projects</a>
+				<a href='#opensource'>OSS</a>
+				<a href='#about'>About</a>
+			</nav>
+			<a class='mobile-subscribe' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
+		</div>
+	</div>
+
+	<!-- Desktop only: full sidebar content -->
+	<div class='sidebar-expanded'>
+		<nav class='sidebar-nav' id='sidebar-nav'>
+			<a href='#writing' data-section='writing'>Writing</a>
+			<a href='#projects' data-section='projects'>Projects</a>
+			<a href='#opensource' data-section='opensource'>Open Source</a>
+			<a href='#analysis' data-section='analysis'>Analysis</a>
+			<a href='#about' data-section='about'>About</a>
+		</nav>
+
+		<div class='sidebar-currently'>
+			<div class='sidebar-label'>Currently</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>✍</span>
+				<span>Writing about <a href='#writing'>agentic coding workflows</a></span>
+			</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>🔧</span>
+				<span>Building <a href='https://github.com/eeshansrivastava89/sidequests' target='_blank'>Sidequests</a></span>
+			</div>
+			<div class='sidebar-currently-item'>
+				<span class='sidebar-emoji'>📚</span>
+				<span>MIT MicroMasters in Statistics</span>
+			</div>
+		</div>
+
+		<div class='sidebar-bottom'>
+			<hr class='sidebar-bottom-rule' />
+			<SidebarNewsletter />
+		</div>
+	</div>
+</aside>
+
+<style>
+	/* ═══════ Mobile bar (hidden on desktop) ═══════ */
+	.mobile-bar { display: none; }
+
+	/* ═══════ Desktop sidebar ═══════ */
+	.sidebar {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow: hidden;
+		padding: 48px 24px 20px 32px;
+		border-right: 1px solid hsl(var(--border));
+		display: flex;
+		flex-direction: column;
+		font-family: 'Inter', -apple-system, sans-serif;
+	}
+
+	.sidebar-identity { margin-bottom: 0; }
+
+	.sidebar-name {
+		font-family: 'Playfair Display', serif;
+		font-size: 28px;
+		font-weight: 700;
+		letter-spacing: -0.5px;
+		line-height: 1.2;
+		margin-bottom: 4px;
+		color: hsl(var(--foreground));
+	}
+
+	.sidebar-role {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.5;
+		margin-bottom: 10px;
+	}
+
+	.sidebar-role strong {
+		color: hsl(var(--foreground));
+		font-weight: 500;
+	}
+
+	.sidebar-social {
+		display: flex;
+		gap: 10px;
+	}
+
+	.sidebar-social a {
+		display: flex;
+		align-items: center;
+		gap: 3px;
+		color: hsl(var(--muted-foreground));
+		font-size: 11px;
+		font-family: 'JetBrains Mono', monospace;
+		padding: 3px 0;
+		border-bottom: 1px solid transparent;
+		text-decoration: none;
+		transition: all 0.15s;
+	}
+
+	.sidebar-social a:hover {
+		color: hsl(var(--foreground));
+		border-bottom-color: hsl(var(--muted-foreground));
+	}
+
+	.sidebar-social-icon {
+		width: 12px;
+		height: 12px;
+		flex-shrink: 0;
+	}
+
+	.sidebar-nav {
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+		margin-bottom: 0;
+		padding: 10px 0;
+		margin-top: 10px;
+		border-top: 1px solid hsl(var(--border));
+		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.sidebar-nav a {
+		font-size: 14px;
+		color: hsl(var(--muted-foreground));
+		padding: 5px 10px;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: all 0.15s;
+		font-weight: 450;
+	}
+
+	.sidebar-nav a:hover,
+	.sidebar-nav a.active {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+	}
+
+	.sidebar-credentials {
+		padding: 10px 0;
+		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.sidebar-bio {
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.5;
+	}
+
+	.sidebar-label {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-bottom: 6px;
+	}
+
+	.sidebar-credential {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding: 3px 0;
+	}
+
+	.sidebar-company {
+		font-size: 12px;
+		font-weight: 500;
+		color: hsl(var(--foreground));
+	}
+
+	.sidebar-title {
+		font-size: 11px;
+		font-weight: 400;
+		color: hsl(var(--muted-foreground));
+	}
+
+	.sidebar-years {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 10px;
+		color: hsl(var(--muted-foreground));
+	}
+
+	.sidebar-edu {
+		font-size: 11px;
+		color: hsl(var(--muted-foreground));
+	}
+
+	.sidebar-currently {
+		padding: 10px 0;
+		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.sidebar-currently-item {
+		display: flex;
+		gap: 6px;
+		align-items: baseline;
+		padding: 3px 0;
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		line-height: 1.4;
+	}
+
+	.sidebar-currently-item a {
+		color: hsl(var(--foreground));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--border));
+		text-underline-offset: 2px;
+	}
+
+	.sidebar-emoji {
+		font-size: 11px;
+		width: 16px;
+		flex-shrink: 0;
+	}
+
+	.sidebar-expanded {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
+	}
+
+	.sidebar-bottom {
+		margin-top: auto;
+	}
+
+	.sidebar-bottom-rule {
+		border: none;
+		border-top: 1px solid hsl(var(--border));
+		margin: 0 0 10px 0;
+	}
+
+	/* ═══════ Mobile (< 900px) ═══════ */
+	@media (max-width: 900px) {
+		.sidebar {
+			position: relative;
+			height: auto;
+			border-right: none;
+			border-bottom: 1px solid hsl(var(--border));
+			padding: 20px 20px 0;
+			overflow: visible;
+		}
+
+		.sidebar-expanded { display: none; }
+
+		.sidebar-name { font-size: 20px; }
+
+		.sidebar-role {
+			font-size: 11px;
+			margin-bottom: 6px;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.sidebar-role br { display: none; }
+
+		.mobile-bar {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 0;
+			border-top: 1px solid hsl(var(--border));
+			margin-top: 8px;
+		}
+
+		.mobile-nav {
+			display: flex;
+			gap: 4px;
+			flex: 1;
+			overflow-x: auto;
+		}
+
+		.mobile-nav a {
+			font-size: 12px;
+			font-weight: 450;
+			color: hsl(var(--muted-foreground));
+			padding: 4px 10px;
+			border-radius: 6px;
+			text-decoration: none;
+			white-space: nowrap;
+			transition: all 0.15s;
+		}
+
+		.mobile-nav a:hover {
+			color: hsl(var(--foreground));
+			background: hsl(var(--muted));
+		}
+
+		.mobile-subscribe {
+			flex-shrink: 0;
+			padding: 6px 14px;
+			background: hsl(var(--foreground));
+			color: hsl(var(--background));
+			border-radius: 6px;
+			font-size: 11px;
+			font-weight: 600;
+			text-decoration: none;
+			transition: opacity 0.15s;
+		}
+
+		.mobile-subscribe:hover {
+			opacity: 0.9;
+			color: hsl(var(--background));
+		}
+	}
+</style>
+
+<script>
+	// Smooth scroll for both desktop and mobile nav
+	document.querySelectorAll('#sidebar-nav a, #mobile-nav a').forEach(link => {
+		link.addEventListener('click', (e) => {
+			const href = link.getAttribute('href')
+			if (href?.startsWith('#')) {
+				e.preventDefault()
+				const target = document.querySelector(href)
+				target?.scrollIntoView({ behavior: 'smooth' })
+			}
+		})
+	})
+
+	// Intersection Observer for active nav (desktop)
+	const sections = document.querySelectorAll('section[id]')
+	const navLinks = document.querySelectorAll('#sidebar-nav a[data-section]')
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					navLinks.forEach(link => link.classList.remove('active'))
+					const activeLink = document.querySelector(
+						`#sidebar-nav a[data-section="${entry.target.id}"]`
+					)
+					activeLink?.classList.add('active')
+				}
+			})
+		},
+		{ rootMargin: '-20% 0px -60% 0px' }
+	)
+
+	sections.forEach(section => observer.observe(section))
+</script>

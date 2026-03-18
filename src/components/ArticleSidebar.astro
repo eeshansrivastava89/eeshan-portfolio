@@ -1,0 +1,156 @@
+---
+import type { TocEntry } from '@/lib/toc'
+import { Icon } from 'astro-icon/components'
+import SidebarNewsletter from './SidebarNewsletter.astro'
+
+interface Props {
+  title: string
+  toc: TocEntry[]
+}
+
+const { title, toc } = Astro.props
+---
+
+<aside class='article-sidebar'>
+	<div class='article-sidebar-top'>
+		<p class='article-sidebar-title'>{title}</p>
+	</div>
+
+	<nav class='article-toc' id='article-toc'>
+		{toc.map(entry => (
+			<a
+				href={`#${entry.id}`}
+				class={`toc-link ${entry.level >= 3 ? 'toc-indent' : ''}`}
+				data-toc-id={entry.id}
+			>
+				{entry.text}
+			</a>
+		))}
+	</nav>
+
+	<div class='toc-bottom'>
+		<hr class='toc-bottom-rule' />
+		<SidebarNewsletter />
+	</div>
+</aside>
+
+<style>
+	.article-sidebar {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow-y: auto;
+		padding: 28px 24px 20px 32px;
+		border-right: 1px solid hsl(var(--border));
+		display: flex;
+		flex-direction: column;
+		font-family: 'Inter', -apple-system, sans-serif;
+	}
+
+	.article-sidebar::-webkit-scrollbar { width: 0; }
+
+	.article-sidebar-top {
+		margin-bottom: 10px;
+	}
+
+
+	.article-sidebar-title {
+		font-family: 'Playfair Display', serif;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 1.3;
+		color: hsl(var(--foreground));
+	}
+
+	.article-toc {
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+		padding: 10px 0;
+		border-top: 1px solid hsl(var(--border));
+		overflow-y: auto;
+	}
+
+	.article-toc::-webkit-scrollbar { width: 0; }
+
+	.toc-bottom {
+		margin-top: auto;
+	}
+
+	.toc-bottom-rule {
+		border: none;
+		border-top: 1px solid hsl(var(--border));
+		margin: 0 0 10px 0;
+	}
+
+	.toc-link {
+		font-size: 13px;
+		color: hsl(var(--muted-foreground));
+		padding: 4px 10px;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: all 0.15s;
+		font-weight: 400;
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.toc-link:hover {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+	}
+
+	.toc-link.active {
+		color: hsl(var(--foreground));
+		background: hsl(var(--muted));
+		font-weight: 450;
+	}
+
+	.toc-indent {
+		padding-left: 22px;
+		font-size: 12px;
+	}
+
+
+	@media (max-width: 900px) {
+		.article-sidebar {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	document.querySelectorAll('#article-toc a[data-toc-id]').forEach(link => {
+		link.addEventListener('click', (e) => {
+			const href = link.getAttribute('href')
+			if (href?.startsWith('#')) {
+				e.preventDefault()
+				const target = document.querySelector(href)
+				target?.scrollIntoView({ behavior: 'smooth' })
+			}
+		})
+	})
+
+	const headings = document.querySelectorAll('.substack-content h1[id], .substack-content h2[id], .substack-content h3[id]')
+	const tocLinks = document.querySelectorAll('#article-toc a[data-toc-id]')
+
+	const tocObserver = new IntersectionObserver(
+		(entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					tocLinks.forEach(link => link.classList.remove('active'))
+					const activeLink = document.querySelector(
+						`#article-toc a[data-toc-id="${entry.target.id}"]`
+					)
+					activeLink?.classList.add('active')
+				}
+			})
+		},
+		{ rootMargin: '-10% 0px -70% 0px' }
+	)
+
+	headings.forEach(h => tocObserver.observe(h))
+</script>

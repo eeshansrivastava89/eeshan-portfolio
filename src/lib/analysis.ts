@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import { getSubstackPosts, type SubstackPost } from '@shared/lib/substack'
+import { getSubstackPosts, type SubstackPost } from '@/lib/substack'
 
 /**
  * Unified content type for /analysis page
@@ -20,6 +20,7 @@ export interface AnalysisContent {
 interface NotebookYAML {
   title: string
   project_id?: string
+  analysis_url?: string
   status?: string
   decision?: string
   methods?: string[]
@@ -50,8 +51,8 @@ function getAllNotebooks(): AnalysisContent[] {
       const projectId = pathParts[pathParts.length - 2]
       const notebookId = pathParts[pathParts.length - 1].replace('.yaml', '')
 
-      // Build link to notebook detail page
-      const link = `/projects/${projectId}/analysis/${notebookId}/`
+      // Use external analysis_url if provided, otherwise build internal link
+      const link = data.analysis_url || `/projects/${projectId}/analysis/${notebookId}/`
 
       const date = data.generated_at ? new Date(data.generated_at) : new Date()
 
@@ -106,7 +107,7 @@ export async function getAllAnalysisContent(
 
   // Combine and sort by date (newest first)
   const allContent = [...notebooks, ...posts]
-  allContent.sort((a, b) => b.date.getTime() - a.date.getTime())
+  allContent.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return allContent
 }

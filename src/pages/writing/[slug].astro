@@ -1,0 +1,161 @@
+---
+/**
+ * Full Substack article page — mirrors content with Substack canonical.
+ * Two-column layout: TOC sidebar (same position as homepage) + article content.
+ */
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import ArticleSidebar from '@/components/ArticleSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
+import '../../styles/substack-article.css'
+
+import { getSubstackPosts } from '@/lib/substack'
+import { extractToc } from '@/lib/toc'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
+
+export async function getStaticPaths() {
+  const posts = await getSubstackPosts('https://theasymptotic.substack.com/feed', substackMappingsRaw)
+
+  return posts.map(post => {
+    const { toc, html } = extractToc(post.content)
+    return {
+      params: { slug: post.slug },
+      props: { post, toc, processedHtml: html }
+    }
+  })
+}
+
+const { post, toc, processedHtml } = Astro.props
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+---
+
+<html lang='en' class='scroll-smooth'>
+  <head>
+    <BaseHead
+      title={post.title}
+      description={post.description}
+      ogImage={post.coverImage}
+      articleDate={post.pubDate.toISOString()}
+      canonicalUrl={post.link}
+    />
+  </head>
+
+  <body class='bg-background text-foreground'>
+    <ThemeProvider />
+
+    <div class='article-layout'>
+      <ArticleSidebar title={post.title} toc={toc} />
+
+      <main class='article-main'>
+        <PageNav />
+        <header class='article-header'>
+          <h1 class='article-title'>{post.title}</h1>
+          <div class='article-meta'>
+            <time datetime={post.pubDate.toISOString()}>{formatDate(post.pubDate)}</time>
+            <span class='article-meta-sep'>·</span>
+            <span>Eeshan Srivastava</span>
+          </div>
+        </header>
+
+        <div class='substack-content'>
+          <Fragment set:html={processedHtml} />
+        </div>
+
+        <footer class='article-footer'>
+          <p class='article-attribution'>
+            Originally published on <a href={post.link} target='_blank' rel='noopener noreferrer'>Asymptotic</a>
+          </p>
+          <a href='/' class='article-back-bottom'>← Back to eeshans.com</a>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  .article-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .article-main {
+    padding: 48px 48px 80px;
+    max-width: 720px;
+  }
+
+
+  .article-header {
+    margin-bottom: 40px;
+  }
+
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    color: hsl(var(--foreground));
+  }
+
+  .article-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .article-meta-sep {
+    margin: 0 6px;
+  }
+
+  .article-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .article-attribution {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 16px;
+  }
+
+  .article-attribution a {
+    color: hsl(var(--foreground));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-back-bottom {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+  }
+
+  .article-back-bottom:hover {
+    color: hsl(var(--foreground));
+  }
+
+  @media (max-width: 900px) {
+    .article-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .article-main {
+      padding: 24px 20px 64px;
+    }
+
+  }
+</style>

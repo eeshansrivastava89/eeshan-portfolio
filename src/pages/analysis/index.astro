@@ -1,49 +1,248 @@
 ---
-import PageLayout from '@/layouts/BaseLayout.astro'
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import ListingSidebar from '@/components/ListingSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
+
 import { getAllAnalysisContent } from '@/lib/analysis'
-import { AnalysisTable } from '@/components/AnalysisTable'
 import { siteConfig } from '@/site-config'
-import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
-import { getAllProjects } from '@shared/data/projectLoader'
+import { getAllProjects } from '@/data/projectLoader'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
 
-// Import YAML mapping as raw text
-import substackMappingsRaw from '@shared/data/substack-posts.yaml?raw'
+const rawContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)
+// Analysis page only shows notebooks/ML work, not Substack articles
+const allContent = rawContent.filter(item => item.type === 'notebook')
+const allProjects = getAllProjects()
+const projectNames = Object.fromEntries(allProjects.map(p => [p.id, p.name]))
 
-// Load all analysis content (notebooks + Substack posts)
-const allContent = await getAllAnalysisContent(siteConfig.substackRssUrl, substackMappingsRaw)
+// Group by project
+const byProject = new Map<string, typeof allContent>()
+const untagged: typeof allContent = []
 
-// Load project metadata to get actual names
-const allProjects = await getAllProjects()
-const projectNames = Object.fromEntries(
-	allProjects.map(p => [p.id, p.name])
-)
+for (const item of allContent) {
+  if (item.projectId && projectNames[item.projectId]) {
+    if (!byProject.has(item.projectId)) byProject.set(item.projectId, [])
+    byProject.get(item.projectId)!.push(item)
+  } else {
+    untagged.push(item)
+  }
+}
 
-const initialProjectId = Astro.url.searchParams.get('project')?.trim() || undefined
+const projectIds = Array.from(byProject.keys())
 
-// Serialize dates for React (convert Date objects to ISO strings for hydration)
-const serializedContent = allContent.map(item => ({
-	...item,
-	date: item.date.toISOString()
-}))
-
-const meta = {
-	description: 'Unified view of all notebooks and posts across projects. Filter by type, project, or statistical method.',
-	title: 'Analysis & Writing'
+function formatDate(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 ---
 
-<PageLayout meta={meta}>
-	<div class='w-full'>
-		<Breadcrumbs />
+<html lang='en' class='scroll-smooth'>
+  <head>
+    <BaseHead title='Analysis' description='Published notebooks and statistical analysis across all projects.' />
+  </head>
+  <body class='bg-background text-foreground'>
+    <ThemeProvider />
+    <div class='listing-layout'>
+      <ListingSidebar
+        title='Analysis'
+        description='Published notebooks, ML experiments, and technical analysis across all projects.'
+      >
+        <div class='project-nav'>
+          {projectIds.map(id => (
+            <a href={`#project-${id}`} class='project-filter-link'>{projectNames[id]}</a>
+          ))}
+          {untagged.length > 0 && (
+            <a href='#general' class='project-filter-link'>General</a>
+          )}
+        </div>
+      </ListingSidebar>
 
-		<div class="mb-8 mt-5">
-			<h1 class='text-2xl font-bold mb-2'>Analysis & Writing</h1>
-			<p class='text-base text-muted-foreground'>
-				Explore notebooks and posts across all projects. Filter by type, project, or statistical method.
-			</p>
-		</div>
+      <main class='listing-main'>
+        <PageNav />
+        <div class='listing-mobile-header'>
+          <h1 class='listing-mobile-title'>Analysis</h1>
+        </div>
 
-		<!-- React island for interactive table -->
-		<AnalysisTable data={serializedContent} projectNames={projectNames} initialProjectId={initialProjectId} client:load />
-	</div>
-</PageLayout>
+        {projectIds.map(projectId => (
+          <section id={`project-${projectId}`} class='analysis-group'>
+            <h2 class='analysis-group-heading'>{projectNames[projectId]}</h2>
+            {byProject.get(projectId)!.map(item => (
+              <a href={item.link} target={item.type === 'post' ? '_blank' : undefined} class='analysis-row'>
+                <span class='analysis-type-badge' data-type={item.type}>
+                  {item.type === 'notebook' ? 'Notebook' : 'Article'}
+                </span>
+                <div class='analysis-info'>
+                  <h3 class='analysis-title'>{item.title}</h3>
+                  {item.description && (
+                    <p class='analysis-desc'>{item.description}</p>
+                  )}
+                </div>
+                <span class='analysis-date'>{formatDate(item.date)}</span>
+              </a>
+            ))}
+          </section>
+        ))}
+
+        {untagged.length > 0 && (
+          <section id='general' class='analysis-group'>
+            <h2 class='analysis-group-heading'>General</h2>
+            {untagged.map(item => (
+              <a href={item.link} target={item.type === 'post' ? '_blank' : undefined} class='analysis-row'>
+                <span class='analysis-type-badge' data-type={item.type}>
+                  {item.type === 'notebook' ? 'Notebook' : 'Article'}
+                </span>
+                <div class='analysis-info'>
+                  <h3 class='analysis-title'>{item.title}</h3>
+                  {item.description && (
+                    <p class='analysis-desc'>{item.description}</p>
+                  )}
+                </div>
+                <span class='analysis-date'>{formatDate(item.date)}</span>
+              </a>
+            ))}
+          </section>
+        )}
+
+        {allContent.length === 0 && (
+          <p class='analysis-empty'>No analysis published yet.</p>
+        )}
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .listing-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .listing-main {
+    padding: 48px 48px 80px;
+    max-width: 800px;
+  }
+
+  .listing-mobile-header { display: none; }
+
+  .project-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .project-filter-link {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .project-filter-link:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--muted));
+  }
+
+  .analysis-group {
+    margin-bottom: 40px;
+  }
+
+  .analysis-group-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .analysis-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    padding: 10px 12px;
+    margin: 0 -12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+
+  .analysis-row:hover {
+    background: hsl(var(--muted));
+  }
+
+  .analysis-type-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .analysis-type-badge[data-type='notebook'] {
+    color: hsl(210, 60%, 55%);
+  }
+
+  .analysis-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
+
+  .analysis-desc {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .analysis-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: hsl(var(--muted-foreground));
+    white-space: nowrap;
+  }
+
+  .analysis-empty {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    text-align: center;
+    padding: 40px;
+  }
+
+  @media (max-width: 900px) {
+    .listing-layout { grid-template-columns: 1fr; }
+    .listing-main { padding: 24px 20px 64px; }
+    .listing-mobile-header { display: block; margin-bottom: 24px; }
+    .listing-mobile-back {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .listing-mobile-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+    }
+    .analysis-row { grid-template-columns: 1fr auto; }
+    .analysis-type-badge { display: none; }
+  }
+</style>

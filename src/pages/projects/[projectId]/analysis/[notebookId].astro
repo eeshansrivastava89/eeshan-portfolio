@@ -1,72 +1,63 @@
 ---
 /**
  * Dynamic Analysis Page for Project Notebooks
- * 
- * Scans analytics/notebooks/{projectId}/*.ipynb for notebooks
- * Embeds rendered HTML from public/analysis/{projectId}/{notebookId}.html
- * 
+ *
+ * Scans public/analysis/{projectId}/ for pre-rendered notebook HTML and YAML
+ * Each project repo owns its own notebooks; this page displays the rendered output.
+ *
  * URL pattern: /projects/{projectId}/analysis/{notebookId}
  * Example: /projects/ab-simulator/analysis/ab-test-analysis
  */
 import PageLayout from '../../../../layouts/BaseLayout.astro'
-import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import { Icon } from 'astro-icon/components'
 
-import { getAllProjects } from '@shared/data/projectLoader'
+import { getAllProjects } from '@/data/projectLoader'
 import fs from 'node:fs'
 import path from 'node:path'
 
-// Generate static paths from folder structure
+// Generate static paths from public/analysis/ rendered output
 export async function getStaticPaths() {
-  // Inline discovery - scan analytics/notebooks/{projectId}/*.ipynb
-  const notebooksDir = path.join(process.cwd(), 'analytics', 'notebooks')
-  const notebooks: Array<{ projectId: string; notebookId: string; path: string }> = []
-  
-  if (fs.existsSync(notebooksDir)) {
-    const projectDirs = fs.readdirSync(notebooksDir, { withFileTypes: true })
+  const analysisDir = path.join(process.cwd(), 'public', 'analysis')
+  const notebooks: Array<{ projectId: string; notebookId: string }> = []
+
+  if (fs.existsSync(analysisDir)) {
+    const projectDirs = fs.readdirSync(analysisDir, { withFileTypes: true })
       .filter(d => d.isDirectory())
       .map(d => d.name)
-    
+
     for (const projectId of projectDirs) {
-      const projectPath = path.join(notebooksDir, projectId)
-      const ipynbFiles = fs.readdirSync(projectPath)
-        .filter(f => f.endsWith('.ipynb'))
-      
-      for (const file of ipynbFiles) {
-        // Convert filename to ID: ab_test_analysis.ipynb -> ab-test-analysis
-        const notebookId = file.replace('.ipynb', '').replace(/_/g, '-')
-        notebooks.push({
-          projectId,
-          notebookId,
-          path: `analytics/notebooks/${projectId}/${file}`
-        })
+      const projectPath = path.join(analysisDir, projectId)
+      const htmlFiles = fs.readdirSync(projectPath)
+        .filter(f => f.endsWith('.html'))
+
+      for (const file of htmlFiles) {
+        const notebookId = file.replace('.html', '')
+        notebooks.push({ projectId, notebookId })
       }
     }
   }
-  
+
   const allProjects = getAllProjects()
-  
+
   return notebooks.map(nb => {
     const project = allProjects.find(p => p.id === nb.projectId)
     return {
-      params: { 
-        projectId: nb.projectId, 
-        notebookId: nb.notebookId 
+      params: {
+        projectId: nb.projectId,
+        notebookId: nb.notebookId
       },
-      props: { 
+      props: {
         project,
-        notebookId: nb.notebookId,
-        notebookPath: nb.path
+        notebookId: nb.notebookId
       }
     }
-  }).filter(p => p.props.project) // Only include if project exists
+  }).filter(p => p.props.project)
 }
 
 const { projectId, notebookId } = Astro.params
-const { project, notebookPath } = Astro.props
-const appUrl = `/${projectId}/`  // Link to actual app page
+const { project } = Astro.props
 
-// Guard - should never happen since getStaticPaths filters undefined projects
 if (!project) {
   throw new Error(`Project not found: ${projectId}`)
 }
@@ -94,7 +85,6 @@ try {
   if (fs.existsSync(htmlPath)) {
     notebookHtml = fs.readFileSync(htmlPath, 'utf-8')
     const stats = fs.statSync(htmlPath)
-    // Full datetime format
     lastUpdated = stats.mtime.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -107,82 +97,39 @@ try {
 } catch (e) {
   console.warn(`Notebook HTML not found: ${projectId}/${notebookId}.html`)
 }
-
-// Build GitHub link to source notebook
-const githubNotebookUrl = `https://github.com/eeshansrivastava89/datascienceapps/blob/main/${notebookPath}`
-
-// Parse refresh schedule from notebooks.yml workflow
-let refreshSchedule = 'on demand'
-try {
-  const workflowPath = path.join(process.cwd(), '.github', 'workflows', 'notebooks.yml')
-  if (fs.existsSync(workflowPath)) {
-    const workflowContent = fs.readFileSync(workflowPath, 'utf-8')
-    const cronMatch = workflowContent.match(/cron:\s*['"](.+?)['"]/)
-    if (cronMatch) {
-      const cron = cronMatch[1]
-      // Parse common cron patterns to human-readable
-      if (cron.match(/^\d+\s+\*\/(\d+)\s+\*\s+\*\s+\*/)) {
-        const hours = cron.match(/\*\/(\d+)/)?.[1]
-        refreshSchedule = hours === '1' ? 'hourly' : `every ${hours} hours`
-      } else if (cron.match(/^\d+\s+\d+\s+\*\s+\*\s+\*/)) {
-        refreshSchedule = 'daily'
-      } else if (cron.match(/^\d+\s+\d+\s+\*\s+\*\s+\d+/)) {
-        refreshSchedule = 'weekly'
-      }
-    }
-  }
-} catch (e) {
-  // Fallback to default
-}
 ---
 
-<PageLayout meta={{ 
-  title: `${notebookTitle} | ${project.name}`, 
-  description: `Analysis notebook for ${project.name}` 
+<PageLayout meta={{
+  title: `${notebookTitle} | ${project.name}`,
+  description: `Analysis notebook for ${project.name}`
 }}>
   <div class='flex w-full flex-col gap-y-8'>
-    
+
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
       { label: 'Projects', href: '/projects' },
-      { label: project.name, href: appUrl },
+      { label: project.name, href: project.url || '/projects' },
       { label: 'Analysis' }
     ]} />
 
-    <!-- Header -->
     <header class='space-y-4'>
       <div class='flex items-start justify-between gap-4'>
         <div class='space-y-2'>
           <h1 class='text-2xl font-bold text-foreground sm:text-3xl'>{notebookTitle}</h1>
           <p class='max-w-2xl text-muted-foreground'>Analysis notebook for {project.name}</p>
         </div>
-        
-        <a
-          href={githubNotebookUrl}
-          target='_blank'
-          rel='noopener noreferrer'
-          class='flex shrink-0 items-center gap-2 rounded border border-border px-3 py-2 text-sm text-muted-foreground transition hover:border-foreground/30 hover:text-foreground'
-        >
-          <Icon name='mdi:github' class='h-4 w-4' />
-          View Source
-        </a>
       </div>
-      
+
       {lastUpdated && (
         <div class='flex items-center gap-4 text-sm text-muted-foreground'>
           <span class='flex items-center gap-1.5'>
             <Icon name='mdi:calendar' class='h-4 w-4' />
             Last updated: {lastUpdated}
           </span>
-          <span class='flex items-center gap-1.5'>
-            <Icon name='mdi:refresh' class='h-4 w-4' />
-            Refreshes {refreshSchedule}
-          </span>
         </div>
       )}
     </header>
 
-    <!-- Notebook Content -->
     {notebookExists ? (
       <div class='notebook-container overflow-hidden rounded-lg border border-border bg-card'>
         <Fragment set:html={notebookHtml} />
@@ -192,27 +139,17 @@ try {
         <Icon name='mdi:notebook-outline' class='mx-auto h-12 w-12 text-muted-foreground/50' />
         <h2 class='mt-4 text-lg font-medium text-foreground'>Analysis Coming Soon</h2>
         <p class='mt-2 text-muted-foreground'>
-          This notebook will be generated on the next scheduled run (weekly).
+          This notebook will be available once the analysis is published.
         </p>
-        <a
-          href={githubNotebookUrl}
-          target='_blank'
-          rel='noopener noreferrer'
-          class='mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'
-        >
-          <Icon name='mdi:github' class='h-4 w-4' />
-          View source notebook on GitHub
-        </a>
       </div>
     )}
 
-    <!-- Back to Project -->
     <div class='border-t border-border pt-6'>
       <a
-        href={appUrl}
+        href='/projects'
         class='inline-flex items-center gap-2 text-muted-foreground transition hover:text-foreground'
       >
-        ← Back to {project.name}
+        ← Back to Projects
       </a>
     </div>
 
@@ -220,12 +157,10 @@ try {
 </PageLayout>
 
 <style>
-  /* Style adjustments for embedded notebook */
   .notebook-container {
     padding: 2rem;
   }
 
-  /* Override Jupyter notebook styles for better integration */
   .notebook-container :global(.jp-Notebook),
   .notebook-container :global(.jp-Cell) {
     background: transparent;
@@ -255,64 +190,26 @@ try {
     border-radius: 4px;
   }
 
-  /* ============================================ */
-  /* DARK MODE - Comprehensive overrides         */
-  /* ============================================ */
-
-  /* Base text color for entire notebook */
   :global(.dark) .notebook-container,
   :global(.dark) .notebook-container :global(*) {
     color: #e0e0e0;
   }
 
-  /* Markdown content - headings and text */
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown),
-  :global(.dark) .notebook-container :global(.jp-RenderedHTMLCommon) {
-    color: #e0e0e0;
-  }
-
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h1),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h2),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h3),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown h4),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown p),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown li),
-  :global(.dark) .notebook-container :global(.jp-RenderedMarkdown strong) {
-    color: #f0f0f0;
-  }
-
-  /* Code blocks and pre */
   :global(.dark) .notebook-container :global(pre) {
     background: #2d2d2d;
     color: #e0e0e0;
   }
 
-  /* Output cells */
-  :global(.dark) .notebook-container :global(.jp-OutputArea-output),
-  :global(.dark) .notebook-container :global(.jp-RenderedText) {
-    background: #2d2d2d;
-    color: #e0e0e0;
-  }
-
-  /* Input prompts (In [1]:) */
-  :global(.dark) .notebook-container :global(.jp-InputPrompt),
-  :global(.dark) .notebook-container :global(.jp-OutputPrompt) {
-    color: #888;
-  }
-
-  /* Tables */
   :global(.dark) .notebook-container :global(th),
   :global(.dark) .notebook-container :global(td) {
     border-color: #444;
     color: #e0e0e0;
   }
 
-  /* Links */
   :global(.dark) .notebook-container :global(a) {
     color: #6db3f2;
   }
 
-  /* Code syntax highlighting - preserve colors */
   :global(.dark) .notebook-container :global(.highlight) {
     background: #2d2d2d;
   }

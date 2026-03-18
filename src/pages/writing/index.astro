@@ -1,0 +1,184 @@
+---
+import BaseHead from '@/components/BaseHead.astro'
+import ThemeProvider from '@/components/ThemeProvider.astro'
+import ListingSidebar from '@/components/ListingSidebar.astro'
+import PageNav from '@/components/PageNav.astro'
+
+import { getSubstackPosts } from '@/lib/substack'
+import substackMappingsRaw from '@/data/substack-posts.yaml?raw'
+
+const posts = await getSubstackPosts('https://theasymptotic.substack.com/feed', substackMappingsRaw)
+
+// Group by year
+const byYear = new Map<number, typeof posts>()
+for (const post of posts) {
+  const year = post.pubDate.getFullYear()
+  if (!byYear.has(year)) byYear.set(year, [])
+  byYear.get(year)!.push(post)
+}
+const years = Array.from(byYear.keys()).sort((a, b) => b - a)
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+---
+
+<html lang='en' class='scroll-smooth'>
+  <head>
+    <BaseHead title='Writing' description='Articles on AI, data science, and privacy from Asymptotic.' />
+  </head>
+  <body class='bg-background text-foreground'>
+    <ThemeProvider />
+    <div class='listing-layout'>
+      <ListingSidebar
+        title='Writing'
+        description='Articles from Asymptotic — pragmatic takes on AI, data science, and privacy.'
+      >
+        <div class='year-nav'>
+          {years.map(year => (
+            <a href={`#year-${year}`} class='year-link'>{year}</a>
+          ))}
+        </div>
+      </ListingSidebar>
+
+      <main class='listing-main'>
+        <PageNav />
+        <!-- Mobile header -->
+        <div class='listing-mobile-header'>
+          <h1 class='listing-mobile-title'>Writing</h1>
+        </div>
+
+        {years.map(year => (
+          <section id={`year-${year}`} class='year-group'>
+            <h2 class='year-heading'>{year}</h2>
+            {byYear.get(year)!.map(post => (
+              <a href={`/writing/${post.slug}`} class='post-row'>
+                <span class='post-date'>{formatDate(post.pubDate)}</span>
+                <div class='post-info'>
+                  <h3 class='post-title'>{post.title}</h3>
+                  <p class='post-desc'>{post.description}</p>
+                </div>
+              </a>
+            ))}
+          </section>
+        ))}
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  .listing-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .listing-main {
+    padding: 48px 48px 80px;
+    max-width: 800px;
+  }
+
+  .listing-mobile-header { display: none; }
+
+  .year-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .year-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .year-link:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--muted));
+  }
+
+  .year-group {
+    margin-bottom: 40px;
+  }
+
+  .year-heading {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .post-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding: 10px 12px;
+    margin: 0 -12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+
+  .post-row:hover {
+    background: hsl(var(--muted));
+  }
+
+  .post-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    white-space: nowrap;
+  }
+
+  .post-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
+
+  .post-desc {
+    font-size: 13px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    .listing-layout { grid-template-columns: 1fr; }
+    .listing-main { padding: 24px 20px 64px; }
+    .listing-mobile-header { display: block; margin-bottom: 24px; }
+    .listing-mobile-back {
+      font-size: 13px;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .listing-mobile-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+    }
+  }
+</style>

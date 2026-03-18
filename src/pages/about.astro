@@ -3,7 +3,7 @@ import PageLayout from '../layouts/BaseLayout.astro'
 import Section from '../components/Section.astro'
 import WorkTimeline from '../components/WorkTimeline.astro'
 import ImpactShelf from '../components/ImpactShelf.astro'
-import Breadcrumbs from '@shared/components/Breadcrumbs.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
 
 import fs from 'fs'
 import yaml from 'js-yaml'
@@ -25,6 +25,9 @@ const impactData = yaml.load(impactYaml) as { impact: any[] }
 <PageLayout meta={{ title: 'About' }}>
 	<div class='flex w-full flex-col gap-y-10'>
 		<Breadcrumbs currentLabel="About" />
+		<p class='text-sm text-muted-foreground'>
+			See the <a href='/#about' class='underline hover:text-foreground'>homepage</a> for a compact overview. This page has the full story.
+		</p>
 		<Section title='About'>
 			<p class='text-lg text-muted-foreground'>
 				I'm Eeshan. I lead a data science team at Starbucks focused on AI/ML, personalization, and experimentation, including recommendation models powering the Starbucks app for 40M+ users.

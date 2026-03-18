@@ -1,0 +1,72 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<nav class='page-nav'>
+	<a href='/' class='page-nav-link'>
+		<Icon name='lucide:home' class='page-nav-icon' />
+		Home
+	</a>
+	<a href='/writing' class='page-nav-link'>
+		<Icon name='lucide:pen-line' class='page-nav-icon' />
+		Writing
+	</a>
+	<a href='/projects' class='page-nav-link'>
+		<Icon name='lucide:layers' class='page-nav-icon' />
+		Projects
+	</a>
+	<a href='/analysis' class='page-nav-link'>
+		<Icon name='lucide:bar-chart-3' class='page-nav-icon' />
+		Analysis
+	</a>
+</nav>
+
+<style>
+	.page-nav {
+		display: flex;
+		gap: 6px;
+		margin-bottom: 32px;
+	}
+
+	.page-nav-link {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		font-size: 13px;
+		font-weight: 450;
+		color: hsl(var(--muted-foreground));
+		text-decoration: none;
+		padding: 5px 12px;
+		border: 1px solid hsl(var(--border));
+		border-radius: 6px;
+		transition: all 0.15s;
+	}
+
+	.page-nav-link:hover {
+		color: hsl(var(--foreground));
+		border-color: hsl(var(--foreground) / 0.3);
+		background: hsl(var(--muted));
+	}
+
+	.page-nav-icon {
+		width: 14px;
+		height: 14px;
+	}
+
+	@media (max-width: 900px) {
+		.page-nav {
+			flex-wrap: nowrap;
+			gap: 4px;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+		.page-nav::-webkit-scrollbar { display: none; }
+		.page-nav-link {
+			font-size: 12px;
+			padding: 4px 8px;
+			white-space: nowrap;
+			flex-shrink: 0;
+		}
+	}
+</style>

@@ -6,12 +6,11 @@
 
 ## Overview
 
-A **static-first monorepo** serving a data science portfolio with interactive apps, production analytics, and automated analysis publishing.
+A **static Astro site** serving as a portfolio and content hub. Projects live in their own repos with their own hosting. Writing is mirrored from Substack. GitHub activity is surfaced via GraphQL API.
 
 ```
 User → Astro (static HTML) → React islands (interactivity)
      → PostHog (events) → Supabase (storage) → PostgREST (API)
-     → Jupyter (analysis) → Published notebooks
 ```
 
 ---
@@ -20,15 +19,13 @@ User → Astro (static HTML) → React islands (interactivity)
 
 | Layer | Technology | Purpose |
 |-------|------------|---------|
-| **Framework** | Astro 5.16 | Static-first SSG, React islands |
-| **Styling** | Tailwind CSS 3.4 | Utility-first, dark mode |
-| **Charts** | Apache ECharts | Bar, line, funnel (300KB) |
-| **Maps** | Leaflet | Tile-based geo visualization |
-| **Analytics** | PostHog | Events, feature flags, A/B tests |
+| **Framework** | Astro 5 | Static-first SSG, React islands |
+| **Styling** | Tailwind CSS 3.4 | 6-theme system (Coffee/Catppuccin/Classic × light/dark) |
+| **Analytics** | PostHog | Events, feature flags, proxied via Cloudflare Worker |
 | **Database** | Supabase (PostgreSQL) | Storage, views, RPCs |
 | **API** | PostgREST | Auto-generated REST from schema |
-| **Hosting** | Fly.io | Docker, global CDN |
-| **CI/CD** | GitHub Actions | Build, notebooks, deploy |
+| **Hosting** | Fly.io | Docker, nginx static serving |
+| **CI/CD** | GitHub Actions | Build and deploy |
 
 ---
 
@@ -36,39 +33,38 @@ User → Astro (static HTML) → React islands (interactivity)
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Home |
-| `/about` | Bio, timeline, recognition |
+| `/` | Home (writing, projects, open source, analysis, about) |
 | `/projects` | Project listing |
-| `/analysis` | Unified notebooks + Substack posts |
-| `/ab-simulator/` | A/B Testing Memory Game |
-| `/projects/{id}/analysis/{notebookId}` | Notebook detail pages |
+| `/writing` | Substack articles rendered on-site |
+| `/writing/[slug]` | Individual article with TOC sidebar |
+| `/analysis` | Published notebooks index |
+| `/about` | Bio and recognition |
+| `/ab-simulator/` | 301 redirect to absim.eeshans.com |
 
 ---
 
-## Monorepo Structure
+## Project Structure
 
 ```
 datascienceapps/
-├── src/                          # Portfolio site
+├── src/
 │   ├── pages/                    # Routes
-│   ├── components/               # Site-specific components
-│   ├── lib/                      # Utilities
-│   └── data/                     # YAML data files
-├── packages/
-│   ├── shared/                   # Reusable across all apps
-│   │   ├── components/           # ProjectCard, Timeline, etc.
-│   │   ├── layouts/              # SiteLayout, AppLayout
-│   │   ├── lib/                  # projects.ts, substack.ts
-│   │   └── data/projects/        # Individual project YAMLs
-│   └── ab-simulator/             # A/B Testing Memory Game
-│       ├── src/pages/            # App routes
-│       └── public/js/ab-sim/     # Game modules
-├── analytics/notebooks/          # Jupyter notebooks by project
-├── supabase/migrations/          # Database schema
-├── scripts/                      # Build tooling
-├── docs/                         # Public documentation
-└── internal/docs/                # Internal documentation
+│   ├── components/               # All UI components
+│   ├── lib/                      # Substack RSS, GitHub GraphQL, project loader
+│   ├── data/
+│   │   └── projects/             # One YAML file per project
+│   └── styles/                   # Tailwind + theme CSS variables
+├── .cache/                       # Build-time API response cache
+├── public/
+│   ├── images/                   # Project thumbnails
+│   └── analysis/                 # Pre-rendered notebook HTML + YAML
+└── docs/                         # Public documentation
 ```
+
+Projects are standalone repos with their own hosting:
+- **ab-simulator** → [absim.eeshans.com](https://absim.eeshans.com) ([repo](https://github.com/eeshansrivastava89/ab-simulator))
+- **howiprompt** → [howiprompt.eeshans.com](https://howiprompt.eeshans.com) ([repo](https://github.com/eeshansrivastava89/howiprompt))
+- **local-llm-bench** → [GitHub Pages](https://eeshansrivastava89.github.io/local-llm-bench/) ([repo](https://github.com/eeshansrivastava89/local-llm-bench))
 
 ---
 
@@ -87,29 +83,13 @@ PostHog Cloud
     ↓
 Two paths:
 ├── Batch Export (hourly) → posthog_batch_events table
-└── Webhook (real-time) → app-specific tables (e.g., posthog_events)
+└── Webhook (real-time) → app-specific tables
     ↓
 SQL Views + RPCs
     ↓
 PostgREST API
     ↓
-React Islands + Charts
-```
-
-### Content Pipeline
-
-```
-Jupyter Notebooks (.ipynb)
-    ↓
-GitHub Actions (scheduled)
-    ↓
-Papermill execution
-    ↓
-HTML + YAML summary → public/analysis/{projectId}/
-    ↓
-Astro build (reads YAML at build time)
-    ↓
-/analysis page + notebook detail pages
+Client-side fetch / React Islands
 ```
 
 ---
@@ -121,13 +101,7 @@ Astro build (reads YAML at build time)
 | Table | Purpose |
 |-------|---------|
 | `posthog_batch_events` | All events (hourly batch) |
-| `analytics_run_log` | Notebook execution logs |
-
-### A/B Simulator Tables
-
-| Table | Purpose |
-|-------|---------|
-| `posthog_events` | Real-time game events (webhook) |
+| `ab_simulator_summary` | Experiment snapshots (appended every 2h by notebook) |
 
 ### Key Views
 
@@ -135,16 +109,6 @@ Astro build (reads YAML at build time)
 |------|---------|
 | `v_page_views` | Pageviews by path |
 | `v_project_engagement_stats` | Per-project metrics |
-| `v_variant_overview` | A/B test comparison |
-| `v_conversion_funnel` | Game funnel metrics |
-
-### Key RPCs
-
-| Function | Purpose |
-|----------|---------|
-| `variant_overview()` | A/B stats + comparison |
-| `leaderboard(variant, limit)` | Top scores |
-| `completion_time_distribution()` | KDE data |
 
 ---
 
@@ -155,12 +119,11 @@ Push to main
     ↓
 GitHub Actions
     ↓
-1. pnpm install (~30s)
-2. Run notebooks (~60s)
-3. Astro build (~10s)
-4. Docker build + Fly.io deploy (~30s)
+1. pnpm install
+2. astro build
+3. Docker build + Fly.io deploy
     ↓
-Live at eeshans.com (~2 min total)
+Live at eeshans.com
 ```
 
 ---
@@ -170,17 +133,10 @@ Live at eeshans.com (~2 min total)
 1. **Static-first** — Pre-render HTML, hydrate only where needed
 2. **React islands** — Interactive components in static pages
 3. **No backend** — SQL views + PostgREST instead of custom APIs
-4. **Monorepo** — Shared package + isolated app packages
-5. **Notebook → YAML → Web** — Analysis outputs become site content
+4. **Aggregator model** — Projects live in own repos, portfolio points to them via YAML
+5. **Build-time data** — Substack RSS and GitHub GraphQL fetched at build with cached fallback
+6. **System-aware theming** — Defaults to system preference, remembers user's manual choice
 
 ---
 
-## Related Documentation
-
-- `internal/docs/PROJECT_HISTORY.md` — Narrative timeline of major decisions
-- `internal/docs/IMPLEMENTATION_ARCHIVE.md` — Detailed implementation notes
-- `internal/docs/ACTIVE_WORK.md` — Current work items
-
----
-
-*Last updated: January 2026*
+*Last updated: March 2026*

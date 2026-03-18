@@ -1,0 +1,65 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<div class='sidebar-newsletter'>
+	<div class='sidebar-newsletter-name'>
+		<Icon name='simple-icons:substack' class='sidebar-newsletter-icon' />
+		Asymptotic
+	</div>
+	<p class='sidebar-newsletter-desc'>Pragmatic takes on AI, data science, and privacy. Past the hype cycles.</p>
+	<a class='sidebar-newsletter-btn' href='https://theasymptotic.substack.com/subscribe' target='_blank' rel='noopener noreferrer'>Subscribe</a>
+</div>
+
+<style>
+	.sidebar-newsletter {
+		padding: 14px;
+		background: hsl(var(--muted));
+		border: 1px solid hsl(var(--border));
+		border-radius: 6px;
+	}
+
+	.sidebar-newsletter-name {
+		font-family: 'Playfair Display', serif;
+		font-size: 14px;
+		font-weight: 600;
+		color: hsl(var(--foreground));
+		margin-bottom: 3px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.sidebar-newsletter-icon {
+		width: 14px;
+		height: 14px;
+		flex-shrink: 0;
+	}
+
+	.sidebar-newsletter-desc {
+		font-size: 12px;
+		color: hsl(var(--muted-foreground));
+		margin-bottom: 10px;
+		line-height: 1.45;
+	}
+
+	.sidebar-newsletter-btn {
+		display: block;
+		width: 100%;
+		padding: 7px 14px;
+		background: hsl(var(--foreground));
+		color: hsl(var(--background));
+		border: none;
+		border-radius: 6px;
+		font-size: 13px;
+		font-weight: 600;
+		text-align: center;
+		text-decoration: none;
+		transition: opacity 0.15s;
+	}
+
+	.sidebar-newsletter-btn:hover {
+		opacity: 0.9;
+		color: hsl(var(--background));
+	}
+</style>
