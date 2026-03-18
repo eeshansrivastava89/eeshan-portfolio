@@ -7,6 +7,7 @@ import ProjectGrid from '@/components/ProjectGrid.astro'
 import ContributionCalendar from '@/components/ContributionCalendar.astro'
 import ActivityTimeline from '@/components/ActivityTimeline.astro'
 import AboutRecognition from '@/components/AboutRecognition.astro'
+import PageNav from '@/components/PageNav.astro'
 
 import { Icon } from 'astro-icon/components'
 import { siteConfig } from '@/site-config'
@@ -46,7 +47,7 @@ const githubData = await getGitHubData()
 
 <html lang={siteConfig.lang} class='scroll-smooth'>
 	<head>
-		<BaseHead title='Eeshan Srivastava' description={siteConfig.description} />
+		<BaseHead title='Home' description={siteConfig.description} />
 	</head>
 
 	<body>
@@ -55,11 +56,12 @@ const githubData = await getGitHubData()
 			<Sidebar />
 
 			<main class='homepage-main'>
+				<PageNav />
+
 				<!-- Intro -->
 				<p class='homepage-intro'>
-					I build apps on AI, data science & privacy to see what holds up beyond the hype.
-					Each project goes end-to-end — design, engineering, analytics, published analysis.
-					<strong>Everything is open source.</strong>
+					I build and write about AI, data science & privacy to see what will hold up beyond the hype cycles.
+					<strong>Everything is open source and transparent.</strong>
 				</p>
 
 				<!-- Writing -->
@@ -98,7 +100,7 @@ const githubData = await getGitHubData()
 									weeks={githubData.weeks}
 									totalContributions={githubData.totalContributions}
 								/>
-								<ActivityTimeline activities={githubData.recentActivity} />
+								<ActivityTimeline activities={githubData.recentActivity} totals={githubData.activityTotals} />
 							</>
 						) : (
 						<p class='homepage-placeholder'>

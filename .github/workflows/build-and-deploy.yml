@@ -36,8 +36,11 @@ jobs:
         run: pnpm install
 
       # ─────────────────────────────────────────────────────────────
-      # 3. Build Astro site
+      # 3. Typecheck + Build Astro site
       # ─────────────────────────────────────────────────────────────
+      - name: Typecheck
+        run: pnpm astro check
+
       - name: Build Astro site
         run: pnpm run build
         env:

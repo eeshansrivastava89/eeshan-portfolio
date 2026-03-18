@@ -1,146 +1,110 @@
 ---
-import type { RecentActivity } from '@/lib/github'
+import type { RecentActivity, ActivityTotals } from '@/lib/github'
 
 interface Props {
   activities: RecentActivity[]
+  totals?: ActivityTotals
 }
 
-const { activities } = Astro.props
+const { activities, totals } = Astro.props
 
-// Group activities by date
-interface DayGroup {
-  date: string
-  label: string
-  items: RecentActivity[]
-}
+// Categorize activities
+const commits = activities.filter(a => a.category === 'commit')
+const repos = activities.filter(a => a.category === 'repo')
+const issues = activities.filter(a => a.category === 'issue')
+const prs = activities.filter(a => a.category === 'pr')
 
-function groupByDay(items: RecentActivity[]): DayGroup[] {
-  const groups = new Map<string, RecentActivity[]>()
-
-  for (const item of items) {
-    const date = new Date(item.time)
-    const key = date.toISOString().split('T')[0]
-    if (!groups.has(key)) {
-      groups.set(key, [])
-    }
-    groups.get(key)!.push(item)
-  }
-
-  const now = new Date()
-  const today = now.toISOString().split('T')[0]
-  const yesterday = new Date(now.getTime() - 86400000).toISOString().split('T')[0]
-
-  return Array.from(groups.entries()).map(([date, items]) => {
-    let label: string
-    if (date === today) {
-      label = 'Today'
-    } else if (date === yesterday) {
-      label = 'Yesterday'
-    } else {
-      label = new Date(date + 'T12:00:00').toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-    }
-
-    // Aggregate: if multiple pushes to same repo on same day, summarize
-    const aggregated = aggregateItems(items)
-
-    return { date, label, items: aggregated }
-  })
-}
-
-function aggregateItems(items: RecentActivity[]): RecentActivity[] {
-  // Group by repo + event category
-  const byRepoCategory = new Map<string, RecentActivity[]>()
-
-  for (const item of items) {
-    const category = categorize(item.message)
-    const key = `${category}:${item.repo}`
-
-    if (!byRepoCategory.has(key)) {
-      byRepoCategory.set(key, [])
-    }
-    byRepoCategory.get(key)!.push(item)
-  }
-
-  const result: RecentActivity[] = []
-
-  for (const [key, group] of byRepoCategory) {
-    if (group.length <= 2) {
-      result.push(...group)
-    } else {
-      // Summarize repeated events
-      const category = key.split(':')[0]
-      const summaries: Record<string, string> = {
-        push: `${group.length} commits`,
-        issue: `${group.length} issue updates`,
-        pr: `${group.length} PR updates`,
-        comment: `${group.length} comments`,
-        other: `${group.length} updates`,
-      }
-      result.push({
-        repo: group[0].repo,
-        message: summaries[category] || `${group.length} events`,
-        time: group[0].time,
-        url: group[0].url,
-      })
-    }
-  }
-
-  return result
-}
-
-function categorize(message: string): string {
-  if (message.includes(' PR: ')) return 'pr'
-  if (message.includes(' issue: ')) return 'issue'
-  if (message.startsWith('Commented ')) return 'comment'
-  if (message.startsWith('Created ')) return 'other'
-  if (message.startsWith('Published ')) return 'other'
-  return 'push'
-}
-
-function relativeTime(dateStr: string): string {
-  const now = Date.now()
-  const then = new Date(dateStr).getTime()
-  const diff = now - then
-  const mins = Math.floor(diff / 60000)
-  if (mins < 60) return `${mins}m ago`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `${hours}h ago`
-  const days = Math.floor(hours / 24)
-  if (days < 7) return `${days}d ago`
-  const weeks = Math.floor(days / 7)
-  if (weeks < 5) return `${weeks}w ago`
-  const months = Math.floor(days / 30)
-  return `${months}mo ago`
-}
-
-const dayGroups = groupByDay(activities).slice(0, 5)
+// Use real totals from GraphQL, fall back to counting returned items
+const totalCommits = totals?.commits || commits.reduce((sum, a) => {
+  const match = a.message.match(/^(\d+)/)
+  return sum + (match ? parseInt(match[1]) : 0)
+}, 0)
+const totalIssues = totals?.issues || issues.length
+const totalPRs = totals?.prs || prs.length
+const totalRepos = totals?.repos || repos.length
 ---
 
-{dayGroups.length > 0 ? (
+{activities.length > 0 ? (
   <div class='timeline'>
-    {dayGroups.map(group => (
-      <div class='timeline-group'>
-        <div class='timeline-date'>{group.label}</div>
+    {/* Commits summary */}
+    {commits.length > 0 && (
+      <div class='timeline-section'>
+        <div class='timeline-section-header'>
+          <span class='timeline-icon'>
+            <svg viewBox='0 0 16 16' fill='currentColor' width='16' height='16'><path d='M10.5 7.75a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm1.43.75a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z'/></svg>
+          </span>
+          <span>{totalCommits.toLocaleString()} commits in {commits.length} repositor{commits.length === 1 ? 'y' : 'ies'}</span>
+        </div>
         <div class='timeline-items'>
-          {group.items.map(item => (
-            <div class='timeline-item'>
-              <div class='timeline-content'>
-                {item.url ? (
-                  <a href={item.url} target='_blank' rel='noopener noreferrer' class='timeline-repo'>{item.repo}</a>
-                ) : (
-                  <span class='timeline-repo'>{item.repo}</span>
-                )}
-                <span class='timeline-msg'>{item.message}</span>
-              </div>
-              <span class='timeline-time'>{relativeTime(item.time)}</span>
-            </div>
+          {commits.map(item => (
+            <a href={item.url} target='_blank' rel='noopener noreferrer' class='timeline-row'>
+              <span class='timeline-repo'>{item.repo}</span>
+              <span class='timeline-detail'>{item.message}</span>
+            </a>
           ))}
         </div>
       </div>
-    ))}
+    )}
+
+    {/* New repos */}
+    {repos.length > 0 && (
+      <div class='timeline-section'>
+        <div class='timeline-section-header'>
+          <span class='timeline-icon'>
+            <svg viewBox='0 0 16 16' fill='currentColor' width='16' height='16'><path d='M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z'/></svg>
+          </span>
+          <span>Created {totalRepos} repositor{totalRepos === 1 ? 'y' : 'ies'}</span>
+        </div>
+        <div class='timeline-items'>
+          {repos.map(item => (
+            <a href={item.url} target='_blank' rel='noopener noreferrer' class='timeline-row'>
+              <span class='timeline-repo'>{item.repo}</span>
+              <span class='timeline-detail'>{item.message.replace('Created repository', '').trim()}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Issues */}
+    {issues.length > 0 && (
+      <div class='timeline-section'>
+        <div class='timeline-section-header'>
+          <span class='timeline-icon'>
+            <svg viewBox='0 0 16 16' fill='currentColor' width='16' height='16'><path d='M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z'/><path d='M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z'/></svg>
+          </span>
+          <span>Opened {totalIssues} issue{totalIssues === 1 ? '' : 's'}</span>
+        </div>
+        <div class='timeline-items'>
+          {issues.map(item => (
+            <a href={item.url} target='_blank' rel='noopener noreferrer' class='timeline-row'>
+              <span class='timeline-repo'>{item.repo}</span>
+              <span class='timeline-detail'>{item.message.replace('Opened issue: ', '')}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Pull Requests */}
+    {prs.length > 0 && (
+      <div class='timeline-section'>
+        <div class='timeline-section-header'>
+          <span class='timeline-icon'>
+            <svg viewBox='0 0 16 16' fill='currentColor' width='16' height='16'><path d='M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z'/></svg>
+          </span>
+          <span>Opened {totalPRs} pull request{totalPRs === 1 ? '' : 's'}</span>
+        </div>
+        <div class='timeline-items'>
+          {prs.map(item => (
+            <a href={item.url} target='_blank' rel='noopener noreferrer' class='timeline-row'>
+              <span class='timeline-repo'>{item.repo}</span>
+              <span class='timeline-detail'>{item.message.replace('Opened PR: ', '')}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 ) : (
   <p class='timeline-empty'>No recent activity.</p>
@@ -150,25 +114,30 @@ const dayGroups = groupByDay(activities).slice(0, 5)
   .timeline {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
   }
 
-  .timeline-group {
+  .timeline-section {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
   }
 
-  .timeline-date {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: hsl(var(--muted-foreground));
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-bottom: 4px;
+  .timeline-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    padding-bottom: 6px;
     border-bottom: 1px solid hsl(var(--border));
-    margin-bottom: 2px;
+  }
+
+  .timeline-icon {
+    display: flex;
+    align-items: center;
+    color: hsl(var(--muted-foreground));
   }
 
   .timeline-items {
@@ -177,45 +146,37 @@ const dayGroups = groupByDay(activities).slice(0, 5)
     gap: 2px;
   }
 
-  .timeline-item {
+  .timeline-row {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-    padding: 6px 10px;
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+    padding: 5px 10px 5px 32px;
     border-radius: 6px;
     font-size: 13px;
+    text-decoration: none;
+    color: inherit;
     transition: background 0.15s;
   }
 
-  .timeline-item:hover {
+  .timeline-row:hover {
     background: hsl(var(--muted));
-  }
-
-  .timeline-content {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .timeline-repo {
     color: hsl(210 60% 55%);
     font-weight: 500;
-    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .timeline-repo:hover {
-    text-decoration: underline;
-  }
-
-  .timeline-msg {
+  .timeline-detail {
     color: hsl(var(--muted-foreground));
-  }
-
-  .timeline-time {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: hsl(var(--muted-foreground));
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .timeline-empty {
@@ -223,5 +184,13 @@ const dayGroups = groupByDay(activities).slice(0, 5)
     color: hsl(var(--muted-foreground));
     padding: 12px;
     text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .timeline-row {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      padding-left: 10px;
+    }
   }
 </style>

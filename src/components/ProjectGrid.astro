@@ -87,16 +87,22 @@ const gridProjects = projects.filter(p => p.id !== featured?.id)
 		gap: 5px;
 		font-size: 11px;
 		font-family: 'JetBrains Mono', monospace;
-		color: #4ade80;
+		color: #16a34a;
 		margin-bottom: 10px;
+	}
+	:global(.dark) .project-status {
+		color: #4ade80;
 	}
 
 	.project-dot {
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: #4ade80;
+		background: #16a34a;
 		animation: pulse 2s infinite;
+	}
+	:global(.dark) .project-dot {
+		background: #4ade80;
 	}
 
 	.project-dot[data-status='in-progress'] {

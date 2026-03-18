@@ -10,7 +10,7 @@
 
 A personal portfolio site that aggregates projects, writing, and analysis from across multiple repos and platforms into one information-dense hub.
 
-Each project lives in its own repo with its own hosting. This site surfaces them all — with live stats, full Substack articles rendered on-site, GitHub activity, and published analysis.
+Each project lives in its own repo with its own hosting. This site surfaces them all — with live stats, full Substack articles rendered on-site, GitHub activity, and published notebooks.
 
 ---
 
@@ -18,9 +18,9 @@ Each project lives in its own repo with its own hosting. This site surfaces them
 
 | Project | Stack | Link |
 |---------|-------|------|
-| A/B Testing Memory Game | Astro, React, PostHog, Supabase | [Try it](https://eeshans.com/ab-simulator) |
-| How I Prompt | Python, Claude AI | [Try it](https://howiprompt.eeshans.com) |
-| Local LLM Bench | MLX, Ollama, Python | [Try it](https://eeshansrivastava89.github.io/local-llm-bench/) |
+| A/B Testing Memory Game | Astro, PostHog, Supabase, Python | [absim.eeshans.com](https://absim.eeshans.com) |
+| How I Prompt | Python, Claude AI | [howiprompt.eeshans.com](https://howiprompt.eeshans.com) |
+| Local LLM Bench | MLX, Ollama, Python | [GitHub Pages](https://eeshansrivastava89.github.io/local-llm-bench/) |
 
 ---
 
@@ -29,9 +29,8 @@ Each project lives in its own repo with its own hosting. This site surfaces them
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | Framework | Astro 5 | Static-first, React islands for interactivity |
-| Styling | Tailwind CSS | Utility-first, dark mode, responsive |
-| Interactivity | React 19 | Subscribe dialog, commit feed, data tables |
-| Analytics | PostHog | Event tracking, feature flags |
+| Styling | Tailwind CSS | 6-theme system (Coffee/Catppuccin/Classic × light/dark) |
+| Analytics | PostHog | Event tracking, proxied through Cloudflare Worker |
 | Database | Supabase | PostgreSQL + PostgREST for live stats |
 | Hosting | Fly.io | Docker deployment, static nginx |
 
@@ -42,15 +41,13 @@ Each project lives in its own repo with its own hosting. This site surfaces them
 ```
 datascienceapps/
 ├── src/
-│   ├── pages/             # Home, Projects, Writing, About
+│   ├── pages/             # Home, Projects, Writing, Analysis, About
 │   ├── components/        # All UI components
-│   ├── lib/               # Substack RSS, GitHub API, project loader
+│   ├── lib/               # Substack RSS, GitHub GraphQL, project loader
 │   ├── data/              # Project YAML definitions
-│   └── styles/            # Tailwind + theme CSS
+│   └── styles/            # Tailwind + theme CSS variables
 ├── .cache/                # Build-time API response cache
-├── public/                # Static assets + pre-rendered analysis
-└── packages/
-    └── ab-simulator/      # Quarantined — pending migration to own repo
+└── public/                # Static assets + pre-rendered analysis
 ```
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical details.

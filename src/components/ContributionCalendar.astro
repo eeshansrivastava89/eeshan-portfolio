@@ -19,7 +19,7 @@ const { weeks, totalContributions } = Astro.props
         {week.contributionDays.map(day => (
           <div
             class='contrib-day'
-            style={`background-color: ${day.contributionCount === 0 ? 'hsl(var(--muted))' : day.color};`}
+            style={`background-color: ${day.contributionCount === 0 ? 'hsl(var(--border))' : day.color};`}
             title={`${day.date}: ${day.contributionCount} contribution${day.contributionCount !== 1 ? 's' : ''}`}
           />
         ))}

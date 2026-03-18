@@ -1,5 +1,6 @@
 title: 'A/B Test: Pineapple Finder Difficulty'
 project_id: ab-simulator
+analysis_url: https://absim.eeshans.com/analysis/
 status: significant
 decision: Do NOT ship Variant B — guardrail metrics show significant drops in completion
   and engagement.

@@ -17,24 +17,24 @@
 	[data-theme="coffee-light"] {
 		/* Coffee Cream: bg #EAE4E1, fg #36221d, surface #e3dbd7 */
 		--background: 20 16% 90%;
-		--foreground: 12 32% 16%;
-		--card: 20 16% 90%;
-		--card-foreground: 12 32% 16%;
+		--foreground: 12 38% 14%;
+		--card: 20 14% 87%;
+		--card-foreground: 12 38% 14%;
 		--popover: 20 16% 90%;
-		--popover-foreground: 12 32% 16%;
-		--primary: 12 32% 16%;
+		--popover-foreground: 12 38% 14%;
+		--primary: 12 38% 14%;
 		--primary-foreground: 20 16% 90%;
-		--secondary: 17 14% 87%;
-		--secondary-foreground: 12 32% 16%;
-		--muted: 17 14% 87%;
-		--muted-foreground: 9 8% 61%;
-		--accent: 13 58% 56%;
+		--secondary: 17 14% 84%;
+		--secondary-foreground: 12 38% 14%;
+		--muted: 17 14% 84%;
+		--muted-foreground: 12 12% 45%;
+		--accent: 13 58% 48%;
 		--accent-foreground: 20 16% 90%;
 		--destructive: 0 100% 61%;
 		--destructive-foreground: 20 16% 90%;
-		--border: 18 15% 75%;
-		--input: 18 15% 75%;
-		--ring: 13 58% 56%;
+		--border: 18 18% 68%;
+		--input: 18 18% 68%;
+		--ring: 13 58% 48%;
 		--radius: 0.5rem;
 	}
 	[data-theme="coffee-dark"] {

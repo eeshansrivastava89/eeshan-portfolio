@@ -1,5 +1,5 @@
 {
-  "totalContributions": 746,
+  "totalContributions": 756,
   "weeks": [
     {
       "contributionDays": [
@@ -2035,6 +2035,21 @@
           "date": "2026-03-15",
           "contributionCount": 37,
           "color": "#216e39"
+        },
+        {
+          "date": "2026-03-16",
+          "contributionCount": 1,
+          "color": "#9be9a8"
+        },
+        {
+          "date": "2026-03-17",
+          "contributionCount": 17,
+          "color": "#40c463"
+        },
+        {
+          "date": "2026-03-18",
+          "contributionCount": 0,
+          "color": "#ebedf0"
         }
       ]
     }
@@ -2049,6 +2064,17 @@
       "primaryLanguage": {
         "name": "Python",
         "color": "#3572A5"
+      }
+    },
+    {
+      "name": "ab-simulator",
+      "description": "A/B Testing Memory Game — a live experiment with real-time dashboard and statistical analysis",
+      "url": "https://github.com/eeshansrivastava89/ab-simulator",
+      "stargazerCount": 0,
+      "forkCount": 0,
+      "primaryLanguage": {
+        "name": "HTML",
+        "color": "#e34c26"
       }
     },
     {
@@ -2130,52 +2156,150 @@
   "followers": 7,
   "recentActivity": [
     {
-      "repo": "openai/codex",
-      "message": "Labeled issue: Codex hangs on agent-browser background sessions for websites with blank pages",
-      "time": "2026-03-15T17:34:42Z",
-      "url": "https://github.com/openai/codex/issues/14755"
+      "repo": "datascienceapps",
+      "message": "196 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/datascienceapps",
+      "category": "commit"
     },
     {
-      "repo": "openai/codex",
+      "repo": "sidequests",
+      "message": "89 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/sidequests",
+      "category": "commit"
+    },
+    {
+      "repo": "weather-app",
+      "message": "29 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/weather-app",
+      "category": "commit"
+    },
+    {
+      "repo": "howiprompt",
+      "message": "28 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/howiprompt",
+      "category": "commit"
+    },
+    {
+      "repo": "ab-simulator",
+      "message": "13 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/ab-simulator",
+      "category": "commit"
+    },
+    {
+      "repo": "quizzard",
+      "message": "12 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/quizzard",
+      "category": "commit"
+    },
+    {
+      "repo": "eeshansrivastava89",
+      "message": "11 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/eeshansrivastava89",
+      "category": "commit"
+    },
+    {
+      "repo": "local-llm-bench",
+      "message": "10 commits",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/local-llm-bench",
+      "category": "commit"
+    },
+    {
+      "repo": "repo-visualizer-kit",
+      "message": "1 commit",
+      "time": "2026-03-18T06:55:39.735Z",
+      "url": "https://github.com/eeshansrivastava89/repo-visualizer-kit",
+      "category": "commit"
+    },
+    {
+      "repo": "ab-simulator",
+      "message": "Created repository · HTML",
+      "time": "2026-03-17T07:02:22Z",
+      "url": "https://github.com/eeshansrivastava89/ab-simulator",
+      "category": "repo"
+    },
+    {
+      "repo": "codex",
       "message": "Opened issue: Codex hangs on agent-browser background sessions for websites with blank pages",
-      "time": "2026-03-15T17:34:41Z",
-      "url": "https://github.com/openai/codex/issues/14755"
+      "time": "2026-03-15T17:34:40Z",
+      "url": "https://github.com/openai/codex/issues/14755",
+      "category": "issue"
     },
     {
       "repo": "sidequests",
       "message": "Opened issue: Refine LOC metric to distinguish code from docs/generated overhead",
-      "time": "2026-03-06T08:32:30Z",
-      "url": "https://github.com/eeshansrivastava89/sidequests/issues/12"
-    },
-    {
-      "repo": "howiprompt",
-      "message": "Labeled issue: Vibe Coder Index — Engineer vs Vibe-Coder Scale",
-      "time": "2026-03-04T05:27:37Z",
-      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/3"
-    },
-    {
-      "repo": "howiprompt",
-      "message": "Labeled issue: Human-in-the-Loop Impact Score",
-      "time": "2026-03-04T05:27:37Z",
-      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/2"
+      "time": "2026-03-06T08:32:29Z",
+      "url": "https://github.com/eeshansrivastava89/sidequests/issues/12",
+      "category": "issue"
     },
     {
       "repo": "howiprompt",
       "message": "Opened issue: Vibe Coder Index — Engineer vs Vibe-Coder Scale",
-      "time": "2026-03-04T05:26:02Z",
-      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/3"
+      "time": "2026-03-04T05:26:01Z",
+      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/3",
+      "category": "issue"
     },
     {
       "repo": "howiprompt",
       "message": "Opened issue: Human-in-the-Loop Impact Score",
-      "time": "2026-03-04T05:25:55Z",
-      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/2"
+      "time": "2026-03-04T05:25:53Z",
+      "url": "https://github.com/eeshansrivastava89/howiprompt/issues/2",
+      "category": "issue"
     },
     {
-      "repo": "datascience",
-      "message": "Pushed code updates",
-      "time": "2026-02-27T20:19:53Z",
-      "url": "https://github.com/eeshansrivastava89/datascience"
+      "repo": "local-llm-bench",
+      "message": "Opened issue: Local model manager: browse, download, and manage models from the UI",
+      "time": "2026-02-27T18:25:16Z",
+      "url": "https://github.com/eeshansrivastava89/local-llm-bench/issues/3",
+      "category": "issue"
+    },
+    {
+      "repo": "local-llm-bench",
+      "message": "Opened issue: Improve front-end dashboard with better charts and visuals",
+      "time": "2026-02-27T18:25:14Z",
+      "url": "https://github.com/eeshansrivastava89/local-llm-bench/issues/2",
+      "category": "issue"
+    },
+    {
+      "repo": "local-llm-bench",
+      "message": "Opened issue: Prep for npx / uv packaging for distribution",
+      "time": "2026-02-27T18:25:07Z",
+      "url": "https://github.com/eeshansrivastava89/local-llm-bench/issues/1",
+      "category": "issue"
+    },
+    {
+      "repo": "sidequests",
+      "message": "Opened issue: Selective scan — checkbox multi-select for Fast Scan and AI Scan",
+      "time": "2026-02-26T08:13:20Z",
+      "url": "https://github.com/eeshansrivastava89/sidequests/issues/11",
+      "category": "issue"
+    },
+    {
+      "repo": "sidequests",
+      "message": "Opened issue: Migrate from Next.js to Hono + Vite for 75% smaller package",
+      "time": "2026-02-26T08:08:50Z",
+      "url": "https://github.com/eeshansrivastava89/sidequests/issues/10",
+      "category": "issue"
+    },
+    {
+      "repo": "sidequests",
+      "message": "Opened issue: Sort activity log list by last commit",
+      "time": "2026-02-23T00:57:57Z",
+      "url": "https://github.com/eeshansrivastava89/sidequests/issues/9",
+      "category": "issue"
     }
-  ]
+  ],
+  "activityTotals": {
+    "commits": 389,
+    "issues": 103,
+    "prs": 1,
+    "repos": 9
+  }
 }

@@ -8,6 +8,7 @@ import { fetchWithCache } from './build-cache'
 import { execSync } from 'node:child_process'
 
 const GITHUB_USERNAME = 'eeshansrivastava89'
+const ACTIVITY_DAYS = 365 // How many days of activity to show in the timeline
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -35,6 +36,14 @@ export interface RecentActivity {
   message: string
   time: string
   url?: string
+  category?: 'commit' | 'issue' | 'pr' | 'repo'
+}
+
+export interface ActivityTotals {
+  commits: number
+  issues: number
+  prs: number
+  repos: number
 }
 
 export interface GitHubData {
@@ -44,12 +53,13 @@ export interface GitHubData {
   bio: string | null
   followers: number
   recentActivity: RecentActivity[]
+  activityTotals: ActivityTotals
 }
 
 // ─── GraphQL (build-time) ────────────────────────────────────
 
 const CONTRIBUTION_QUERY = `
-query($username: String!) {
+query($username: String!, $activityFrom: DateTime!) {
   user(login: $username) {
     bio
     followers { totalCount }
@@ -62,6 +72,31 @@ query($username: String!) {
             contributionCount
             color
           }
+        }
+      }
+    }
+    recentActivity: contributionsCollection(from: $activityFrom) {
+      totalCommitContributions
+      totalIssueContributions
+      totalPullRequestContributions
+      totalRepositoryContributions
+      commitContributionsByRepository(maxRepositories: 20) {
+        repository { name url }
+        contributions { totalCount }
+      }
+      issueContributions(first: 20, orderBy: {direction: DESC}) {
+        nodes {
+          issue { title url createdAt repository { name url } }
+        }
+      }
+      pullRequestContributions(first: 20, orderBy: {direction: DESC}) {
+        nodes {
+          pullRequest { title url createdAt repository { name url } }
+        }
+      }
+      repositoryContributions(first: 10, orderBy: {direction: DESC}) {
+        nodes {
+          repository { name url createdAt primaryLanguage { name } }
         }
       }
     }
@@ -99,7 +134,10 @@ async function fetchGitHubGraphQL(): Promise<GitHubData> {
     },
     body: JSON.stringify({
       query: CONTRIBUTION_QUERY,
-      variables: { username: GITHUB_USERNAME },
+      variables: {
+        username: GITHUB_USERNAME,
+        activityFrom: new Date(Date.now() - ACTIVITY_DAYS * 86400000).toISOString(),
+      },
     }),
   })
 
@@ -107,23 +145,7 @@ async function fetchGitHubGraphQL(): Promise<GitHubData> {
     throw new Error(`GitHub GraphQL failed: ${response.status}`)
   }
 
-  const activityRes = await fetch(
-    `https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=100`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'eeshans-portfolio',
-      },
-    }
-  )
-
-  if (!activityRes.ok) {
-    throw new Error(`GitHub public events failed: ${activityRes.status}`)
-  }
-
   const json = await response.json()
-  const activityJson = await activityRes.json()
 
   if (json.errors) {
     throw new Error(`GitHub GraphQL errors: ${JSON.stringify(json.errors)}`)
@@ -138,95 +160,83 @@ async function fetchGitHubGraphQL(): Promise<GitHubData> {
     repositories: user.repositories.nodes,
     bio: user.bio,
     followers: user.followers.totalCount,
-    recentActivity: normalizeRecentActivity(activityJson),
+    recentActivity: buildActivityFromGraphQL(user.recentActivity),
+    activityTotals: {
+      commits: user.recentActivity?.totalCommitContributions || 0,
+      issues: user.recentActivity?.totalIssueContributions || 0,
+      prs: user.recentActivity?.totalPullRequestContributions || 0,
+      repos: user.recentActivity?.totalRepositoryContributions || 0,
+    },
   }
 }
 
-function normalizeRecentActivity(events: any[]): RecentActivity[] {
-  if (!Array.isArray(events)) return []
+function buildActivityFromGraphQL(contributions: any): RecentActivity[] {
+  const items: RecentActivity[] = []
 
-  const items = events.flatMap((event: any): RecentActivity[] => {
-    const repo = event?.repo?.name?.replace(`${GITHUB_USERNAME}/`, '') || GITHUB_USERNAME
-    const time = event?.created_at
-
-    if (!time) return []
-
-    if (event.type === 'PushEvent') {
-      const commits = Array.isArray(event.payload?.commits) ? event.payload.commits : []
-      if (commits.length === 0) {
-        return [{
-          repo,
-          message: 'Pushed code updates',
-          time,
-          url: `https://github.com/${event.repo?.name}`,
-        }]
-      }
-
-      return commits.map((commit: any) => ({
+  // Commits by repository (aggregated — like "178 commits" per repo)
+  const commitsByRepo = contributions.commitContributionsByRepository || []
+  for (const entry of commitsByRepo) {
+    const repo = entry.repository?.name || 'unknown'
+    const count = entry.contributions?.totalCount || 0
+    if (count > 0) {
+      items.push({
         repo,
-        message: String(commit?.message || 'Updated code').split('\n')[0],
-        time,
-        url: commit?.sha ? `https://github.com/${event.repo?.name}/commit/${commit.sha}` : `https://github.com/${event.repo?.name}`,
-      }))
+        message: `${count} commit${count !== 1 ? 's' : ''}`,
+        time: new Date().toISOString(),
+        url: entry.repository?.url,
+        category: 'commit',
+      })
     }
+  }
 
-    if (event.type === 'CreateEvent') {
-      const refType = event.payload?.ref_type || 'resource'
-      const ref = event.payload?.ref ? ` ${event.payload.ref}` : ''
-      return [{
-        repo,
-        message: `Created ${refType}${ref}`,
-        time,
-        url: `https://github.com/${event.repo?.name}`,
-      }]
-    }
+  // New repositories created
+  const newRepos = contributions.repositoryContributions?.nodes || []
+  for (const entry of newRepos) {
+    const repo = entry.repository?.name || 'unknown'
+    const lang = entry.repository?.primaryLanguage?.name
+    items.push({
+      repo,
+      message: `Created repository${lang ? ` · ${lang}` : ''}`,
+      time: entry.repository?.createdAt || new Date().toISOString(),
+      url: entry.repository?.url,
+      category: 'repo',
+    })
+  }
 
-    if (event.type === 'PullRequestEvent') {
-      const title = event.payload?.pull_request?.title || 'pull request'
-      const action = event.payload?.action || 'updated'
-      return [{
-        repo,
-        message: `${capitalize(action)} PR: ${title}`,
-        time,
-        url: event.payload?.pull_request?.html_url,
-      }]
-    }
+  // Issues opened
+  const issues = contributions.issueContributions?.nodes || []
+  for (const entry of issues) {
+    const issue = entry.issue
+    if (!issue) continue
+    const repo = issue.repository?.name || 'unknown'
+    items.push({
+      repo,
+      message: `Opened issue: ${issue.title}`,
+      time: issue.createdAt,
+      url: issue.url,
+      category: 'issue',
+    })
+  }
 
-    if (event.type === 'IssuesEvent') {
-      const title = event.payload?.issue?.title || 'issue'
-      const action = event.payload?.action || 'updated'
-      return [{
-        repo,
-        message: `${capitalize(action)} issue: ${title}`,
-        time,
-        url: event.payload?.issue?.html_url,
-      }]
-    }
+  // Pull requests
+  const prs = contributions.pullRequestContributions?.nodes || []
+  for (const entry of prs) {
+    const pr = entry.pullRequest
+    if (!pr) continue
+    const repo = pr.repository?.name || 'unknown'
+    items.push({
+      repo,
+      message: `Opened PR: ${pr.title}`,
+      time: pr.createdAt,
+      url: pr.url,
+      category: 'pr',
+    })
+  }
 
-    if (event.type === 'IssueCommentEvent') {
-      const title = event.payload?.issue?.title || 'issue'
-      return [{
-        repo,
-        message: `Commented on issue: ${title}`,
-        time,
-        url: event.payload?.comment?.html_url || event.payload?.issue?.html_url,
-      }]
-    }
+  // Sort by time descending
+  items.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
 
-    if (event.type === 'ReleaseEvent') {
-      const name = event.payload?.release?.name || event.payload?.release?.tag_name || 'release'
-      return [{
-        repo,
-        message: `Published release: ${name}`,
-        time,
-        url: event.payload?.release?.html_url,
-      }]
-    }
-
-    return []
-  })
-
-  return items.slice(0, 8)
+  return items.slice(0, 20)
 }
 
 function getLocalGitActivity(limit = 8): RecentActivity[] {
@@ -253,10 +263,6 @@ function getLocalGitActivity(limit = 8): RecentActivity[] {
   }
 }
 
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1)
-}
-
 /**
  * Get GitHub data with cached fallback for build resilience.
  */
@@ -274,6 +280,7 @@ export async function getGitHubData(): Promise<GitHubData> {
     bio: typeof data.bio === 'string' || data.bio === null ? data.bio ?? null : null,
     followers: typeof data.followers === 'number' ? data.followers : 0,
     recentActivity: Array.isArray(data.recentActivity) ? data.recentActivity : [],
+    activityTotals: data.activityTotals || { commits: 0, issues: 0, prs: 0, repos: 0 },
   }
 
   if (normalized.recentActivity.length === 0) {
@@ -283,50 +290,3 @@ export async function getGitHubData(): Promise<GitHubData> {
   return normalized
 }
 
-// ─── Contributor fetching (existing) ─────────────────────────
-
-export interface Contributor {
-  login: string
-  avatar_url: string
-  html_url: string
-}
-
-export async function getRecentContributors(days = 30): Promise<Contributor[]> {
-  const since = new Date()
-  since.setDate(since.getDate() - days)
-  const sinceISO = since.toISOString()
-
-  const headers: HeadersInit = {
-    Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'datascienceapps',
-  }
-
-  const token = import.meta.env.GITHUB_TOKEN
-  if (token) {
-    headers.Authorization = `Bearer ${token}`
-  }
-
-  const contributors = new Map<string, Contributor>()
-
-  try {
-    const issuesUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/datascienceapps/issues?state=all&since=${sinceISO}&per_page=100`
-    const issuesRes = await fetch(issuesUrl, { headers })
-
-    if (issuesRes.ok) {
-      const issues = await issuesRes.json()
-      for (const issue of issues) {
-        if (issue.user) {
-          contributors.set(issue.user.login, {
-            login: issue.user.login,
-            avatar_url: issue.user.avatar_url,
-            html_url: issue.user.html_url,
-          })
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch GitHub contributors:', error)
-  }
-
-  return Array.from(contributors.values())
-}
